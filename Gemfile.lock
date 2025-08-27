@@ -135,6 +135,8 @@ GEM
     docker-api (2.4.0)
       excon (>= 0.64.0)
       multi_json
+    dockerfile-rails (1.7.10)
+      rails (>= 3.0.0)
     dotenv (3.1.8)
     drb (2.2.3)
     ed25519 (1.4.0)
@@ -514,6 +516,7 @@ DEPENDENCIES
   debug
   devise
   docker-api
+  dockerfile-rails (>= 1.7)
   google-apis-aiplatform_v1
   importmap-rails
   jbuilder
