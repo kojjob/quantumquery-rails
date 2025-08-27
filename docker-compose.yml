@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  # Main Rails application
+  web:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - RAILS_ENV=development
+      - DATABASE_URL=postgres://postgres:password@db:5432/quantumquery_development
+      - REDIS_URL=redis://redis:6379/1
+    volumes:
+      - .:/rails
+      - bundle_cache:/usr/local/bundle
+      - node_modules:/rails/node_modules
+    depends_on:
+      - db
+    command: ./bin/rails server -b 0.0.0.0
+
+  # PostgreSQL database
+  db:
+    image: postgres:15
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=quantumquery_development
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  # Solid Queue worker (Rails 8 - no Redis needed!)
+  worker:
+    build: .
+    environment:
+      - RAILS_ENV=development
+      - DATABASE_URL=postgres://postgres:password@db:5432/quantumquery_development
+    volumes:
+      - .:/rails
+      - bundle_cache:/usr/local/bundle
+      - /var/run/docker.sock:/var/run/docker.sock # For Docker-in-Docker
+    depends_on:
+      - db
+    command: bundle exec rails solid_queue:start
+
+  # Build sandbox image
+  sandbox_builder:
+    build:
+      context: ./docker/sandbox
+      dockerfile: Dockerfile
+    image: quantumquery-sandbox
+    command: echo "Sandbox image built successfully"
+
+volumes:
+  postgres_data:
+  bundle_cache:
+  node_modules:
