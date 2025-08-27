@@ -1,0 +1,73 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="bg-white shadow-xl rounded-lg">
+    <!-- Header -->
+    <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+      <div>
+        <h1 class="text-2xl font-bold text-gray-900">Analysis Requests</h1>
+        <p class="mt-1 text-sm text-gray-500">Ask questions about your data in plain English</p>
+      </div>
+      <%= link_to new_analysis_request_path, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" do %>
+        <svg class="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg>
+        New Analysis
+      <% end %>
+    </div>
+    
+    <!-- Analysis List -->
+    <div class="overflow-hidden">
+      <% if @analysis_requests.any? %>
+        <ul class="divide-y divide-gray-200">
+          <% @analysis_requests.each do |request| %>
+            <li>
+              <%= link_to request, class: "block hover:bg-gray-50 px-6 py-4 transition duration-150" do %>
+                <div class="flex items-center justify-between">
+                  <div class="flex-1">
+                    <div class="flex items-center justify-between">
+                      <p class="text-lg font-medium text-gray-900 truncate">
+                        <%= request.natural_language_query %>
+                      </p>
+                      <div class="ml-2 flex-shrink-0">
+                        <%= render 'shared/status_badge', status: request.status %>
+                      </div>
+                    </div>
+                    <div class="mt-2 flex items-center text-sm text-gray-500">
+                      <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"></path>
+                      </svg>
+                      <%= request.dataset&.name || "No dataset" %>
+                      <span class="mx-2">·</span>
+                      <time datetime="<%= request.created_at.iso8601 %>">
+                        <%= time_ago_in_words(request.created_at) %> ago
+                      </time>
+                    </div>
+                  </div>
+                  <svg class="ml-5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                </div>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+        
+        <!-- Pagination -->
+        <div class="bg-gray-50 px-6 py-3">
+          <%= paginate @analysis_requests %>
+        </div>
+      <% else %>
+        <!-- Empty State -->
+        <div class="text-center py-12">
+          <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+          </svg>
+          <h3 class="mt-2 text-sm font-medium text-gray-900">No analyses yet</h3>
+          <p class="mt-1 text-sm text-gray-500">Get started by creating your first analysis request.</p>
+          <div class="mt-6">
+            <%= link_to "New Analysis", new_analysis_request_path, class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

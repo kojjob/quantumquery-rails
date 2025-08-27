@@ -137,32 +137,47 @@ class QueryAnalysisOrchestrator
     
     # Generate code for this step
     code_prompt = build_code_generation_prompt(step)
-    generated_code = provider.generate_code(
+    result = provider.generate_completion(
       code_prompt, 
-      language: step.language,
       temperature: 0.2
     )
     
-    step.update!(generated_code: generated_code, status: :validating)
+    generated_code = result[:content]
+    step.update!(code: generated_code, status: 'validating')
     
-    # Validate the code
-    validation_result = validate_generated_code(generated_code, step.language)
+    # Track token usage
+    track_usage(result[:usage]) if result[:usage]
     
-    if validation_result[:valid]
-      step.update!(status: :executing)
-      
-      # Queue for execution in sandboxed environment
-      CodeExecutionJob.perform_later(step)
-      
-      # Wait for execution to complete (with timeout)
-      wait_for_step_completion(step)
+    # Execute code in sandboxed environment
+    executor = CodeExecutor.new(
+      code: generated_code,
+      language: step.language,
+      execution_step: step,
+      datasets: prepare_datasets_for_step(step)
+    )
+    
+    if executor.execute
+      Rails.logger.info "Step #{step.id} completed successfully"
     else
-      step.update!(
-        status: :failed,
-        error_message: validation_result[:errors].join(', ')
-      )
-      raise "Code validation failed: #{validation_result[:errors].join(', ')}"
+      raise "Step execution failed: #{step.error_message}"
     end
+  end
+  
+  def prepare_datasets_for_step(step)
+    # Prepare dataset references for the executor
+    datasets = {}
+    
+    if @analysis_request.dataset.present?
+      # Convert dataset to format executor can use
+      case @analysis_request.dataset.source_type
+      when 'csv_upload'
+        datasets['data'] = @analysis_request.dataset.file_path
+      when 'database'
+        datasets['db_config'] = @analysis_request.dataset.connection_config
+      end
+    end
+    
+    datasets
   end
 
   def interpret_results
