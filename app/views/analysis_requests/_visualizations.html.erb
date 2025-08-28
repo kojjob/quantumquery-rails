@@ -1,0 +1,70 @@
+<div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+  <div class="flex justify-between items-center mb-4">
+    <h3 class="text-lg font-semibold text-gray-900">Data Visualizations</h3>
+    <div class="flex space-x-2">
+      <select class="rounded-md border-gray-300 shadow-sm text-sm" 
+              data-action="change->chart#changeType">
+        <option value="bar">Bar Chart</option>
+        <option value="line">Line Chart</option>
+        <option value="pie">Pie Chart</option>
+        <option value="doughnut">Doughnut Chart</option>
+        <option value="radar">Radar Chart</option>
+        <option value="scatter">Scatter Plot</option>
+      </select>
+      <button type="button"
+              class="inline-flex items-center px-3 py-1 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+              data-action="click->chart#exportChart">
+        <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+        </svg>
+        Export
+      </button>
+    </div>
+  </div>
+
+  <% if @visualizations.present? %>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <% @visualizations.each do |viz| %>
+        <div class="bg-gray-50 rounded-lg p-4">
+          <div style="height: 300px;" 
+               data-controller="chart"
+               data-chart-type-value="<%= viz[:type] %>"
+               data-chart-data-value="<%= viz[:data].to_json %>"
+               data-chart-options-value="<%= viz[:options].to_json %>"
+               data-chart-chart-id-value="<%= viz[:id] %>">
+            <canvas data-chart-target="canvas"></canvas>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="text-center py-12 bg-gray-50 rounded-lg">
+      <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+      </svg>
+      <p class="mt-2 text-sm text-gray-600">No visualizations available yet</p>
+      <p class="text-xs text-gray-500 mt-1">Visualizations will appear here once the analysis generates data</p>
+    </div>
+  <% end %>
+</div>
+
+<!-- Summary Charts Section -->
+<% if @summary_charts.present? %>
+  <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mt-6">
+    <h3 class="text-lg font-semibold text-gray-900 mb-4">Analysis Summary</h3>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <% @summary_charts.each do |chart| %>
+        <div class="bg-gray-50 rounded-lg p-3">
+          <div style="height: 200px;" 
+               data-controller="chart"
+               data-chart-type-value="<%= chart[:type] %>"
+               data-chart-data-value="<%= chart[:data].to_json %>"
+               data-chart-options-value="<%= chart[:options].to_json %>"
+               data-chart-chart-id-value="<%= chart[:id] %>">
+            <canvas data-chart-target="canvas"></canvas>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>

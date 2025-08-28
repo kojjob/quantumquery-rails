@@ -1,0 +1,35 @@
+<div class="space-y-4">
+  <% if analysis_request.final_results.present? %>
+    <% if analysis_request.final_results['interpretation'].present? %>
+      <div class="bg-white rounded-lg p-4 border border-gray-200">
+        <h3 class="text-sm font-medium text-gray-900 mb-2">Analysis Interpretation</h3>
+        <p class="text-gray-700"><%= analysis_request.final_results['interpretation'] %></p>
+      </div>
+    <% end %>
+    
+    <% if analysis_request.final_results['detailed_results'].present? %>
+      <div class="bg-white rounded-lg p-4 border border-gray-200">
+        <h3 class="text-sm font-medium text-gray-900 mb-2">Detailed Results</h3>
+        <div class="space-y-2">
+          <% analysis_request.final_results['detailed_results'].each do |result| %>
+            <div class="text-sm">
+              <span class="font-medium text-gray-700"><%= result['step_type'] %>:</span>
+              <% if result['results'].present? %>
+                <pre class="mt-1 p-2 bg-gray-50 rounded text-xs overflow-x-auto"><%= JSON.pretty_generate(result['results']) rescue result['results'] %></pre>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+    
+    <% if analysis_request.metadata&.dig('total_cost').present? %>
+      <div class="bg-blue-50 rounded-lg p-3 text-sm">
+        <span class="font-medium text-blue-900">Estimated Cost:</span>
+        <span class="text-blue-700">$<%= "%.4f" % analysis_request.metadata['total_cost'] %></span>
+      </div>
+    <% end %>
+  <% else %>
+    <p class="text-gray-500 italic">No detailed results available</p>
+  <% end %>
+</div>

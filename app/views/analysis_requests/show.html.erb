@@ -1,0 +1,108 @@
+<%= turbo_stream_from @analysis_request %>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="bg-white shadow-xl rounded-lg">
+    <!-- Header with Status -->
+    <div class="px-6 py-4 border-b border-gray-200">
+      <div class="flex justify-between items-start">
+        <div class="flex-1">
+          <h1 class="text-2xl font-bold text-gray-900">Analysis Request</h1>
+          <p class="mt-2 text-lg text-gray-700"><%= @analysis_request.natural_language_query %></p>
+          <div class="mt-3 flex items-center space-x-4">
+            <span class="text-sm text-gray-500">
+              Created <%= time_ago_in_words(@analysis_request.created_at) %> ago
+            </span>
+            <span class="text-sm text-gray-500">•</span>
+            <span class="text-sm text-gray-500">
+              Dataset: <%= @analysis_request.dataset&.name %>
+            </span>
+          </div>
+        </div>
+        <div class="flex items-center space-x-4">
+          <div id="analysis-status">
+            <%= render 'analysis_status', analysis_request: @analysis_request %>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Progress Bar -->
+    <div id="progress-section" class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+      <%= render 'progress_bar', analysis_request: @analysis_request %>
+    </div>
+    
+    <!-- Execution Steps -->
+    <div class="p-6">
+      <h2 class="text-lg font-medium text-gray-900 mb-4">Execution Steps</h2>
+      
+      <div id="execution-steps" class="space-y-4">
+        <% @execution_steps.each do |step| %>
+          <%= turbo_frame_tag dom_id(step) do %>
+            <%= render 'execution_step', step: step %>
+          <% end %>
+        <% end %>
+        
+        <% if @execution_steps.empty? %>
+          <div class="text-center py-8 text-gray-500">
+            <svg class="mx-auto h-12 w-12 text-gray-400 animate-spin" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <p class="mt-2">Preparing analysis...</p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    
+    <!-- Results Section -->
+    <% if @analysis_request.completed? %>
+      <div class="px-6 py-4 border-t border-gray-200 bg-green-50">
+        <h2 class="text-lg font-medium text-gray-900 mb-4">Results</h2>
+        <div id="analysis-results">
+          <%= render 'results', analysis_request: @analysis_request %>
+        </div>
+      </div>
+      
+      <!-- Visualizations Section -->
+      <div class="px-6 py-4 border-t border-gray-200">
+        <% visualization_service = VisualizationService.new(@analysis_request) %>
+        <% @visualizations = @execution_steps.map { |step| visualization_service.generate_chart_data if step.result_data.present? }.compact %>
+        <% @summary_charts = visualization_service.generate_summary_charts %>
+        <%= render 'visualizations' %>
+      </div>
+    <% elsif @analysis_request.failed? %>
+      <div class="px-6 py-4 border-t border-gray-200 bg-red-50">
+        <h2 class="text-lg font-medium text-red-900 mb-2">Analysis Failed</h2>
+        <p class="text-red-700"><%= @analysis_request.error_message %></p>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<!-- Auto-refresh status while processing -->
+<% if @analysis_request.processing? %>
+  <script>
+    // Poll for status updates
+    const pollStatus = () => {
+      fetch(`<%= status_analysis_request_path(@analysis_request) %>`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.status === 'completed' || data.status === 'failed') {
+            // Reload page to show final results
+            Turbo.visit(window.location.href)
+          }
+        })
+    }
+    
+    // Poll every 2 seconds
+    const statusInterval = setInterval(() => {
+      if (document.hidden) return; // Don't poll when tab is not visible
+      pollStatus()
+    }, 2000)
+    
+    // Clean up on page leave
+    document.addEventListener('turbo:before-render', () => {
+      clearInterval(statusInterval)
+    })
+  </script>
+<% end %>

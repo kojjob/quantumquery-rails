@@ -1,0 +1,10 @@
+<div class="w-full">
+  <div class="flex justify-between text-xs text-gray-600 mb-1">
+    <span><%= analysis_request.current_step_description %></span>
+    <span><%= analysis_request.progress_percentage %>%</span>
+  </div>
+  <div class="w-full bg-gray-200 rounded-full h-2">
+    <div class="bg-gradient-to-r from-indigo-500 to-purple-600 h-2 rounded-full transition-all duration-500 ease-out"
+         style="width: <%= analysis_request.progress_percentage %>%"></div>
+  </div>
+</div>
