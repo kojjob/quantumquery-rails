@@ -1,0 +1,211 @@
+<div class="bg-white rounded-lg shadow p-6 mt-6">
+  <h3 class="text-lg font-medium text-gray-900 mb-4">Comments & Discussion</h3>
+  
+  <div id="comments-section" data-commentable-type="<%= commentable.class.name %>" data-commentable-id="<%= commentable.id %>">
+    <!-- Comment form -->
+    <% unless @read_only %>
+      <div class="mb-6">
+        <form id="new-comment-form" class="space-y-4">
+          <div>
+            <label for="comment-content" class="sr-only">Add your comment</label>
+            <textarea id="comment-content" rows="3" 
+                      class="block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                      placeholder="Add a comment..."></textarea>
+          </div>
+          <div class="flex justify-end">
+            <button type="submit" 
+                    class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+              Post Comment
+            </button>
+          </div>
+        </form>
+      </div>
+    <% end %>
+    
+    <!-- Comments list -->
+    <div id="comments-list" class="space-y-4">
+      <div class="text-center py-8 text-gray-500">
+        Loading comments...
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const commentsSection = document.getElementById('comments-section');
+  const commentsList = document.getElementById('comments-list');
+  const commentForm = document.getElementById('new-comment-form');
+  const commentContent = document.getElementById('comment-content');
+  
+  const commentableType = commentsSection.dataset.commentableType;
+  const commentableId = commentsSection.dataset.commentableId;
+  const baseUrl = `/${commentableType.toLowerCase().replace('::', '_')}s/${commentableId}/comments`;
+  
+  // Load comments
+  async function loadComments() {
+    try {
+      const response = await fetch(baseUrl, {
+        headers: {
+          'Accept': 'application/json',
+          'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content
+        }
+      });
+      
+      const comments = await response.json();
+      renderComments(comments);
+    } catch (error) {
+      console.error('Failed to load comments:', error);
+      commentsList.innerHTML = '<div class="text-red-600">Failed to load comments</div>';
+    }
+  }
+  
+  // Render comments
+  function renderComments(comments) {
+    if (comments.length === 0) {
+      commentsList.innerHTML = '<div class="text-center py-8 text-gray-500">No comments yet. Be the first to comment!</div>';
+      return;
+    }
+    
+    commentsList.innerHTML = comments.map(comment => `
+      <div class="comment border-l-4 border-gray-200 pl-4 py-2" data-comment-id="${comment.id}">
+        <div class="flex justify-between items-start">
+          <div class="flex-1">
+            <div class="flex items-center space-x-2">
+              <span class="font-medium text-gray-900">${comment.author}</span>
+              <span class="text-sm text-gray-500">${comment.formatted_time}</span>
+              ${comment.edited ? '<span class="text-xs text-gray-400">(edited)</span>' : ''}
+            </div>
+            <div class="mt-1 text-gray-700 comment-content">${escapeHtml(comment.content)}</div>
+          </div>
+          ${comment.can_edit || comment.can_delete ? `
+            <div class="ml-4 flex space-x-2">
+              ${comment.can_edit ? '<button class="text-sm text-gray-500 hover:text-gray-700 edit-comment">Edit</button>' : ''}
+              ${comment.can_delete ? '<button class="text-sm text-red-500 hover:text-red-700 delete-comment">Delete</button>' : ''}
+            </div>
+          ` : ''}
+        </div>
+      </div>
+    `).join('');
+    
+    attachCommentActions();
+  }
+  
+  // Escape HTML
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+  
+  // Attach comment actions
+  function attachCommentActions() {
+    // Edit buttons
+    document.querySelectorAll('.edit-comment').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const commentDiv = this.closest('.comment');
+        const commentId = commentDiv.dataset.commentId;
+        const contentDiv = commentDiv.querySelector('.comment-content');
+        const currentContent = contentDiv.textContent;
+        
+        contentDiv.innerHTML = `
+          <textarea class="block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">${currentContent}</textarea>
+          <div class="mt-2 flex space-x-2">
+            <button class="save-edit text-sm text-white bg-blue-600 px-3 py-1 rounded">Save</button>
+            <button class="cancel-edit text-sm text-gray-600 px-3 py-1 rounded">Cancel</button>
+          </div>
+        `;
+        
+        contentDiv.querySelector('.save-edit').addEventListener('click', () => saveEdit(commentId));
+        contentDiv.querySelector('.cancel-edit').addEventListener('click', loadComments);
+      });
+    });
+    
+    // Delete buttons
+    document.querySelectorAll('.delete-comment').forEach(btn => {
+      btn.addEventListener('click', async function() {
+        if (!confirm('Are you sure you want to delete this comment?')) return;
+        
+        const commentDiv = this.closest('.comment');
+        const commentId = commentDiv.dataset.commentId;
+        
+        try {
+          const response = await fetch(`${baseUrl}/${commentId}`, {
+            method: 'DELETE',
+            headers: {
+              'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content
+            }
+          });
+          
+          const result = await response.json();
+          if (result.success) {
+            loadComments();
+          }
+        } catch (error) {
+          console.error('Failed to delete comment:', error);
+        }
+      });
+    });
+  }
+  
+  // Save edit
+  async function saveEdit(commentId) {
+    const commentDiv = document.querySelector(`[data-comment-id="${commentId}"]`);
+    const newContent = commentDiv.querySelector('textarea').value;
+    
+    try {
+      const response = await fetch(`${baseUrl}/${commentId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content
+        },
+        body: JSON.stringify({ comment: { content: newContent } })
+      });
+      
+      const result = await response.json();
+      if (result.success) {
+        loadComments();
+      }
+    } catch (error) {
+      console.error('Failed to update comment:', error);
+    }
+  }
+  
+  // Submit new comment
+  commentForm?.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const content = commentContent.value.trim();
+    if (!content) return;
+    
+    try {
+      const response = await fetch(baseUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content
+        },
+        body: JSON.stringify({ comment: { content } })
+      });
+      
+      const result = await response.json();
+      if (result.success) {
+        commentContent.value = '';
+        loadComments();
+      } else {
+        alert('Error: ' + result.errors.join(', '));
+      }
+    } catch (error) {
+      console.error('Failed to post comment:', error);
+      alert('Failed to post comment');
+    }
+  });
+  
+  // Initial load
+  loadComments();
+  
+  // Refresh every 30 seconds
+  setInterval(loadComments, 30000);
+});
+</script>

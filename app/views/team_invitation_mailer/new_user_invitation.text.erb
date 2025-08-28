@@ -1,0 +1,20 @@
+You're invited to join <%= @organization.name %> on QuantumQuery
+
+Hi there,
+
+<% if @invited_by %>
+<%= @invited_by.full_name || @invited_by.email %> has invited you to join <%= @organization.name %> on QuantumQuery as a <%= @membership.role.humanize %>.
+<% else %>
+You've been invited to join <%= @organization.name %> on QuantumQuery as a <%= @membership.role.humanize %>.
+<% end %>
+
+What is QuantumQuery?
+QuantumQuery is a powerful natural language data analysis platform that lets you explore and analyze data using plain English queries. No SQL knowledge required!
+
+Accept this invitation and create your account by visiting:
+<%= @invitation_url %>
+
+This invitation will expire in 7 days. If you didn't expect this invitation, you can safely ignore this email.
+
+Best regards,
+The QuantumQuery Team

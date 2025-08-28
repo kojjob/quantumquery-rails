@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <div style="font-family: 'Helvetica Neue', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+      <h1 style="color: #333;">You've been invited to join <%= @organization.name %></h1>
+      
+      <p style="font-size: 16px; line-height: 1.5; color: #555;">
+        Hi <%= @membership.user.first_name || @membership.user.email %>,
+      </p>
+      
+      <p style="font-size: 16px; line-height: 1.5; color: #555;">
+        <% if @invited_by %>
+          <%= @invited_by.full_name || @invited_by.email %> has invited you to join 
+        <% else %>
+          You've been invited to join 
+        <% end %>
+        <strong><%= @organization.name %></strong> on QuantumQuery as a <%= @membership.role.humanize %>.
+      </p>
+      
+      <p style="font-size: 16px; line-height: 1.5; color: #555;">
+        Click the button below to accept this invitation:
+      </p>
+      
+      <div style="text-align: center; margin: 30px 0;">
+        <%= link_to 'Accept Invitation', 
+            @invitation_url,
+            style: "background-color: #3b82f6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-size: 16px; display: inline-block;" %>
+      </div>
+      
+      <p style="font-size: 14px; color: #888;">
+        Or copy and paste this link into your browser:
+      </p>
+      <p style="font-size: 14px; color: #3b82f6; word-break: break-all;">
+        <%= @invitation_url %>
+      </p>
+      
+      <hr style="border: none; border-top: 1px solid #e5e5e5; margin: 30px 0;">
+      
+      <p style="font-size: 14px; color: #888;">
+        This invitation will expire in 7 days. If you didn't expect this invitation, you can safely ignore this email.
+      </p>
+      
+      <p style="font-size: 14px; color: #888;">
+        Best regards,<br>
+        The QuantumQuery Team
+      </p>
+    </div>
+  </body>
+</html>
