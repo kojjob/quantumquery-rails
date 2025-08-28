@@ -8,6 +8,7 @@ class User < ApplicationRecord
   belongs_to :organization, optional: true
   has_many :analysis_requests, dependent: :destroy
   has_many :api_keys, dependent: :destroy
+  has_many :scheduled_reports, dependent: :destroy
 
   # Validations
   validates :email, presence: true, uniqueness: true

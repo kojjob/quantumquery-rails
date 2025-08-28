@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        color: #333;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      .header {
+        background-color: #ef4444;
+        color: white;
+        padding: 20px;
+        text-align: center;
+        border-radius: 8px 8px 0 0;
+      }
+      .content {
+        background-color: #fef2f2;
+        padding: 20px;
+        border: 1px solid #fecaca;
+        border-top: none;
+        border-radius: 0 0 8px 8px;
+      }
+      .footer {
+        text-align: center;
+        padding: 20px;
+        color: #6b7280;
+        font-size: 14px;
+      }
+      .button {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #3b82f6;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        margin-top: 15px;
+      }
+      .error-box {
+        background-color: white;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 15px 0;
+        border: 1px solid #fca5a5;
+      }
+      .label {
+        font-weight: bold;
+        color: #991b1b;
+      }
+    </style>
+  </head>
+  
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>Report Generation Failed</h1>
+        <p style="margin: 0; font-size: 18px;"><%= @scheduled_report.name %></p>
+      </div>
+      
+      <div class="content">
+        <p>Hello,</p>
+        
+        <p>We were unable to generate your scheduled report "<strong><%= @scheduled_report.name %></strong>". The report generation process encountered an error.</p>
+        
+        <div class="error-box">
+          <p><span class="label">Report Query:</span><br>
+          <%= @scheduled_report.query %></p>
+          
+          <p><span class="label">Attempted:</span><br>
+          <%= Time.current.strftime("%B %d, %Y at %l:%M %p %Z") %></p>
+          
+          <% if @error_message.present? %>
+            <p><span class="label">Error Details:</span><br>
+            <%= @error_message %></p>
+          <% end %>
+        </div>
+        
+        <p><strong>What you can do:</strong></p>
+        <ul>
+          <li>Check if your query is correctly formatted</li>
+          <li>Ensure the dataset is still accessible and contains data</li>
+          <li>Verify that any referenced columns or fields still exist</li>
+          <li>Try running the query manually to identify any issues</li>
+        </ul>
+        
+        <p>You can review and edit your scheduled report settings in your dashboard:</p>
+        
+        <%= link_to "View Scheduled Report", scheduled_report_url(@scheduled_report), class: "button", style: "color: white;" %>
+        
+        <div class="error-box" style="margin-top: 20px;">
+          <p style="margin: 0;"><span class="label">Next Attempt:</span><br>
+          <% if @scheduled_report.next_run_at && @scheduled_report.enabled? %>
+            We will attempt to generate this report again on <%= @scheduled_report.next_run_at.strftime("%B %d, %Y at %l:%M %p %Z") %>
+          <% else %>
+            This report is currently disabled or not scheduled for future runs.
+          <% end %>
+          </p>
+        </div>
+      </div>
+      
+      <div class="footer">
+        <p>This is an automated error notification from QuantumQuery.</p>
+        <p>If you continue to experience issues, please contact our support team.</p>
+        <p>&copy; <%= Date.current.year %> QuantumQuery. All rights reserved.</p>
+      </div>
+    </div>
+  </body>
+</html>
