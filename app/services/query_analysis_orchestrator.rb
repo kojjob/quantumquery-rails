@@ -8,11 +8,43 @@ class QueryAnalysisOrchestrator
     @execution_steps = []
     @total_tokens_used = { input: 0, output: 0 }
     @total_cost = 0.0
+    @cache_service = QueryCacheService.new(
+      analysis_request.organization,
+      analysis_request.dataset,
+      { 
+        user_id: analysis_request.user.id,
+        request_id: analysis_request.id,
+        ai_model: analysis_request.model_used,
+        skip_cache: analysis_request.user_options&.dig('skip_cache')
+      }
+    )
   end
 
   def perform
     Rails.logger.info "Starting analysis for request #{@analysis_request.id}"
     
+    # Check cache first
+    cached_result = @cache_service.execute_with_cache(@analysis_request.natural_language_query) do
+      perform_analysis
+    end
+    
+    if cached_result && cached_result != perform_analysis_result
+      Rails.logger.info "Using cached result for request #{@analysis_request.id}"
+      @analysis_request.update!(
+        final_results: cached_result,
+        metadata: @analysis_request.metadata.merge('cache_hit' => true)
+      )
+      @analysis_request.complete!
+      notify_completion
+      return cached_result
+    end
+    
+    perform_analysis_result
+  end
+  
+  private
+  
+  def perform_analysis
     @analysis_request.start_analysis!
     
     begin
@@ -35,12 +67,18 @@ class QueryAnalysisOrchestrator
       @analysis_request.complete!
       notify_completion
       
+      # Return the final results for caching
+      @analysis_request.final_results
+      
     rescue => e
       handle_error(e)
+      nil
     end
   end
-
-  private
+  
+  def perform_analysis_result
+    @perform_analysis_result ||= perform_analysis
+  end
 
   def analyze_intent
     Rails.logger.info "Stage 1: Analyzing query intent"

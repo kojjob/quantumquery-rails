@@ -10,6 +10,27 @@ Rails.application.routes.draw do
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
+  # Query Cache Management Routes
+  resources :query_caches do
+    collection do
+      get :statistics
+      post :clear_all
+      post :clear_expired
+    end
+    member do
+      post :refresh
+    end
+  end
+  
+  # Dataset-specific cache routes
+  resources :datasets do
+    resources :query_caches, only: [:index] do
+      collection do
+        get :statistics, to: 'query_caches#dataset_stats'
+      end
+    end
+  end
+
   # Defines the root path route ("/")
   root "pages#home"
 end

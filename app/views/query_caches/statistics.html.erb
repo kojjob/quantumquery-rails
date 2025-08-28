@@ -1,0 +1,183 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-gray-900">Cache Statistics</h1>
+    <%= link_to "Back to Cache Management", query_caches_path, class: "bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded" %>
+  </div>
+  
+  <!-- Overview Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+      <div class="px-4 py-5 sm:p-6">
+        <dt class="text-sm font-medium text-gray-500 truncate">
+          Total Cache Entries
+        </dt>
+        <dd class="mt-1 text-3xl font-semibold text-gray-900">
+          <%= @stats[:total_entries] %>
+        </dd>
+        <p class="text-sm text-gray-500 mt-2">
+          <span class="text-green-600"><%= @stats[:active_entries] %> active</span> / 
+          <span class="text-red-600"><%= @stats[:expired_entries] %> expired</span>
+        </p>
+      </div>
+    </div>
+    
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+      <div class="px-4 py-5 sm:p-6">
+        <dt class="text-sm font-medium text-gray-500 truncate">
+          Cache Size
+        </dt>
+        <dd class="mt-1 text-3xl font-semibold text-gray-900">
+          <%= @stats[:total_size_mb] %> MB
+        </dd>
+        <p class="text-sm text-gray-500 mt-2">
+          Total storage used
+        </p>
+      </div>
+    </div>
+    
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+      <div class="px-4 py-5 sm:p-6">
+        <dt class="text-sm font-medium text-gray-500 truncate">
+          Hit Rate
+        </dt>
+        <dd class="mt-1 text-3xl font-semibold text-gray-900">
+          <%= @stats[:hit_rate] %>%
+        </dd>
+        <p class="text-sm text-gray-500 mt-2">
+          Today's performance
+        </p>
+      </div>
+    </div>
+    
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+      <div class="px-4 py-5 sm:p-6">
+        <dt class="text-sm font-medium text-gray-500 truncate">
+          Cache Status
+        </dt>
+        <dd class="mt-1 text-3xl font-semibold <%= @stats[:cache_enabled] ? 'text-green-600' : 'text-red-600' %>">
+          <%= @stats[:cache_enabled] ? 'Enabled' : 'Disabled' %>
+        </dd>
+        <p class="text-sm text-gray-500 mt-2">
+          System configuration
+        </p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Cache by Dataset -->
+  <% if @stats[:cache_by_dataset].present? %>
+    <div class="bg-white shadow overflow-hidden sm:rounded-lg mb-8">
+      <div class="px-4 py-5 sm:px-6">
+        <h3 class="text-lg leading-6 font-medium text-gray-900">
+          Cache by Dataset
+        </h3>
+      </div>
+      <div class="border-t border-gray-200">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Dataset
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Total Entries
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Active
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Size (MB)
+              </th>
+              <th scope="col" class="relative px-6 py-3">
+                <span class="sr-only">Actions</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <% @stats[:cache_by_dataset].each do |dataset_stat| %>
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                  <%= dataset_stat[:name] %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <%= dataset_stat[:entries] %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    <%= dataset_stat[:active] %>
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <%= dataset_stat[:size_mb] %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <%= link_to "View Details", query_caches_path(dataset_id: dataset_stat[:name]), class: "text-indigo-600 hover:text-indigo-900" %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  <% end %>
+  
+  <!-- Popular Queries -->
+  <% if @stats[:popular_queries].present? %>
+    <div class="bg-white shadow overflow-hidden sm:rounded-lg mb-8">
+      <div class="px-4 py-5 sm:px-6">
+        <h3 class="text-lg leading-6 font-medium text-gray-900">
+          Most Popular Cached Queries
+        </h3>
+      </div>
+      <div class="border-t border-gray-200">
+        <ul class="divide-y divide-gray-200">
+          <% @stats[:popular_queries].each do |query, count| %>
+            <li class="px-4 py-4 sm:px-6">
+              <div class="flex items-center justify-between">
+                <p class="text-sm font-medium text-gray-900 truncate">
+                  <%= query.truncate(100) %>
+                </p>
+                <div class="ml-2 flex-shrink-0 flex">
+                  <p class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                    <%= count %> accesses
+                  </p>
+                </div>
+              </div>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+  
+  <!-- Recent Activity -->
+  <% if @stats[:recent_activity].present? %>
+    <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+      <div class="px-4 py-5 sm:px-6">
+        <h3 class="text-lg leading-6 font-medium text-gray-900">
+          Recent Cache Activity
+        </h3>
+      </div>
+      <div class="border-t border-gray-200">
+        <ul class="divide-y divide-gray-200">
+          <% @stats[:recent_activity].each do |activity| %>
+            <li class="px-4 py-4 sm:px-6">
+              <div class="flex items-center justify-between">
+                <div class="flex-1">
+                  <p class="text-sm font-medium text-gray-900">
+                    <%= activity[:query] %>
+                  </p>
+                  <p class="text-sm text-gray-500">
+                    Dataset: <%= activity[:dataset] %> | 
+                    Accessed: <%= time_ago_in_words(activity[:accessed_at]) %> ago | 
+                    Total accesses: <%= activity[:access_count] %>
+                  </p>
+                </div>
+              </div>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+</div>
