@@ -33,11 +33,12 @@ gem "replicate-ruby" # Llama, Mixtral and other open models
 gem "csv" # Required for Ruby 3.4+
 gem "pg_search" # PostgreSQL full-text search
 gem "connection_pool" # Database connection pooling
-# gem "mysql2" # MySQL connector - uncomment after installing mysql dependencies
+# gem "mysql2", "~> 0.5" # MySQL connector - requires brew install mysql zstd
 gem "mongo" # MongoDB connector
 gem "aws-sdk-s3" # S3 integration
 gem "roo" # Excel/CSV processing
 gem "caxlsx" # Excel generation
+gem "charlock_holmes", "~> 0.7" # For encoding detection
 
 # Security and authentication
 gem "devise" # Authentication framework
@@ -80,6 +81,10 @@ gem "thruster", require: false
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
+
+# Export functionality
+gem "wicked_pdf" # PDF generation
+gem "wkhtmltopdf-binary" # Binary for PDF generation
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

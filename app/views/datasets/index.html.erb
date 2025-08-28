@@ -1,0 +1,99 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="bg-white shadow-xl rounded-lg">
+    <!-- Header -->
+    <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+      <div>
+        <h1 class="text-2xl font-bold text-gray-900">Data Sources</h1>
+        <p class="mt-1 text-sm text-gray-500">Connect and manage your databases and files</p>
+      </div>
+      <%= link_to new_dataset_path, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" do %>
+        <svg class="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg>
+        Add Data Source
+      <% end %>
+    </div>
+    
+    <!-- Dataset Grid -->
+    <div class="p-6">
+      <% if @datasets.any? %>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <% @datasets.each do |dataset| %>
+            <div class="bg-white border border-gray-200 rounded-lg hover:shadow-lg transition-shadow">
+              <%= link_to dataset, class: "block p-6" do %>
+                <!-- Dataset Icon -->
+                <div class="flex items-center justify-between mb-4">
+                  <div class="flex items-center">
+                    <% case dataset.source_type %>
+                    <% when 'postgresql' %>
+                      <div class="h-12 w-12 rounded-lg bg-blue-100 flex items-center justify-center">
+                        <svg class="h-8 w-8 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        </svg>
+                      </div>
+                    <% when 'mysql' %>
+                      <div class="h-12 w-12 rounded-lg bg-orange-100 flex items-center justify-center">
+                        <svg class="h-8 w-8 text-orange-600" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                        </svg>
+                      </div>
+                    <% when 'csv_upload' %>
+                      <div class="h-12 w-12 rounded-lg bg-green-100 flex items-center justify-center">
+                        <svg class="h-8 w-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                      </div>
+                    <% else %>
+                      <div class="h-12 w-12 rounded-lg bg-gray-100 flex items-center justify-center">
+                        <svg class="h-8 w-8 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"></path>
+                        </svg>
+                      </div>
+                    <% end %>
+                  </div>
+                  <%= render 'shared/status_badge', status: dataset.status %>
+                </div>
+                
+                <!-- Dataset Info -->
+                <h3 class="text-lg font-medium text-gray-900 mb-1"><%= dataset.name %></h3>
+                <p class="text-sm text-gray-500 mb-3"><%= dataset.source_type.humanize %></p>
+                
+                <% if dataset.description.present? %>
+                  <p class="text-sm text-gray-600 mb-3"><%= dataset.description.truncate(100) %></p>
+                <% end %>
+                
+                <!-- Stats -->
+                <div class="space-y-2 text-sm">
+                  <% if dataset.schema_metadata.present? %>
+                    <div class="flex justify-between">
+                      <span class="text-gray-500">Tables:</span>
+                      <span class="font-medium text-gray-900"><%= dataset.schema_metadata['tables']&.count || 0 %></span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span class="text-gray-500">Last Connected:</span>
+                      <span class="font-medium text-gray-900">
+                        <%= dataset.last_connected_at ? time_ago_in_words(dataset.last_connected_at) + ' ago' : 'Never' %>
+                      </span>
+                    </div>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <!-- Empty State -->
+        <div class="text-center py-12">
+          <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"></path>
+          </svg>
+          <h3 class="mt-2 text-sm font-medium text-gray-900">No data sources</h3>
+          <p class="mt-1 text-sm text-gray-500">Get started by connecting your first data source.</p>
+          <div class="mt-6">
+            <%= link_to "Add Data Source", new_dataset_path, class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
