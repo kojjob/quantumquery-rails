@@ -1,5 +1,6 @@
 class DatasetsController < ApplicationController
   before_action :authenticate_user!
+  before_action :ensure_organization!
   before_action :set_dataset, only: [:show, :edit, :update, :destroy, :test_connection, :fetch_schema, :sample_data]
   
   def index
@@ -30,6 +31,23 @@ class DatasetsController < ApplicationController
     else
       render :new, status: :unprocessable_entity
     end
+  end
+  
+  def edit
+    # View will be rendered
+  end
+  
+  def update
+    if @dataset.update(dataset_params)
+      redirect_to @dataset, notice: 'Dataset updated successfully!'
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
+  
+  def destroy
+    @dataset.destroy
+    redirect_to datasets_path, notice: 'Dataset was successfully deleted.'
   end
   
   def test_connection

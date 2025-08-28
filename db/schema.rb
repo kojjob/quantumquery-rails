@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_27_222057) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_28_000611) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -27,6 +27,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_27_222057) do
     t.text "error_message"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "completed_at"
     t.index ["dataset_id"], name: "index_analysis_requests_on_dataset_id"
     t.index ["organization_id"], name: "index_analysis_requests_on_organization_id"
     t.index ["user_id"], name: "index_analysis_requests_on_user_id"
@@ -43,6 +44,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_27_222057) do
     t.text "last_error"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "created_by_id"
+    t.jsonb "metadata", default: {}
+    t.datetime "last_connected_at"
+    t.index ["created_by_id"], name: "index_datasets_on_created_by_id"
     t.index ["organization_id"], name: "index_datasets_on_organization_id"
   end
 
@@ -98,6 +103,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_27_222057) do
   add_foreign_key "analysis_requests", "organizations"
   add_foreign_key "analysis_requests", "users"
   add_foreign_key "datasets", "organizations"
+  add_foreign_key "datasets", "users", column: "created_by_id"
   add_foreign_key "execution_steps", "analysis_requests"
   add_foreign_key "users", "organizations"
 end

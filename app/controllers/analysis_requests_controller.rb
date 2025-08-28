@@ -1,6 +1,7 @@
 class AnalysisRequestsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_analysis_request, only: [:show, :edit, :update, :destroy, :status]
+  before_action :ensure_organization!
+  before_action :set_analysis_request, only: [:show, :destroy, :status, :export]
   
   def index
     @analysis_requests = current_user.analysis_requests
@@ -47,6 +48,44 @@ class AnalysisRequestsController < ApplicationController
         }
       }
     }
+  end
+  
+  def destroy
+    @analysis_request.destroy
+    redirect_to analysis_requests_path, notice: 'Analysis request was successfully deleted.'
+  end
+  
+  def export
+    export_service = AnalysisExportService.new(@analysis_request, params[:format])
+    
+    respond_to do |format|
+      format.pdf do
+        @export_data = export_service.export
+        render pdf: "analysis_request_#{@analysis_request.id}",
+               template: 'analysis_requests/export',
+               layout: 'pdf',
+               page_size: 'A4',
+               orientation: 'portrait',
+               margin: { top: 20, bottom: 20, left: 15, right: 15 },
+               footer: { right: '[page] of [topage]', font_size: 9 }
+      end
+      
+      format.xlsx do
+        send_data export_service.export.read,
+                  filename: "analysis_request_#{@analysis_request.id}.xlsx",
+                  type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                  disposition: 'attachment'
+      end
+      
+      format.csv do
+        send_data export_service.export,
+                  filename: "analysis_request_#{@analysis_request.id}.csv",
+                  type: 'text/csv',
+                  disposition: 'attachment'
+      end
+    end
+  rescue ArgumentError => e
+    redirect_to @analysis_request, alert: e.message
   end
   
   private

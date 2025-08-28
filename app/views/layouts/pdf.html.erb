@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Analysis Request Export</title>
+    <style>
+      body {
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-size: 12px;
+        line-height: 1.6;
+        color: #333;
+        margin: 0;
+        padding: 0;
+      }
+
+      .header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px 30px;
+        margin-bottom: 30px;
+      }
+
+      .header h1 {
+        margin: 0;
+        font-size: 24px;
+        font-weight: 600;
+      }
+
+      .header .subtitle {
+        font-size: 14px;
+        opacity: 0.9;
+        margin-top: 5px;
+      }
+
+      .container {
+        padding: 0 30px;
+      }
+
+      .section {
+        margin-bottom: 30px;
+        background: #f9fafb;
+        border-radius: 8px;
+        padding: 20px;
+        page-break-inside: avoid;
+      }
+
+      .section-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 15px;
+        border-bottom: 2px solid #e5e7eb;
+        padding-bottom: 8px;
+      }
+
+      .info-grid {
+        display: table;
+        width: 100%;
+        margin-bottom: 10px;
+      }
+
+      .info-row {
+        display: table-row;
+      }
+
+      .info-label {
+        display: table-cell;
+        font-weight: 600;
+        color: #4b5563;
+        padding: 5px 15px 5px 0;
+        width: 30%;
+        vertical-align: top;
+      }
+
+      .info-value {
+        display: table-cell;
+        color: #1f2937;
+        padding: 5px 0;
+        vertical-align: top;
+      }
+
+      .query-box {
+        background: white;
+        border-left: 4px solid #667eea;
+        padding: 15px;
+        margin: 15px 0;
+        font-size: 14px;
+        font-style: italic;
+        color: #374151;
+      }
+
+      .status-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+
+      .status-completed {
+        background: #d1fae5;
+        color: #065f46;
+      }
+
+      .status-failed {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+
+      .status-processing {
+        background: #fef3c7;
+        color: #92400e;
+      }
+
+      .status-pending {
+        background: #e0e7ff;
+        color: #3730a3;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+      }
+
+      th {
+        background: #f3f4f6;
+        color: #374151;
+        font-weight: 600;
+        padding: 10px;
+        text-align: left;
+        border-bottom: 2px solid #d1d5db;
+        font-size: 11px;
+        text-transform: uppercase;
+      }
+
+      td {
+        padding: 10px;
+        border-bottom: 1px solid #e5e7eb;
+        color: #4b5563;
+      }
+
+      tr:last-child td {
+        border-bottom: none;
+      }
+
+      .footer {
+        margin-top: 50px;
+        padding: 20px 30px;
+        background: #f9fafb;
+        border-top: 1px solid #e5e7eb;
+        font-size: 10px;
+        color: #6b7280;
+        text-align: center;
+      }
+
+      .timestamp {
+        color: #9ca3af;
+        font-size: 11px;
+      }
+
+      .metric-box {
+        display: inline-block;
+        background: white;
+        border-radius: 6px;
+        padding: 10px 15px;
+        margin: 5px;
+        border: 1px solid #e5e7eb;
+      }
+
+      .metric-value {
+        font-size: 20px;
+        font-weight: bold;
+        color: #1f2937;
+      }
+
+      .metric-label {
+        font-size: 11px;
+        color: #6b7280;
+        text-transform: uppercase;
+        margin-top: 2px;
+      }
+
+      .code-block {
+        background: #1f2937;
+        color: #e5e7eb;
+        padding: 15px;
+        border-radius: 6px;
+        font-family: 'Courier New', monospace;
+        font-size: 11px;
+        overflow-x: auto;
+        margin: 10px 0;
+      }
+
+      .visualization-placeholder {
+        background: #f3f4f6;
+        border: 2px dashed #d1d5db;
+        padding: 30px;
+        text-align: center;
+        color: #9ca3af;
+        border-radius: 6px;
+        margin: 15px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <%= yield %>
+  </body>
+</html>

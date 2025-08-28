@@ -1,6 +1,7 @@
 class Dataset < ApplicationRecord
   # Associations
   belongs_to :organization
+  belongs_to :created_by, class_name: 'User', optional: true
   has_many :analysis_requests, dependent: :restrict_with_error
   has_one_attached :data_file # For CSV/Excel uploads
   
@@ -39,6 +40,9 @@ class Dataset < ApplicationRecord
   store_accessor :connection_config, :host, :port, :database, :username, :encrypted_password, 
                  :ssl_enabled, :connection_pool_size
   
+  # Alias for compatibility
+  alias_attribute :source_type, :data_source_type
+  
   # Scopes
   scope :active, -> { where(status: [:connected, :ready]) }
   scope :by_type, ->(type) { where(data_source_type: type) }
@@ -70,5 +74,14 @@ class Dataset < ApplicationRecord
     # Estimate from row counts
     total_rows = row_counts&.values&.sum || 0
     total_rows * 0.001 # Rough estimate: 1KB per row
+  end
+  
+  # Helper methods for views
+  def csv_upload?
+    data_source_type == 'csv_upload'
+  end
+  
+  def last_connected_at
+    updated_at if status_connected? || status_ready?
   end
 end

@@ -1,0 +1,211 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <!-- Header -->
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900">Dashboard</h1>
+    <p class="mt-2 text-gray-600">Welcome back! Here's your data science overview.</p>
+  </div>
+  
+  <!-- Quick Actions -->
+  <div class="bg-white rounded-lg shadow mb-8">
+    <div class="px-6 py-4 border-b border-gray-200">
+      <h2 class="text-lg font-semibold text-gray-900">Quick Actions</h2>
+    </div>
+    <div class="p-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <%= link_to new_analysis_request_path, class: "flex items-center p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-indigo-500 hover:bg-indigo-50 transition-colors" do %>
+          <svg class="h-12 w-12 text-indigo-600 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+          </svg>
+          <div>
+            <h3 class="font-semibold text-gray-900">New Analysis</h3>
+            <p class="text-sm text-gray-600">Ask a question in natural language</p>
+          </div>
+        <% end %>
+        
+        <%= link_to new_dataset_path, class: "flex items-center p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-indigo-500 hover:bg-indigo-50 transition-colors" do %>
+          <svg class="h-12 w-12 text-green-600 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"></path>
+          </svg>
+          <div>
+            <h3 class="font-semibold text-gray-900">Connect Data</h3>
+            <p class="text-sm text-gray-600">Add database or upload CSV</p>
+          </div>
+        <% end %>
+        
+        <%= link_to analysis_requests_path, class: "flex items-center p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-indigo-500 hover:bg-indigo-50 transition-colors" do %>
+          <svg class="h-12 w-12 text-purple-600 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+          <div>
+            <h3 class="font-semibold text-gray-900">View Analyses</h3>
+            <p class="text-sm text-gray-600">Browse your analysis history</p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Statistics Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+    <div class="bg-white rounded-lg shadow p-6">
+      <div class="flex items-center">
+        <div class="p-3 bg-indigo-100 rounded-full">
+          <svg class="h-6 w-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+          </svg>
+        </div>
+        <div class="ml-4">
+          <p class="text-sm text-gray-500">Total Analyses</p>
+          <p class="text-2xl font-semibold text-gray-900">
+            <%= @stats[:total_analyses] || 0 %>
+          </p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow p-6">
+      <div class="flex items-center">
+        <div class="p-3 bg-green-100 rounded-full">
+          <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"></path>
+          </svg>
+        </div>
+        <div class="ml-4">
+          <p class="text-sm text-gray-500">Data Sources</p>
+          <p class="text-2xl font-semibold text-gray-900">
+            <%= @stats[:data_sources] || 0 %>
+          </p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow p-6">
+      <div class="flex items-center">
+        <div class="p-3 bg-yellow-100 rounded-full">
+          <svg class="h-6 w-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+          </svg>
+        </div>
+        <div class="ml-4">
+          <p class="text-sm text-gray-500">Active Now</p>
+          <p class="text-2xl font-semibold text-gray-900">
+            <%= @stats[:active_analyses] || 0 %>
+          </p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow p-6">
+      <div class="flex items-center">
+        <div class="p-3 bg-purple-100 rounded-full">
+          <svg class="h-6 w-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+        <div class="ml-4">
+          <p class="text-sm text-gray-500">Avg. Time</p>
+          <p class="text-2xl font-semibold text-gray-900">
+            <%= @stats[:avg_execution_time] || '0s' %>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Recent Activity -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <!-- Recent Analyses -->
+    <div class="bg-white rounded-lg shadow">
+      <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+        <h2 class="text-lg font-semibold text-gray-900">Recent Analyses</h2>
+        <%= link_to "View All →", analysis_requests_path, class: "text-sm text-indigo-600 hover:text-indigo-800" %>
+      </div>
+      <div class="p-6">
+        <% if @recent_analyses&.any? %>
+          <div class="space-y-4">
+            <% @recent_analyses.each do |analysis| %>
+              <%= link_to analysis_request_path(analysis), class: "block p-4 border rounded-lg hover:bg-gray-50 transition-colors" do %>
+                <div class="flex justify-between items-start">
+                  <div class="flex-1">
+                    <p class="font-medium text-gray-900 line-clamp-2">
+                      <%= truncate(analysis.prompt, length: 100) %>
+                    </p>
+                    <p class="text-sm text-gray-500 mt-1">
+                      <%= time_ago_in_words(analysis.created_at) %> ago
+                    </p>
+                  </div>
+                  <div class="ml-4">
+                    <%= render 'shared/status_badge', status: analysis.status %>
+                  </div>
+                </div>
+              <% end %>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="text-center py-8">
+            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+            <p class="mt-2 text-sm text-gray-500">No analyses yet</p>
+            <%= link_to "Create your first analysis", new_analysis_request_path, 
+                class: "mt-4 inline-block text-indigo-600 hover:text-indigo-800" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    
+    <!-- Data Sources -->
+    <div class="bg-white rounded-lg shadow">
+      <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+        <h2 class="text-lg font-semibold text-gray-900">Data Sources</h2>
+        <%= link_to "Manage →", datasets_path, class: "text-sm text-indigo-600 hover:text-indigo-800" %>
+      </div>
+      <div class="p-6">
+        <% if @data_sources&.any? %>
+          <div class="space-y-4">
+            <% @data_sources.each do |dataset| %>
+              <%= link_to dataset_path(dataset), class: "block p-4 border rounded-lg hover:bg-gray-50 transition-colors" do %>
+                <div class="flex items-center">
+                  <% case dataset.source_type %>
+                  <% when 'postgresql' %>
+                    <div class="h-10 w-10 rounded-lg bg-blue-100 flex items-center justify-center">
+                      <svg class="h-6 w-6 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                      </svg>
+                    </div>
+                  <% when 'mysql' %>
+                    <div class="h-10 w-10 rounded-lg bg-orange-100 flex items-center justify-center">
+                      <svg class="h-6 w-6 text-orange-600" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                      </svg>
+                    </div>
+                  <% when 'csv_upload' %>
+                    <div class="h-10 w-10 rounded-lg bg-green-100 flex items-center justify-center">
+                      <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                      </svg>
+                    </div>
+                  <% end %>
+                  <div class="ml-4 flex-1">
+                    <p class="font-medium text-gray-900"><%= dataset.name %></p>
+                    <p class="text-sm text-gray-500"><%= dataset.source_type.humanize %></p>
+                  </div>
+                  <%= render 'shared/status_badge', status: dataset.status %>
+                </div>
+              <% end %>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="text-center py-8">
+            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"></path>
+            </svg>
+            <p class="mt-2 text-sm text-gray-500">No data sources connected</p>
+            <%= link_to "Connect your first data source", new_dataset_path, 
+                class: "mt-4 inline-block text-indigo-600 hover:text-indigo-800" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

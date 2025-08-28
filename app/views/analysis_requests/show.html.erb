@@ -18,8 +18,58 @@
             </span>
           </div>
         </div>
-        <div id="analysis-status">
-          <%= render 'analysis_status', analysis_request: @analysis_request %>
+        <div class="flex items-center space-x-4">
+          <div id="analysis-status">
+            <%= render 'analysis_status', analysis_request: @analysis_request %>
+          </div>
+          
+          <!-- Export Dropdown -->
+          <div class="relative" data-controller="dropdown">
+            <button type="button" 
+                    data-action="click->dropdown#toggle click@window->dropdown#hide"
+                    class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+              <svg class="mr-2 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              Export
+              <svg class="ml-2 h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+            </button>
+            
+            <div data-dropdown-target="menu"
+                 class="hidden absolute right-0 z-10 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+              <div class="py-1" role="menu">
+                <%= link_to export_analysis_request_path(@analysis_request, format: :pdf),
+                            class: "group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900",
+                            target: "_blank",
+                            role: "menuitem" do %>
+                  <svg class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                  </svg>
+                  Export as PDF
+                <% end %>
+                
+                <%= link_to export_analysis_request_path(@analysis_request, format: :xlsx),
+                            class: "group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900",
+                            role: "menuitem" do %>
+                  <svg class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v1a1 1 0 01-1 1H5a2 2 0 00-2 2M9 17v1a1 1 0 001 1h3m-4-1v-1m0 1h4m0 0v1a1 1 0 001 1h3a2 2 0 002-2M13 17v-1m0 1h4m-11-5h14a1 1 0 011 1v3a1 1 0 01-1 1H3a1 1 0 01-1-1v-3a1 1 0 011-1zm4-8h6m-3-3v6" />
+                  </svg>
+                  Export as Excel
+                <% end %>
+                
+                <%= link_to export_analysis_request_path(@analysis_request, format: :csv),
+                            class: "group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900",
+                            role: "menuitem" do %>
+                  <svg class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                  </svg>
+                  Export as CSV
+                <% end %>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

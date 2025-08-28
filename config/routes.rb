@@ -5,10 +5,12 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
   
   authenticated :user do
-    root "analysis_requests#index", as: :authenticated_root
+    root "dashboard#index", as: :authenticated_root
   end
   
   root "pages#home"
+  
+  get 'dashboard', to: 'dashboard#index', as: :dashboard
   
   resources :analysis_requests do
     member do

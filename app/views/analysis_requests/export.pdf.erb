@@ -1,0 +1,223 @@
+<div class="header">
+  <h1>QuantumQuery Analysis Report</h1>
+  <div class="subtitle">Natural Language Data Science Platform</div>
+</div>
+
+<div class="container">
+  <!-- Query Section -->
+  <div class="section">
+    <h2 class="section-title">Analysis Query</h2>
+    <div class="query-box">
+      <%= @export_data[:analysis].natural_language_query %>
+    </div>
+    <div class="info-grid">
+      <div class="info-row">
+        <div class="info-label">Status</div>
+        <div class="info-value">
+          <span class="status-badge status-<%= @export_data[:analysis].status %>">
+            <%= @export_data[:analysis].status.humanize %>
+          </span>
+        </div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">Dataset</div>
+        <div class="info-value"><%= @export_data[:metadata][:dataset] || 'N/A' %></div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">Created</div>
+        <div class="info-value">
+          <%= @export_data[:metadata][:created_at]&.strftime("%B %d, %Y at %I:%M %p") %>
+        </div>
+      </div>
+      <% if @export_data[:metadata][:completed_at] %>
+        <div class="info-row">
+          <div class="info-label">Completed</div>
+          <div class="info-value">
+            <%= @export_data[:metadata][:completed_at].strftime("%B %d, %Y at %I:%M %p") %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Summary Metrics -->
+  <div class="section">
+    <h2 class="section-title">Analysis Summary</h2>
+    <div style="text-align: center;">
+      <div class="metric-box">
+        <div class="metric-value"><%= @export_data[:summary][:total_steps] || 0 %></div>
+        <div class="metric-label">Total Steps</div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-value"><%= @export_data[:summary][:completed_steps] || 0 %></div>
+        <div class="metric-label">Completed</div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-value"><%= @export_data[:metadata][:complexity_score] || 'N/A' %></div>
+        <div class="metric-label">Complexity</div>
+      </div>
+      <% if @export_data[:metadata][:total_execution_time] %>
+        <div class="metric-box">
+          <div class="metric-value"><%= "%.2f" % @export_data[:metadata][:total_execution_time] %>s</div>
+          <div class="metric-label">Execution Time</div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Execution Steps -->
+  <div class="section">
+    <h2 class="section-title">Execution Steps</h2>
+    <% if @export_data[:execution_steps].any? %>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Step Type</th>
+            <th>Status</th>
+            <th>Language</th>
+            <th>Duration</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @export_data[:execution_steps].each_with_index do |step, index| %>
+            <tr>
+              <td><%= index + 1 %></td>
+              <td><%= step.step_type.humanize %></td>
+              <td>
+                <span class="status-badge status-<%= step.status %>">
+                  <%= step.status %>
+                </span>
+              </td>
+              <td><%= step.language || 'N/A' %></td>
+              <td><%= step.execution_time_ms ? "#{step.execution_time_ms}ms" : 'N/A' %></td>
+              <td><%= step.description || 'N/A' %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <p style="color: #6b7280;">No execution steps recorded.</p>
+    <% end %>
+  </div>
+
+  <!-- Results Section -->
+  <% if @export_data[:analysis].completed? %>
+    <div class="section">
+      <h2 class="section-title">Analysis Results</h2>
+      
+      <% if @export_data[:analysis].final_results.present? %>
+        <% if @export_data[:analysis].final_results['interpretation'].present? %>
+          <div class="info-grid">
+            <div class="info-row">
+              <div class="info-label">Interpretation</div>
+              <div class="info-value">
+                <%= @export_data[:analysis].final_results['interpretation'] %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+        
+        <% if @export_data[:analysis].final_results['detailed_results'].present? %>
+          <h3 style="margin-top: 20px; font-size: 14px; color: #374151;">Detailed Results</h3>
+          <% @export_data[:analysis].final_results['detailed_results'].each do |result| %>
+            <div style="margin-bottom: 15px;">
+              <strong><%= result['step_type'] %>:</strong>
+              <% if result['results'].present? %>
+                <div class="code-block">
+                  <%= result['results'].to_json %>
+                </div>
+              <% end %>
+              <% if result['visualizations'].present? && result['visualizations'].any? %>
+                <div class="visualization-placeholder">
+                  <p>📊 Visualization: <%= result['visualizations'].count %> chart(s) generated</p>
+                  <small>Please view in the web interface for interactive charts</small>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        <% end %>
+      <% else %>
+        <p style="color: #6b7280;">No results data available.</p>
+      <% end %>
+    </div>
+  <% end %>
+
+  <!-- Metadata Section -->
+  <div class="section">
+    <h2 class="section-title">Technical Details</h2>
+    
+    <% if @export_data[:analysis].analyzed_intent.present? %>
+      <h3 style="font-size: 14px; color: #374151;">Intent Analysis</h3>
+      <div class="info-grid">
+        <% @export_data[:analysis].analyzed_intent.each do |key, value| %>
+          <div class="info-row">
+            <div class="info-label"><%= key.humanize %></div>
+            <div class="info-value"><%= value.is_a?(Array) ? value.join(", ") : value %></div>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+    
+    <% if @export_data[:summary][:models_used].present? %>
+      <h3 style="margin-top: 20px; font-size: 14px; color: #374151;">AI Models Used</h3>
+      <div class="info-grid">
+        <% @export_data[:summary][:models_used].each do |task, model| %>
+          <div class="info-row">
+            <div class="info-label"><%= task.humanize %></div>
+            <div class="info-value"><%= model %></div>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if @export_data[:summary][:tokens_used].present? %>
+      <h3 style="margin-top: 20px; font-size: 14px; color: #374151;">Resource Usage</h3>
+      <div class="info-grid">
+        <div class="info-row">
+          <div class="info-label">Input Tokens</div>
+          <div class="info-value"><%= @export_data[:summary][:tokens_used]['input'] || 0 %></div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">Output Tokens</div>
+          <div class="info-value"><%= @export_data[:summary][:tokens_used]['output'] || 0 %></div>
+        </div>
+        <% if @export_data[:summary][:total_cost] %>
+          <div class="info-row">
+            <div class="info-label">Estimated Cost</div>
+            <div class="info-value">$<%= "%.4f" % @export_data[:summary][:total_cost] %></div>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Organization Info -->
+  <div class="section">
+    <h2 class="section-title">Report Information</h2>
+    <div class="info-grid">
+      <div class="info-row">
+        <div class="info-label">Organization</div>
+        <div class="info-value"><%= @export_data[:metadata][:organization] %></div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">User</div>
+        <div class="info-value"><%= @export_data[:metadata][:user] %></div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">Report Generated</div>
+        <div class="info-value"><%= Time.current.strftime("%B %d, %Y at %I:%M %p") %></div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">Analysis ID</div>
+        <div class="info-value">#<%= @export_data[:analysis].id %></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <p>© <%= Date.current.year %> QuantumQuery - Natural Language Data Science Platform</p>
+  <p>This report contains confidential information. Please handle with appropriate security measures.</p>
+</div>

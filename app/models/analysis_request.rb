@@ -54,6 +54,7 @@ class AnalysisRequest < ApplicationRecord
     event :complete do
       transitions from: :interpreting_results, to: :completed
       after do
+        update(completed_at: Time.current)
         broadcast_status_update
         notify_user_of_completion
       end

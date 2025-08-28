@@ -1,0 +1,213 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="bg-white shadow-xl rounded-lg">
+    <!-- Header -->
+    <div class="px-6 py-4 border-b border-gray-200">
+      <div class="flex justify-between items-start">
+        <div>
+          <h1 class="text-2xl font-bold text-gray-900"><%= @dataset.name %></h1>
+          <p class="mt-1 text-sm text-gray-500">
+            <%= @dataset.source_type.humanize %> Data Source
+            <% if @dataset.description.present? %>
+              • <%= @dataset.description %>
+            <% end %>
+          </p>
+        </div>
+        <div class="flex items-center space-x-2">
+          <%= render 'shared/status_badge', status: @dataset.status %>
+          <%= link_to "Edit", edit_dataset_path(@dataset), 
+              class: "px-3 py-1 text-sm border border-gray-300 rounded-md hover:bg-gray-50" %>
+          <%= link_to "Delete", dataset_path(@dataset), 
+              method: :delete,
+              data: { confirm: "Are you sure?" },
+              class: "px-3 py-1 text-sm border border-red-300 text-red-600 rounded-md hover:bg-red-50" %>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Connection Info -->
+    <div class="px-6 py-4 border-b border-gray-200">
+      <h2 class="text-lg font-semibold text-gray-900 mb-3">Connection Details</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <span class="text-sm text-gray-500">Type:</span>
+          <p class="font-medium"><%= @dataset.source_type.humanize %></p>
+        </div>
+        <div>
+          <span class="text-sm text-gray-500">Status:</span>
+          <p class="font-medium">
+            <% if @dataset.status == 'connected' %>
+              <span class="text-green-600">Connected</span>
+            <% elsif @dataset.status == 'error' %>
+              <span class="text-red-600">Connection Error</span>
+            <% else %>
+              <span class="text-yellow-600">Not Connected</span>
+            <% end %>
+          </p>
+        </div>
+        <% if @dataset.last_connected_at %>
+          <div>
+            <span class="text-sm text-gray-500">Last Connected:</span>
+            <p class="font-medium"><%= time_ago_in_words(@dataset.last_connected_at) %> ago</p>
+          </div>
+        <% end %>
+        <% if @dataset.source_type != 'csv_upload' && @dataset.connection_config.present? %>
+          <div>
+            <span class="text-sm text-gray-500">Host:</span>
+            <p class="font-medium"><%= @dataset.connection_config['host'] || 'N/A' %></p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    
+    <!-- Schema Information -->
+    <% if @dataset.schema_metadata.present? && @dataset.schema_metadata['tables'].present? %>
+      <div class="px-6 py-4">
+        <h2 class="text-lg font-semibold text-gray-900 mb-3">Database Schema</h2>
+        <div class="space-y-4">
+          <% @dataset.schema_metadata['tables'].each do |table| %>
+            <div class="border rounded-lg">
+              <div class="px-4 py-3 bg-gray-50 border-b">
+                <h3 class="font-medium text-gray-900">
+                  <%= table['name'] %>
+                  <span class="text-sm text-gray-500 ml-2">
+                    (<%= pluralize(table['columns']&.size || 0, 'column') %>, 
+                    <%= number_with_delimiter(table['row_count'] || 0) %> rows)
+                  </span>
+                </h3>
+              </div>
+              <div class="px-4 py-3">
+                <table class="min-w-full">
+                  <thead>
+                    <tr class="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th class="pb-2">Column Name</th>
+                      <th class="pb-2">Type</th>
+                      <th class="pb-2">Nullable</th>
+                      <th class="pb-2">Default</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-gray-200">
+                    <% (table['columns'] || []).each do |column| %>
+                      <tr class="text-sm">
+                        <td class="py-2 font-mono">
+                          <%= column['name'] %>
+                          <% if column['is_primary'] %>
+                            <span class="ml-1 px-1 py-0.5 text-xs bg-yellow-100 text-yellow-800 rounded">PK</span>
+                          <% end %>
+                          <% if column['is_foreign'] %>
+                            <span class="ml-1 px-1 py-0.5 text-xs bg-blue-100 text-blue-800 rounded">FK</span>
+                          <% end %>
+                        </td>
+                        <td class="py-2 text-gray-600"><%= column['data_type'] %></td>
+                        <td class="py-2">
+                          <%= column['is_nullable'] ? 
+                              content_tag(:span, 'Yes', class: 'text-gray-500') : 
+                              content_tag(:span, 'No', class: 'text-gray-900 font-medium') %>
+                        </td>
+                        <td class="py-2 text-gray-500"><%= column['default_value'] || '-' %></td>
+                      </tr>
+                    <% end %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% elsif @dataset.source_type == 'csv_upload' && @dataset.schema_metadata.present? %>
+      <div class="px-6 py-4">
+        <h2 class="text-lg font-semibold text-gray-900 mb-3">CSV Schema</h2>
+        <div class="border rounded-lg">
+          <div class="px-4 py-3 bg-gray-50 border-b">
+            <h3 class="font-medium text-gray-900">
+              Columns 
+              <span class="text-sm text-gray-500 ml-2">
+                (<%= @dataset.schema_metadata['columns']&.size || 0 %> columns, 
+                <%= number_with_delimiter(@dataset.schema_metadata['row_count'] || 0) %> rows)
+              </span>
+            </h3>
+          </div>
+          <div class="px-4 py-3">
+            <table class="min-w-full">
+              <thead>
+                <tr class="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th class="pb-2">Column Name</th>
+                  <th class="pb-2">Inferred Type</th>
+                  <th class="pb-2">Sample Values</th>
+                  <th class="pb-2">Null Count</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200">
+                <% (@dataset.schema_metadata['columns'] || []).each do |column| %>
+                  <tr class="text-sm">
+                    <td class="py-2 font-mono"><%= column['name'] %></td>
+                    <td class="py-2 text-gray-600"><%= column['data_type'] || 'string' %></td>
+                    <td class="py-2 text-gray-500">
+                      <% if column['sample_values'].present? %>
+                        <%= column['sample_values'].first(3).join(', ') %>
+                      <% else %>
+                        -
+                      <% end %>
+                    </td>
+                    <td class="py-2 text-gray-500"><%= column['null_count'] || 0 %></td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    <% else %>
+      <div class="px-6 py-4">
+        <div class="text-center py-12">
+          <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+          <h3 class="mt-2 text-sm font-medium text-gray-900">No schema information</h3>
+          <p class="mt-1 text-sm text-gray-500">Connect to the data source to view schema details.</p>
+          <div class="mt-6">
+            <%= link_to "Test Connection", test_connection_dataset_path(@dataset), 
+                method: :post,
+                class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+    
+    <!-- Recent Analyses -->
+    <% if @dataset.analysis_requests.any? %>
+      <div class="px-6 py-4 border-t border-gray-200">
+        <h2 class="text-lg font-semibold text-gray-900 mb-3">Recent Analyses</h2>
+        <div class="space-y-2">
+          <% @dataset.analysis_requests.limit(5).order(created_at: :desc).each do |request| %>
+            <%= link_to analysis_request_path(request), class: "block p-3 border rounded-lg hover:bg-gray-50" do %>
+              <div class="flex justify-between items-start">
+                <div>
+                  <p class="font-medium text-gray-900"><%= truncate(request.prompt, length: 100) %></p>
+                  <p class="text-sm text-gray-500 mt-1">
+                    <%= time_ago_in_words(request.created_at) %> ago
+                  </p>
+                </div>
+                <%= render 'shared/status_badge', status: request.status %>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+    
+    <!-- Actions -->
+    <div class="px-6 py-4 bg-gray-50 rounded-b-lg">
+      <div class="flex justify-between">
+        <%= link_to "← Back to Data Sources", datasets_path, 
+            class: "text-sm text-gray-600 hover:text-gray-900" %>
+        <div class="space-x-3">
+          <%= link_to "Test Connection", test_connection_dataset_path(@dataset), 
+              method: :post,
+              class: "inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50" %>
+          <%= link_to "New Analysis", new_analysis_request_path(dataset_id: @dataset.id), 
+              class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700" %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
