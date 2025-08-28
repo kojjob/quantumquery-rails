@@ -10,6 +10,31 @@ Rails.application.routes.draw do
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
+  # API Token Management
+  resources :api_tokens do
+    member do
+      post :revoke
+    end
+  end
+
+  # API Routes
+  namespace :api do
+    namespace :v1 do
+      # API Documentation
+      get "documentation", to: "documentation#index"
+      
+      # Dataset endpoints
+      resources :datasets
+      
+      # Analysis endpoints
+      resources :analysis, only: [:index, :show, :create] do
+        member do
+          post :cancel
+        end
+      end
+    end
+  end
+
   # Defines the root path route ("/")
   root "pages#home"
 end

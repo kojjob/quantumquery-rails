@@ -1,0 +1,89 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-gray-900">API Tokens</h1>
+    <%= link_to "Create New Token", new_api_token_path, class: "bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded" %>
+  </div>
+
+  <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            Name
+          </th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            Status
+          </th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            Last Used
+          </th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            Usage (Today)
+          </th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            Expires
+          </th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            Created
+          </th>
+          <th class="relative px-6 py-3">
+            <span class="sr-only">Actions</span>
+          </th>
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+        <% @api_tokens.each do |token| %>
+          <tr>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <%= link_to token.name, api_token_path(token), class: "text-blue-600 hover:text-blue-900 font-medium" %>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <% if token.revoked? %>
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                  Revoked
+                </span>
+              <% elsif token.expired? %>
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                  Expired
+                </span>
+              <% else %>
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                  Active
+                </span>
+              <% end %>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              <%= token.last_used_at ? time_ago_in_words(token.last_used_at) + " ago" : "Never" %>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              <%= token.usage_today %> requests
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              <%= token.expires_at ? token.expires_at.strftime("%B %d, %Y") : "Never" %>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              <%= token.created_at.strftime("%B %d, %Y") %>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+              <% if token.active? %>
+                <%= link_to "Revoke", revoke_api_token_path(token), method: :post, 
+                    data: { confirm: "Are you sure you want to revoke this token?" },
+                    class: "text-red-600 hover:text-red-900 mr-3" %>
+              <% end %>
+              <%= link_to "Delete", api_token_path(token), method: :delete,
+                  data: { confirm: "Are you sure you want to delete this token?" },
+                  class: "text-red-600 hover:text-red-900" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <% if @api_tokens.empty? %>
+      <div class="text-center py-8">
+        <p class="text-gray-500">No API tokens yet.</p>
+        <%= link_to "Create your first token", new_api_token_path, class: "text-blue-600 hover:text-blue-900 mt-2 inline-block" %>
+      </div>
+    <% end %>
+  </div>
+</div>
