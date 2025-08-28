@@ -10,6 +10,39 @@ Rails.application.routes.draw do
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
+  # Authenticated routes
+  authenticate :user do
+    resources :data_source_connections do
+      member do
+        post :test_connection
+        post :sync_schema
+        get :list_tables
+      end
+    end
+    
+    resources :datasets do
+      member do
+        post :analyze
+      end
+    end
+    
+    resources :analysis_requests, only: [:index, :show, :destroy] do
+      member do
+        get :export
+      end
+    end
+    
+    resources :scheduled_reports do
+      member do
+        patch :enable
+        patch :disable
+        post :run_now
+      end
+    end
+    
+    get "dashboard", to: "dashboard#index"
+  end
+
   # Defines the root path route ("/")
   root "pages#home"
 end

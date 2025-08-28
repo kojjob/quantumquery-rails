@@ -1,0 +1,174 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="sm:flex sm:items-center">
+    <div class="sm:flex-auto">
+      <h1 class="text-2xl font-semibold text-gray-900">Data Source Connections</h1>
+      <p class="mt-2 text-sm text-gray-700">Connect to your data warehouses and databases to analyze data with natural language queries.</p>
+    </div>
+    <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
+      <div class="relative inline-block text-left">
+        <button type="button" id="new-connection-btn"
+                class="inline-flex items-center justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:w-auto">
+          <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+          Add Connection
+        </button>
+        
+        <!-- Dropdown menu -->
+        <div id="connection-dropdown" class="hidden absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+          <div class="py-1" role="menu">
+            <%= link_to new_data_source_connection_path(source_type: 'snowflake'),
+                        class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100",
+                        role: "menuitem" do %>
+              <div class="flex items-center">
+                <svg class="mr-3 h-5 w-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+                </svg>
+                Snowflake
+              </div>
+            <% end %>
+            
+            <%= link_to new_data_source_connection_path(source_type: 'bigquery'),
+                        class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100",
+                        role: "menuitem" do %>
+              <div class="flex items-center">
+                <svg class="mr-3 h-5 w-5 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                </svg>
+                BigQuery
+              </div>
+            <% end %>
+            
+            <%= link_to new_data_source_connection_path(source_type: 'postgresql'),
+                        class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100",
+                        role: "menuitem" do %>
+              <div class="flex items-center">
+                <svg class="mr-3 h-5 w-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4" />
+                </svg>
+                PostgreSQL
+              </div>
+            <% end %>
+            
+            <%= link_to new_data_source_connection_path(source_type: 'mysql'),
+                        class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100",
+                        role: "menuitem" do %>
+              <div class="flex items-center">
+                <svg class="mr-3 h-5 w-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4" />
+                </svg>
+                MySQL
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Connection Cards -->
+  <div class="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <% @data_source_connections.each do |connection| %>
+      <div class="relative flex flex-col rounded-lg border border-gray-300 bg-white shadow-sm">
+        <div class="flex-1 px-4 py-5">
+          <div class="flex items-center justify-between">
+            <h3 class="text-lg font-medium text-gray-900">
+              <%= link_to connection.name, connection, class: "hover:text-blue-600" %>
+            </h3>
+            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium
+                         <%= connection.connected? ? 'bg-green-100 text-green-800' :
+                            connection.error? ? 'bg-red-100 text-red-800' :
+                            connection.syncing? ? 'bg-yellow-100 text-yellow-800' :
+                            'bg-gray-100 text-gray-800' %>">
+              <%= connection.status.humanize %>
+            </span>
+          </div>
+          
+          <div class="mt-3">
+            <div class="flex items-center text-sm text-gray-500">
+              <% case connection.source_type %>
+              <% when 'snowflake' %>
+                <svg class="mr-2 h-4 w-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+                </svg>
+              <% when 'bigquery' %>
+                <svg class="mr-2 h-4 w-4 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                </svg>
+              <% else %>
+                <svg class="mr-2 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4" />
+                </svg>
+              <% end %>
+              <%= connection.display_name %>
+            </div>
+            
+            <% if connection.metadata['tables'].present? %>
+              <p class="mt-2 text-sm text-gray-600">
+                <%= pluralize(connection.metadata['tables'].size, 'table') %> available
+              </p>
+            <% end %>
+            
+            <% if connection.last_synced_at %>
+              <p class="mt-1 text-xs text-gray-500">
+                Last synced <%= time_ago_in_words(connection.last_synced_at) %> ago
+              </p>
+            <% end %>
+            
+            <% if connection.error? && connection.last_error_message.present? %>
+              <p class="mt-2 text-xs text-red-600">
+                <%= truncate(connection.last_error_message, length: 100) %>
+              </p>
+            <% end %>
+          </div>
+        </div>
+        
+        <div class="border-t border-gray-200 px-4 py-3">
+          <div class="flex justify-between">
+            <%= link_to "View", connection, class: "text-sm text-gray-700 hover:text-gray-900" %>
+            <%= link_to "Edit", edit_data_source_connection_path(connection), class: "text-sm text-gray-700 hover:text-gray-900" %>
+            <% if connection.connected? %>
+              <%= link_to "Sync", sync_schema_data_source_connection_path(connection), 
+                          method: :post,
+                          class: "text-sm text-blue-600 hover:text-blue-900" %>
+            <% else %>
+              <%= link_to "Test", test_connection_data_source_connection_path(connection),
+                          method: :post,
+                          class: "text-sm text-blue-600 hover:text-blue-900" %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+    
+    <% if @data_source_connections.empty? %>
+      <div class="col-span-full">
+        <div class="text-center py-12">
+          <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4" />
+          </svg>
+          <h3 class="mt-2 text-sm font-medium text-gray-900">No data sources</h3>
+          <p class="mt-1 text-sm text-gray-500">Get started by connecting a data source.</p>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const newConnectionBtn = document.getElementById('new-connection-btn');
+  const dropdown = document.getElementById('connection-dropdown');
+  
+  newConnectionBtn?.addEventListener('click', function() {
+    dropdown.classList.toggle('hidden');
+  });
+  
+  // Close dropdown when clicking outside
+  document.addEventListener('click', function(event) {
+    if (!newConnectionBtn?.contains(event.target) && !dropdown?.contains(event.target)) {
+      dropdown?.classList.add('hidden');
+    }
+  });
+});
+</script>
