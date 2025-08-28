@@ -1,6 +1,7 @@
 class Dataset < ApplicationRecord
   # Associations
   belongs_to :organization
+  belongs_to :data_source_connection, optional: true
   has_many :analysis_requests, dependent: :restrict_with_error
   has_one_attached :data_file # For CSV/Excel uploads
   

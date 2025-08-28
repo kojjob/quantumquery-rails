@@ -1,0 +1,95 @@
+<div class="space-y-4">
+  <div class="bg-blue-50 border border-blue-200 rounded-md p-4 mb-4">
+    <h4 class="text-sm font-medium text-blue-900">Snowflake Connection</h4>
+    <p class="mt-1 text-sm text-blue-700">
+      Connect to your Snowflake data warehouse to query and analyze data.
+    </p>
+  </div>
+  
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+    <div>
+      <label for="snowflake_account" class="block text-sm font-medium text-gray-700">
+        Account Identifier <span class="text-red-500">*</span>
+      </label>
+      <input type="text" name="data_source_connection[snowflake_account]" id="snowflake_account"
+             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+             placeholder="xy12345.us-west-2" required>
+      <p class="mt-1 text-xs text-gray-500">Your Snowflake account identifier</p>
+    </div>
+    
+    <div>
+      <label for="snowflake_region" class="block text-sm font-medium text-gray-700">
+        Region
+      </label>
+      <select name="data_source_connection[snowflake_region]" id="snowflake_region"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        <option value="us-west-2">US West (Oregon)</option>
+        <option value="us-east-1">US East (N. Virginia)</option>
+        <option value="eu-west-1">EU (Ireland)</option>
+        <option value="eu-central-1">EU (Frankfurt)</option>
+        <option value="ap-southeast-1">Asia Pacific (Singapore)</option>
+        <option value="ap-northeast-1">Asia Pacific (Tokyo)</option>
+      </select>
+    </div>
+  </div>
+  
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+    <div>
+      <label for="snowflake_username" class="block text-sm font-medium text-gray-700">
+        Username <span class="text-red-500">*</span>
+      </label>
+      <input type="text" name="data_source_connection[snowflake_username]" id="snowflake_username"
+             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+             required>
+    </div>
+    
+    <div>
+      <label for="snowflake_password" class="block text-sm font-medium text-gray-700">
+        Password <span class="text-red-500">*</span>
+      </label>
+      <input type="password" name="data_source_connection[snowflake_password]" id="snowflake_password"
+             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+             required>
+    </div>
+  </div>
+  
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+    <div>
+      <label for="snowflake_warehouse" class="block text-sm font-medium text-gray-700">
+        Warehouse <span class="text-red-500">*</span>
+      </label>
+      <input type="text" name="data_source_connection[snowflake_warehouse]" id="snowflake_warehouse"
+             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+             placeholder="COMPUTE_WH" required>
+    </div>
+    
+    <div>
+      <label for="snowflake_role" class="block text-sm font-medium text-gray-700">
+        Role
+      </label>
+      <input type="text" name="data_source_connection[snowflake_role]" id="snowflake_role"
+             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+             placeholder="ACCOUNTADMIN">
+    </div>
+  </div>
+  
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+    <div>
+      <label for="snowflake_database" class="block text-sm font-medium text-gray-700">
+        Database <span class="text-red-500">*</span>
+      </label>
+      <input type="text" name="data_source_connection[snowflake_database]" id="snowflake_database"
+             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+             required>
+    </div>
+    
+    <div>
+      <label for="snowflake_schema" class="block text-sm font-medium text-gray-700">
+        Schema
+      </label>
+      <input type="text" name="data_source_connection[snowflake_schema]" id="snowflake_schema"
+             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+             placeholder="PUBLIC">
+    </div>
+  </div>
+</div>

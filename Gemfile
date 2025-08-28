@@ -38,6 +38,7 @@ gem "mongo" # MongoDB connector
 gem "aws-sdk-s3" # S3 integration
 gem "roo" # Excel/CSV processing
 gem "caxlsx" # Excel generation
+gem "google-cloud-bigquery" # BigQuery connector
 
 # Security and authentication
 gem "devise" # Authentication framework
