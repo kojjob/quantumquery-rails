@@ -8,6 +8,11 @@ class User < ApplicationRecord
   belongs_to :organization, optional: true
   has_many :analysis_requests, dependent: :destroy
   has_many :api_keys, dependent: :destroy
+  has_many :scheduled_reports, dependent: :destroy
+  has_many :share_links, foreign_key: :created_by_id, dependent: :destroy
+  has_many :comments, dependent: :destroy
+  has_many :team_memberships, dependent: :destroy
+  has_many :organizations_as_member, through: :team_memberships, source: :organization
 
   # Validations
   validates :email, presence: true, uniqueness: true

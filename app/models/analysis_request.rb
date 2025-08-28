@@ -7,6 +7,8 @@ class AnalysisRequest < ApplicationRecord
   belongs_to :organization
   has_many :execution_steps, dependent: :destroy
   has_many_attached :generated_artifacts # Charts, CSV exports, etc.
+  has_many :share_links, dependent: :destroy
+  has_many :comments, as: :commentable, dependent: :destroy
   
   # Validations
   validates :natural_language_query, presence: true, length: { minimum: 10, maximum: 5000 }

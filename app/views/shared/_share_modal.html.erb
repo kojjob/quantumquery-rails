@@ -1,0 +1,200 @@
+<div id="shareModal" class="hidden fixed z-50 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+  <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+    
+    <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+    
+    <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+      <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+        <div class="sm:flex sm:items-start">
+          <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
+            <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m9.032 4.026a9.001 9.001 0 01-7.522 0m9.032-4.026A9.001 9.001 0 0112 3c-4.474 0-8.268 3.12-9.195 7.5M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </div>
+          <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left flex-1">
+            <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+              Share Analysis Results
+            </h3>
+            
+            <div class="mt-4">
+              <div id="share-link-form">
+                <!-- Expiration -->
+                <div class="mb-4">
+                  <label class="block text-sm font-medium text-gray-700">Link expires after</label>
+                  <select id="expires_in" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                    <option value="">Never</option>
+                    <option value="1">1 hour</option>
+                    <option value="24">24 hours</option>
+                    <option value="168">7 days</option>
+                    <option value="720">30 days</option>
+                  </select>
+                </div>
+                
+                <!-- Max Views -->
+                <div class="mb-4">
+                  <label class="block text-sm font-medium text-gray-700">Maximum views</label>
+                  <input type="number" id="max_views" min="1" placeholder="Unlimited" 
+                         class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                </div>
+                
+                <!-- Password Protection -->
+                <div class="mb-4">
+                  <label class="block text-sm font-medium text-gray-700">
+                    <input type="checkbox" id="password_protected" class="mr-2">
+                    Password protect this link
+                  </label>
+                  <input type="password" id="share_password" placeholder="Enter password" 
+                         class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm hidden">
+                </div>
+              </div>
+              
+              <!-- Generated Link -->
+              <div id="generated-share-link" class="hidden">
+                <div class="mb-4">
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Share Link</label>
+                  <div class="flex">
+                    <input type="text" id="share-url" readonly 
+                           class="flex-1 block w-full border-gray-300 rounded-l-md shadow-sm bg-gray-50 text-sm">
+                    <button type="button" id="copy-link-btn"
+                            class="inline-flex items-center px-3 py-2 border border-l-0 border-gray-300 rounded-r-md bg-gray-50 hover:bg-gray-100 text-gray-700 text-sm">
+                      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                      </svg>
+                      <span class="ml-1">Copy</span>
+                    </button>
+                  </div>
+                </div>
+                
+                <div class="text-sm text-gray-500">
+                  <p id="share-details"></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+        <button type="button" id="generate-link-btn"
+                class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">
+          Generate Link
+        </button>
+        <button type="button" id="close-share-modal"
+                class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const modal = document.getElementById('shareModal');
+  const generateBtn = document.getElementById('generate-link-btn');
+  const closeBtn = document.getElementById('close-share-modal');
+  const copyBtn = document.getElementById('copy-link-btn');
+  const passwordCheckbox = document.getElementById('password_protected');
+  const passwordField = document.getElementById('share_password');
+  
+  // Toggle password field
+  passwordCheckbox?.addEventListener('change', function() {
+    if (this.checked) {
+      passwordField.classList.remove('hidden');
+    } else {
+      passwordField.classList.add('hidden');
+      passwordField.value = '';
+    }
+  });
+  
+  // Generate share link
+  generateBtn?.addEventListener('click', async function() {
+    const analysisId = modal.dataset.analysisId;
+    const expiresIn = document.getElementById('expires_in').value;
+    const maxViews = document.getElementById('max_views').value;
+    const password = document.getElementById('share_password').value;
+    
+    let expiresAt = null;
+    if (expiresIn) {
+      const hours = parseInt(expiresIn);
+      expiresAt = new Date(Date.now() + hours * 60 * 60 * 1000).toISOString();
+    }
+    
+    const data = {
+      share_link: {
+        expires_at: expiresAt,
+        max_views: maxViews || null,
+        password: password || null
+      }
+    };
+    
+    try {
+      const response = await fetch(`/analysis_requests/${analysisId}/share_links`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content
+        },
+        body: JSON.stringify(data)
+      });
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        // Show generated link
+        document.getElementById('share-link-form').classList.add('hidden');
+        document.getElementById('generated-share-link').classList.remove('hidden');
+        document.getElementById('share-url').value = result.share_url;
+        
+        // Update details
+        let details = [];
+        if (result.share_link.expires_at) {
+          details.push(`Expires: ${new Date(result.share_link.expires_at).toLocaleString()}`);
+        }
+        if (result.share_link.max_views) {
+          details.push(`Max views: ${result.share_link.max_views}`);
+        }
+        if (result.share_link.requires_password) {
+          details.push('Password protected');
+        }
+        document.getElementById('share-details').textContent = details.join(' • ') || 'No restrictions';
+        
+        generateBtn.textContent = 'Generate New Link';
+      } else {
+        alert('Error: ' + result.errors.join(', '));
+      }
+    } catch (error) {
+      alert('An error occurred while generating the share link');
+      console.error(error);
+    }
+  });
+  
+  // Copy link to clipboard
+  copyBtn?.addEventListener('click', function() {
+    const shareUrl = document.getElementById('share-url');
+    shareUrl.select();
+    document.execCommand('copy');
+    
+    const originalText = this.querySelector('span').textContent;
+    this.querySelector('span').textContent = 'Copied!';
+    setTimeout(() => {
+      this.querySelector('span').textContent = originalText;
+    }, 2000);
+  });
+  
+  // Close modal
+  closeBtn?.addEventListener('click', function() {
+    modal.classList.add('hidden');
+    // Reset form
+    document.getElementById('share-link-form').classList.remove('hidden');
+    document.getElementById('generated-share-link').classList.add('hidden');
+  });
+  
+  // Open modal function (to be called from analysis page)
+  window.openShareModal = function(analysisId) {
+    modal.dataset.analysisId = analysisId;
+    modal.classList.remove('hidden');
+  };
+});
+</script>

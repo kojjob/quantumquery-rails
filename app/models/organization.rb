@@ -3,6 +3,9 @@ class Organization < ApplicationRecord
   has_many :users, dependent: :destroy
   has_many :datasets, dependent: :destroy
   has_many :analysis_requests, dependent: :destroy
+  has_many :scheduled_reports, dependent: :destroy
+  has_many :team_memberships, dependent: :destroy
+  has_many :team_members, through: :team_memberships, source: :user
   
   # Validations
   validates :name, presence: true, uniqueness: true

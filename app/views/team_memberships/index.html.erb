@@ -1,0 +1,304 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="bg-white shadow rounded-lg">
+    <div class="px-4 py-5 sm:p-6">
+      <div class="sm:flex sm:items-center sm:justify-between">
+        <div>
+          <h3 class="text-lg leading-6 font-medium text-gray-900">Team Members</h3>
+          <p class="mt-1 max-w-2xl text-sm text-gray-500">Manage your organization's team members and their roles.</p>
+        </div>
+        <div class="mt-3 sm:mt-0 sm:ml-4">
+          <button type="button" id="invite-member-btn"
+                  class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+            Invite Team Member
+          </button>
+        </div>
+      </div>
+
+      <!-- Team Members List -->
+      <div class="mt-6">
+        <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+          <table class="min-w-full divide-y divide-gray-300">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Member</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined</th>
+                <th class="relative px-6 py-3"><span class="sr-only">Actions</span></th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <% @team_memberships.each do |membership| %>
+                <tr>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="flex items-center">
+                      <div class="flex-shrink-0 h-10 w-10">
+                        <div class="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
+                          <span class="text-sm font-medium text-gray-700">
+                            <%= membership.user.email[0].upcase %>
+                          </span>
+                        </div>
+                      </div>
+                      <div class="ml-4">
+                        <div class="text-sm font-medium text-gray-900">
+                          <%= membership.user.full_name.presence || membership.user.email %>
+                        </div>
+                        <div class="text-sm text-gray-500">
+                          <%= membership.user.email %>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <% if current_user_membership&.can_manage_team? && membership.id != current_user_membership.id %>
+                      <select class="role-select text-sm rounded-md border-gray-300" data-membership-id="<%= membership.id %>">
+                        <% TeamMembership.roles.keys.each do |role| %>
+                          <% next if role == 'owner' && !current_user_membership.owner? %>
+                          <option value="<%= role %>" <%= 'selected' if membership.role == role %>><%= role.humanize %></option>
+                        <% end %>
+                      </select>
+                    <% else %>
+                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                   <%= membership.owner? ? 'bg-purple-100 text-purple-800' : 
+                                       membership.admin? ? 'bg-blue-100 text-blue-800' : 
+                                       membership.editor? ? 'bg-green-100 text-green-800' : 
+                                       'bg-gray-100 text-gray-800' %>">
+                        <%= membership.role.humanize %>
+                      </span>
+                    <% end %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <% if membership.invitation_accepted_at.present? %>
+                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                        Active
+                      </span>
+                    <% else %>
+                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                        Pending
+                      </span>
+                    <% end %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <%= membership.invitation_accepted_at&.strftime('%b %d, %Y') || 'Not yet' %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <% if current_user_membership&.can_manage_team? && membership.id != current_user_membership.id %>
+                      <% if membership.invitation_accepted_at.blank? %>
+                        <button class="resend-invitation text-blue-600 hover:text-blue-900 mr-3" data-membership-id="<%= membership.id %>">
+                          Resend
+                        </button>
+                      <% end %>
+                      <% unless membership.owner? %>
+                        <button class="remove-member text-red-600 hover:text-red-900" data-membership-id="<%= membership.id %>">
+                          Remove
+                        </button>
+                      <% end %>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Invite Member Modal -->
+<div id="inviteModal" class="hidden fixed z-50 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+  <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+    
+    <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+    
+    <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+      <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+        <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">Invite Team Member</h3>
+        
+        <form id="invite-form">
+          <div class="mb-4">
+            <label for="email" class="block text-sm font-medium text-gray-700">Email address</label>
+            <input type="email" id="invite-email" name="email" required
+                   class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+          </div>
+          
+          <div class="mb-4">
+            <label for="role" class="block text-sm font-medium text-gray-700">Role</label>
+            <select id="invite-role" name="role" required
+                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+              <option value="viewer">Viewer</option>
+              <option value="editor">Editor</option>
+              <% if current_user_membership&.owner? %>
+                <option value="admin">Admin</option>
+              <% end %>
+            </select>
+          </div>
+          
+          <div class="text-sm text-gray-500 mb-4">
+            <p><strong>Viewer:</strong> Can view shared analyses and datasets</p>
+            <p><strong>Editor:</strong> Can create and edit analyses</p>
+            <p><strong>Admin:</strong> Can manage team members and settings</p>
+          </div>
+        </form>
+      </div>
+      
+      <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+        <button type="button" id="send-invitation-btn"
+                class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">
+          Send Invitation
+        </button>
+        <button type="button" id="close-invite-modal"
+                class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const organizationId = <%= @organization.id %>;
+  const inviteModal = document.getElementById('inviteModal');
+  const inviteBtn = document.getElementById('invite-member-btn');
+  const closeModalBtn = document.getElementById('close-invite-modal');
+  const sendInvitationBtn = document.getElementById('send-invitation-btn');
+  
+  // Open modal
+  inviteBtn?.addEventListener('click', function() {
+    inviteModal.classList.remove('hidden');
+  });
+  
+  // Close modal
+  closeModalBtn?.addEventListener('click', function() {
+    inviteModal.classList.add('hidden');
+    document.getElementById('invite-form').reset();
+  });
+  
+  // Send invitation
+  sendInvitationBtn?.addEventListener('click', async function() {
+    const email = document.getElementById('invite-email').value;
+    const role = document.getElementById('invite-role').value;
+    
+    if (!email) {
+      alert('Please enter an email address');
+      return;
+    }
+    
+    try {
+      const response = await fetch(`/organizations/${organizationId}/team_memberships`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content
+        },
+        body: JSON.stringify({ team_membership: { email, role } })
+      });
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        inviteModal.classList.add('hidden');
+        document.getElementById('invite-form').reset();
+        location.reload();
+      } else {
+        alert('Error: ' + (result.errors.join(', ') || 'Failed to send invitation'));
+      }
+    } catch (error) {
+      alert('An error occurred while sending the invitation');
+      console.error(error);
+    }
+  });
+  
+  // Update role
+  document.querySelectorAll('.role-select').forEach(select => {
+    select.addEventListener('change', async function() {
+      const membershipId = this.dataset.membershipId;
+      const newRole = this.value;
+      
+      try {
+        const response = await fetch(`/organizations/${organizationId}/team_memberships/${membershipId}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content
+          },
+          body: JSON.stringify({ team_membership: { role: newRole } })
+        });
+        
+        const result = await response.json();
+        
+        if (!result.success) {
+          alert('Error: ' + (result.errors.join(', ') || 'Failed to update role'));
+          location.reload();
+        }
+      } catch (error) {
+        alert('An error occurred while updating the role');
+        console.error(error);
+      }
+    });
+  });
+  
+  // Resend invitation
+  document.querySelectorAll('.resend-invitation').forEach(btn => {
+    btn.addEventListener('click', async function() {
+      const membershipId = this.dataset.membershipId;
+      
+      if (confirm('Resend invitation email?')) {
+        try {
+          const response = await fetch(`/organizations/${organizationId}/team_memberships/${membershipId}/resend_invitation`, {
+            method: 'POST',
+            headers: {
+              'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content
+            }
+          });
+          
+          const result = await response.json();
+          
+          if (result.success) {
+            alert('Invitation resent successfully');
+          } else {
+            alert('Error: ' + (result.error || 'Failed to resend invitation'));
+          }
+        } catch (error) {
+          alert('An error occurred while resending the invitation');
+          console.error(error);
+        }
+      }
+    });
+  });
+  
+  // Remove member
+  document.querySelectorAll('.remove-member').forEach(btn => {
+    btn.addEventListener('click', async function() {
+      const membershipId = this.dataset.membershipId;
+      
+      if (confirm('Are you sure you want to remove this team member?')) {
+        try {
+          const response = await fetch(`/organizations/${organizationId}/team_memberships/${membershipId}`, {
+            method: 'DELETE',
+            headers: {
+              'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content
+            }
+          });
+          
+          const result = await response.json();
+          
+          if (result.success) {
+            location.reload();
+          } else {
+            alert('Error: ' + (result.error || 'Failed to remove member'));
+          }
+        } catch (error) {
+          alert('An error occurred while removing the member');
+          console.error(error);
+        }
+      }
+    });
+  });
+});
+</script>
