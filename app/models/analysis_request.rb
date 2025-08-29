@@ -44,6 +44,7 @@ class AnalysisRequest < ApplicationRecord
     event :complete do
       transitions from: :interpreting_results, to: :completed
       after do
+        update_execution_metrics
         notify_user_of_completion
       end
     end
@@ -100,6 +101,17 @@ class AnalysisRequest < ApplicationRecord
   end
 
   private
+
+  def update_execution_metrics
+    # Calculate total execution time and store it in both the column and metadata
+    total_time = total_execution_time
+    if total_time
+      update_columns(execution_time: total_time)
+      # Also update metadata to maintain backward compatibility
+      self.metadata = (metadata || {}).merge("execution_time" => total_time)
+      save! if changed?
+    end
+  end
 
   def notify_user_of_completion
     # Use Action Cable to notify user in real-time via Solid Cable

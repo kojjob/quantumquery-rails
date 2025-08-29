@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_29_083358) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_29_102645) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -28,6 +28,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_29_083358) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "completed_at"
+    t.decimal "execution_time", precision: 8, scale: 3, comment: "Execution time in seconds"
     t.index ["dataset_id"], name: "index_analysis_requests_on_dataset_id"
     t.index ["organization_id"], name: "index_analysis_requests_on_organization_id"
     t.index ["user_id"], name: "index_analysis_requests_on_user_id"

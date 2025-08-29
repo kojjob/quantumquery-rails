@@ -19,7 +19,7 @@
     <meta property="og:url" content="<%= request.original_url %>">
     <meta property="og:title" content="<%= content_for(:og_title) || 'QuantumQuery - AI-Powered Data Science Platform' %>">
     <meta property="og:description" content="<%= content_for(:og_description) || 'Transform complex data into actionable insights with AI-powered analytics. Natural language queries, automated ML workflows, and enterprise-grade security.' %>">
-    <meta property="og:image" content="<%= content_for(:og_image) || asset_url('quantum-query-og-image.png') %>">
+    <meta property="og:image" content="<%= content_for(:og_image) || request.base_url + '/icon.png' %>">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:site_name" content="QuantumQuery">
@@ -30,15 +30,15 @@
     <meta name="twitter:url" content="<%= request.original_url %>">
     <meta name="twitter:title" content="<%= content_for(:twitter_title) || 'QuantumQuery - AI-Powered Data Science Platform' %>">
     <meta name="twitter:description" content="<%= content_for(:twitter_description) || 'Transform data into insights with AI. Natural language queries, automated ML, enterprise security. Start free trial.' %>">
-    <meta name="twitter:image" content="<%= content_for(:twitter_image) || asset_url('quantum-query-twitter-card.png') %>">
+    <meta name="twitter:image" content="<%= content_for(:twitter_image) || request.base_url + '/icon.png' %>">
     <meta name="twitter:site" content="@quantumquery">
     <meta name="twitter:creator" content="@quantumquery">
     
     <!-- Additional SEO Enhancements -->
     <link rel="canonical" href="<%= content_for(:canonical_url) || request.original_url.split('?').first %>">
-    <meta name="theme-color" content="#7C3AED">
+    <meta name="theme-color" content="#0D9488">
     <meta name="application-name" content="QuantumQuery">
-    <meta name="msapplication-TileColor" content="#7C3AED">
+    <meta name="msapplication-TileColor" content="#0D9488">
     
     <!-- Schema.org Structured Data -->
     <script type="application/ld+json">
@@ -69,7 +69,7 @@
         "url": "https://quantumquery.ai",
         "logo": {
           "@type": "ImageObject",
-          "url": "<%= asset_url('quantum-query-logo.png') %>"
+          "url": "<%= request.base_url + '/icon.png' %>"
         }
       }
     }
@@ -104,6 +104,7 @@
   </head>
 
   <body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+    <%= render 'shared/navbar' %>
     <main>
       <%= yield %>
     </main>

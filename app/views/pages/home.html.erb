@@ -4,7 +4,7 @@
 <div class="min-h-screen bg-white overflow-x-hidden">
   <!-- Animated Background Gradient -->
   <div class="fixed inset-0 -z-10">
-    <div class="absolute inset-0 bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50"></div>
+    <div class="absolute inset-0 bg-gradient-to-br from-teal-50 via-cyan-50 to-sky-50"></div>
     <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%239C92AC" fill-opacity="0.03"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-20"></div>
   </div>
 
@@ -14,15 +14,15 @@
   <section class="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8">
     <!-- Floating Elements Animation -->
     <div class="absolute inset-0 overflow-hidden">
-      <div class="absolute -top-40 -right-40 w-80 h-80 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
-      <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
-      <div class="absolute top-40 left-1/2 w-80 h-80 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
+      <div class="absolute -top-40 -right-40 w-80 h-80 bg-teal-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
+      <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-amber-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
+      <div class="absolute top-40 left-1/2 w-80 h-80 bg-cyan-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
     </div>
 
     <div class="relative max-w-7xl mx-auto">
       <div class="text-center">
         <!-- Trust Badge -->
-        <div class="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium mb-6 animate-fade-in-down">
+        <div class="inline-flex items-center gap-2 bg-gradient-to-r from-teal-600 to-cyan-600 text-white px-4 py-2 rounded-full text-sm font-medium mb-6 animate-fade-in-down">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
           </svg>
@@ -31,7 +31,7 @@
 
         <!-- Main Headline with Gradient -->
         <h1 class="text-5xl md:text-7xl font-black mb-6 animate-fade-in-up">
-          <span class="bg-clip-text text-transparent bg-gradient-to-r from-purple-600 via-blue-600 to-indigo-600">
+          <span class="bg-clip-text text-transparent bg-gradient-to-r from-teal-600 via-cyan-600 to-sky-600">
             Ask Questions in English
           </span>
           <br>
@@ -58,7 +58,7 @@
             </svg>
             Solid Cache Performance
           </span>
-          <span class="inline-flex items-center gap-2 px-4 py-2 bg-purple-100 text-purple-800 rounded-full text-sm font-medium">
+          <span class="inline-flex items-center gap-2 px-4 py-2 bg-amber-100 text-amber-800 rounded-full text-sm font-medium">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
             </svg>
@@ -69,31 +69,32 @@
         <!-- CTA Buttons -->
         <div class="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up animation-delay-600">
           <% if user_signed_in? %>
-            <%= link_to dashboards_path, class: "group relative inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-white bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl hover:from-purple-700 hover:to-blue-700 transform hover:scale-105 transition-all duration-200 shadow-xl hover:shadow-2xl" do %>
+            <%= link_to dashboards_path, class: "group relative inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-white bg-gradient-to-r from-teal-600 to-cyan-600 rounded-xl hover:from-teal-700 hover:to-cyan-700 transform hover:scale-105 transition-all duration-200 shadow-xl hover:shadow-2xl" do %>
               <span class="relative z-10">Launch Dashboard</span>
               <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
               </svg>
-              <div class="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl blur opacity-40 group-hover:opacity-60 transition-opacity"></div>
+              <div class="absolute inset-0 bg-gradient-to-r from-teal-600 to-cyan-600 rounded-xl blur opacity-40 group-hover:opacity-60 transition-opacity"></div>
             <% end %>
           <% else %>
-            <%= link_to new_user_registration_path, class: "group relative inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-white bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl hover:from-purple-700 hover:to-blue-700 transform hover:scale-105 transition-all duration-200 shadow-xl hover:shadow-2xl" do %>
+            <%= link_to new_user_registration_path, class: "group relative inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-white bg-gradient-to-r from-teal-600 to-cyan-600 rounded-xl hover:from-teal-700 hover:to-cyan-700 transform hover:scale-105 transition-all duration-200 shadow-xl hover:shadow-2xl" do %>
               <span class="relative z-10">Start Free Trial</span>
               <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
               </svg>
-              <div class="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl blur opacity-40 group-hover:opacity-60 transition-opacity"></div>
+              <div class="absolute inset-0 bg-gradient-to-r from-teal-600 to-cyan-600 rounded-xl blur opacity-40 group-hover:opacity-60 transition-opacity"></div>
             <% end %>
             <%= link_to "Watch Demo", "#demo", class: "group inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-gray-900 bg-white border-2 border-gray-200 rounded-xl hover:border-gray-300 hover:bg-gray-50 transform hover:scale-105 transition-all duration-200" %>
           <% end %>
         </div>
 
         <!-- Social Proof -->
-        <div class="mt-12 flex items-center justify-center gap-8 opacity-60 grayscale">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google" class="h-8">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" alt="Microsoft" class="h-8">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg" alt="Netflix" class="h-8">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon" class="h-8">
+        <div class="mt-12 flex flex-wrap items-center justify-center gap-8 text-gray-400">
+          <div class="font-semibold text-lg">Trusted by teams at:</div>
+          <span class="font-bold text-2xl">Fortune 500</span>
+          <span class="font-bold text-2xl">Startups</span>
+          <span class="font-bold text-2xl">Universities</span>
+          <span class="font-bold text-2xl">Agencies</span>
         </div>
       </div>
     </div>
@@ -109,7 +110,7 @@
 
       <!-- Demo Interface -->
       <div class="bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-100">
-        <div class="bg-gradient-to-r from-purple-600 to-blue-600 p-4">
+        <div class="bg-gradient-to-r from-teal-600 to-cyan-600 p-4">
           <div class="flex items-center gap-2">
             <div class="w-3 h-3 bg-red-500 rounded-full"></div>
             <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
@@ -120,8 +121,8 @@
         <div class="p-8">
           <div class="space-y-4">
             <div class="flex items-start gap-4">
-              <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
-                <svg class="w-4 h-4 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+              <div class="w-8 h-8 bg-teal-100 rounded-full flex items-center justify-center flex-shrink-0">
+                <svg class="w-4 h-4 text-teal-600" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
                 </svg>
               </div>
@@ -141,16 +142,16 @@
               <div class="flex-1">
                 <p class="text-gray-600 mb-2">QuantumQuery's 5-Stage Analysis:</p>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div class="bg-gradient-to-br from-purple-50 to-blue-50 rounded-lg p-4">
-                    <div class="text-2xl font-bold text-purple-600">GPT-4</div>
+                  <div class="bg-gradient-to-br from-teal-50 to-cyan-50 rounded-lg p-4">
+                    <div class="text-2xl font-bold text-teal-600">GPT-4</div>
                     <div class="text-sm text-gray-600">Intent Analysis</div>
                   </div>
-                  <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-4">
-                    <div class="text-2xl font-bold text-blue-600">Python</div>
+                  <div class="bg-gradient-to-br from-cyan-50 to-sky-50 rounded-lg p-4">
+                    <div class="text-2xl font-bold text-cyan-600">Python</div>
                     <div class="text-sm text-gray-600">Code Generated</div>
                   </div>
-                  <div class="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-lg p-4">
-                    <div class="text-2xl font-bold text-indigo-600">92.3%</div>
+                  <div class="bg-gradient-to-br from-amber-50 to-orange-50 rounded-lg p-4">
+                    <div class="text-2xl font-bold text-amber-600">92.3%</div>
                     <div class="text-sm text-gray-600">Predicted Retention</div>
                   </div>
                 </div>
@@ -166,7 +167,7 @@
   <section class="py-20 px-4 sm:px-6 lg:px-8 bg-white">
     <div class="max-w-7xl mx-auto">
       <div class="text-center mb-12">
-        <div class="inline-flex items-center gap-2 bg-purple-100 text-purple-800 px-4 py-2 rounded-full text-sm font-medium mb-4">
+        <div class="inline-flex items-center gap-2 bg-teal-100 text-teal-800 px-4 py-2 rounded-full text-sm font-medium mb-4">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
           </svg>
@@ -180,10 +181,10 @@
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <!-- Feature 1 -->
-        <div class="group relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-purple-200">
-          <div class="absolute inset-0 bg-gradient-to-br from-purple-50 to-blue-50 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        <div class="group relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-teal-200">
+          <div class="absolute inset-0 bg-gradient-to-br from-teal-50 to-cyan-50 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
           <div class="relative">
-            <div class="w-14 h-14 bg-gradient-to-br from-purple-500 to-blue-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+            <div class="w-14 h-14 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
               <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
               </svg>
@@ -192,7 +193,7 @@
             <p class="text-gray-600 mb-4">
               Intelligent model selection from GPT-4, Claude 3 (Opus/Sonnet/Haiku), Gemini Pro/Ultra, Command R+, Llama, and Mixtral based on query complexity.
             </p>
-            <a href="#" class="inline-flex items-center text-purple-600 font-medium group-hover:text-purple-700">
+            <a href="#" class="inline-flex items-center text-teal-600 font-medium group-hover:text-teal-700">
               Learn more
               <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
@@ -202,10 +203,10 @@
         </div>
 
         <!-- Feature 2 -->
-        <div class="group relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-blue-200">
-          <div class="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        <div class="group relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-cyan-200">
+          <div class="absolute inset-0 bg-gradient-to-br from-cyan-50 to-sky-50 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
           <div class="relative">
-            <div class="w-14 h-14 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+            <div class="w-14 h-14 bg-gradient-to-br from-cyan-500 to-sky-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
               <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
               </svg>
@@ -214,7 +215,7 @@
             <p class="text-gray-600 mb-4">
               Generate Python, R, SQL, and Julia code with proper error handling, optimizations, and best practices. Runs in sandboxed environments.
             </p>
-            <a href="#" class="inline-flex items-center text-blue-600 font-medium group-hover:text-blue-700">
+            <a href="#" class="inline-flex items-center text-cyan-600 font-medium group-hover:text-cyan-700">
               View examples
               <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
@@ -224,10 +225,10 @@
         </div>
 
         <!-- Feature 3 -->
-        <div class="group relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-green-200">
-          <div class="absolute inset-0 bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        <div class="group relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-emerald-200">
+          <div class="absolute inset-0 bg-gradient-to-br from-emerald-50 to-green-50 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
           <div class="relative">
-            <div class="w-14 h-14 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+            <div class="w-14 h-14 bg-gradient-to-br from-emerald-500 to-green-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
               <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
               </svg>
@@ -236,7 +237,7 @@
             <p class="text-gray-600 mb-4">
               Drag-and-drop dashboard builder with Chart.js visualizations. Real-time updates via Solid Cable WebSockets. Dark mode support included.
             </p>
-            <a href="#" class="inline-flex items-center text-green-600 font-medium group-hover:text-green-700">
+            <a href="#" class="inline-flex items-center text-emerald-600 font-medium group-hover:text-emerald-700">
               See gallery
               <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
@@ -246,19 +247,19 @@
         </div>
 
         <!-- Feature 4 -->
-        <div class="group relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-yellow-200">
-          <div class="absolute inset-0 bg-gradient-to-br from-yellow-50 to-orange-50 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        <div class="group relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-amber-200">
+          <div class="absolute inset-0 bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
           <div class="relative">
-            <div class="w-14 h-14 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+            <div class="w-14 h-14 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
               <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
               </svg>
             </div>
-            <h3 class="text-xl font-bold text-gray-900 mb-3">Custom Data Pipelines</h3>
+            <h3 class="text-xl font-bold text-gray-900 mb-3">Universal Data Connectivity</h3>
             <p class="text-gray-600 mb-4">
-              Build automated workflows that clean, transform, and analyze your data. Schedule recurring reports and get alerts on key metrics.
+              Connect PostgreSQL, MySQL, MongoDB, Snowflake, BigQuery, S3, Google Sheets, or upload CSV/Excel. Automatic schema detection included.
             </p>
-            <a href="#" class="inline-flex items-center text-yellow-600 font-medium group-hover:text-yellow-700">
+            <a href="#" class="inline-flex items-center text-amber-600 font-medium group-hover:text-amber-700">
               Explore workflows
               <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
@@ -268,19 +269,19 @@
         </div>
 
         <!-- Feature 5 -->
-        <div class="group relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-red-200">
-          <div class="absolute inset-0 bg-gradient-to-br from-red-50 to-pink-50 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        <div class="group relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-slate-200">
+          <div class="absolute inset-0 bg-gradient-to-br from-slate-50 to-gray-50 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
           <div class="relative">
-            <div class="w-14 h-14 bg-gradient-to-br from-red-500 to-pink-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+            <div class="w-14 h-14 bg-gradient-to-br from-slate-600 to-gray-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
               <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
               </svg>
             </div>
-            <h3 class="text-xl font-bold text-gray-900 mb-3">Enterprise Security</h3>
+            <h3 class="text-xl font-bold text-gray-900 mb-3">Enterprise-Grade Security</h3>
             <p class="text-gray-600 mb-4">
-              Bank-level encryption, SOC 2 compliance, and role-based access control. Your data is protected with multiple layers of security.
+              Devise authentication with 2FA, Lockbox encryption, role-based access control, rate limiting with Rack::Attack. Multi-tenant data isolation.
             </p>
-            <a href="#" class="inline-flex items-center text-red-600 font-medium group-hover:text-red-700">
+            <a href="#" class="inline-flex items-center text-slate-600 font-medium group-hover:text-slate-700">
               Security details
               <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
@@ -290,19 +291,19 @@
         </div>
 
         <!-- Feature 6 -->
-        <div class="group relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-indigo-200">
-          <div class="absolute inset-0 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        <div class="group relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-sky-200">
+          <div class="absolute inset-0 bg-gradient-to-br from-sky-50 to-blue-50 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
           <div class="relative">
-            <div class="w-14 h-14 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+            <div class="w-14 h-14 bg-gradient-to-br from-sky-500 to-blue-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
               <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
               </svg>
             </div>
-            <h3 class="text-xl font-bold text-gray-900 mb-3">Team Collaboration</h3>
+            <h3 class="text-xl font-bold text-gray-900 mb-3">Scheduled Reports & Collaboration</h3>
             <p class="text-gray-600 mb-4">
-              Share dashboards, collaborate on analysis, and maintain version control. Built for teams that make data-driven decisions together.
+              Automated report generation (PDF/CSV), customizable schedules, email distribution lists. Organization workspaces with team roles.
             </p>
-            <a href="#" class="inline-flex items-center text-indigo-600 font-medium group-hover:text-indigo-700">
+            <a href="#" class="inline-flex items-center text-sky-600 font-medium group-hover:text-sky-700">
               Team features
               <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
@@ -314,30 +315,99 @@
     </div>
   </section>
 
-  <!-- Statistics Section -->
-  <section class="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-purple-600 to-blue-600">
+  <!-- How It Works Section -->
+  <section class="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-teal-600 to-cyan-600">
     <div class="max-w-7xl mx-auto">
       <div class="text-center text-white mb-12">
-        <h2 class="text-4xl font-bold mb-4">Trusted by Data Teams Worldwide</h2>
-        <p class="text-xl opacity-90">Join thousands of companies making smarter decisions with QuantumQuery</p>
+        <h2 class="text-4xl font-bold mb-4">Your Data Journey in 5 Simple Steps</h2>
+        <p class="text-xl opacity-90">From question to actionable insight in under 60 seconds</p>
       </div>
 
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
-        <div class="text-center">
-          <div class="text-5xl font-bold text-white mb-2">10K+</div>
-          <div class="text-white/80">Active Users</div>
+      <div class="relative">
+        <!-- Connection Line -->
+        <div class="hidden md:block absolute top-1/2 left-0 right-0 h-0.5 bg-white/20 -translate-y-1/2"></div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-6 relative">
+          <!-- Step 1 -->
+          <div class="text-center relative">
+            <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-xl">
+              <span class="text-2xl font-bold text-teal-600">1</span>
+            </div>
+            <h3 class="text-white font-bold mb-2">Connect Data</h3>
+            <p class="text-white/80 text-sm">Link your database or upload files instantly</p>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="text-center relative">
+            <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-xl">
+              <span class="text-2xl font-bold text-teal-600">2</span>
+            </div>
+            <h3 class="text-white font-bold mb-2">Ask Questions</h3>
+            <p class="text-white/80 text-sm">Type your query in plain English</p>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="text-center relative">
+            <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-xl">
+              <span class="text-2xl font-bold text-teal-600">3</span>
+            </div>
+            <h3 class="text-white font-bold mb-2">AI Analysis</h3>
+            <p class="text-white/80 text-sm">Multi-model AI selects optimal approach</p>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="text-center relative">
+            <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-xl">
+              <span class="text-2xl font-bold text-teal-600">4</span>
+            </div>
+            <h3 class="text-white font-bold mb-2">Get Code</h3>
+            <p class="text-white/80 text-sm">Receive Python, R, or SQL code</p>
+          </div>
+
+          <!-- Step 5 -->
+          <div class="text-center relative">
+            <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-xl">
+              <span class="text-2xl font-bold text-teal-600">5</span>
+            </div>
+            <h3 class="text-white font-bold mb-2">View Results</h3>
+            <p class="text-white/80 text-sm">Interactive charts and insights</p>
+          </div>
         </div>
-        <div class="text-center">
-          <div class="text-5xl font-bold text-white mb-2">50M+</div>
-          <div class="text-white/80">Queries Analyzed</div>
+      </div>
+
+      <!-- Additional Benefits -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16">
+        <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+          <div class="flex items-center gap-3 mb-3">
+            <svg class="w-6 h-6 text-yellow-300" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
+              <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/>
+            </svg>
+            <h4 class="text-white font-bold">Full Transparency</h4>
+          </div>
+          <p class="text-white/80 text-sm">See exactly how your data is analyzed with our 5-stage workflow visibility</p>
         </div>
-        <div class="text-center">
-          <div class="text-5xl font-bold text-white mb-2">99.9%</div>
-          <div class="text-white/80">Uptime SLA</div>
+
+        <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+          <div class="flex items-center gap-3 mb-3">
+            <svg class="w-6 h-6 text-green-300" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+            </svg>
+            <h4 class="text-white font-bold">Production Ready</h4>
+          </div>
+          <p class="text-white/80 text-sm">Generated code includes error handling, optimizations, and best practices</p>
         </div>
-        <div class="text-center">
-          <div class="text-5xl font-bold text-white mb-2">4.9/5</div>
-          <div class="text-white/80">Customer Rating</div>
+
+        <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+          <div class="flex items-center gap-3 mb-3">
+            <svg class="w-6 h-6 text-blue-300" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M3 12v3c0 1.657 3.134 3 7 3s7-1.343 7-3v-3c0 1.657-3.134 3-7 3s-7-1.343-7-3z"/>
+              <path d="M3 7v3c0 1.657 3.134 3 7 3s7-1.343 7-3V7c0 1.657-3.134 3-7 3S3 8.657 3 7z"/>
+              <path d="M17 5c0 1.657-3.134 3-7 3S3 6.657 3 5s3.134-3 7-3 7 1.343 7 3z"/>
+            </svg>
+            <h4 class="text-white font-bold">Smart Caching</h4>
+          </div>
+          <p class="text-white/80 text-sm">Solid Cache technology reduces costs and speeds up repeated queries</p>
         </div>
       </div>
     </div>
@@ -378,15 +448,15 @@
             </svg>
           </div>
           <p class="text-gray-700 mb-6">
-            "QuantumQuery has revolutionized how we analyze data. What used to take hours now takes minutes. The natural language interface is a game-changer."
+            "The multi-model AI approach is brilliant. GPT-4 handles complex queries while Claude Haiku manages simple ones cost-effectively. Our analysis time dropped by 75%."
           </p>
           <div class="flex items-center gap-4">
-            <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
-              <span class="text-purple-600 font-bold">SK</span>
+            <div class="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center">
+              <span class="text-teal-600 font-bold">SK</span>
             </div>
             <div>
               <div class="font-semibold text-gray-900">Sarah Kim</div>
-              <div class="text-sm text-gray-600">Head of Data, TechCorp</div>
+              <div class="text-sm text-gray-600">Head of Data Analytics</div>
             </div>
           </div>
         </div>
@@ -411,7 +481,7 @@
             </svg>
           </div>
           <p class="text-gray-700 mb-6">
-            "The multi-model AI approach gives us confidence in our insights. We're making better decisions faster than ever before. Highly recommended!"
+            "The Python and R code generation saves us hours daily. Connect our PostgreSQL database, ask questions in English, get production-ready code instantly."
           </p>
           <div class="flex items-center gap-4">
             <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
@@ -419,7 +489,7 @@
             </div>
             <div>
               <div class="font-semibold text-gray-900">Michael Rodriguez</div>
-              <div class="text-sm text-gray-600">Data Scientist, FinanceHub</div>
+              <div class="text-sm text-gray-600">Senior Data Scientist</div>
             </div>
           </div>
         </div>
@@ -444,7 +514,7 @@
             </svg>
           </div>
           <p class="text-gray-700 mb-6">
-            "Finally, a platform that makes advanced analytics accessible to our entire team. The ROI has been incredible - we're saving 20+ hours per week."
+            "The 5-stage analysis workflow is genius. From intent analysis to result interpretation, everything is transparent. Real-time dashboards with Solid Cable are fantastic!"
           </p>
           <div class="flex items-center gap-4">
             <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
@@ -452,7 +522,7 @@
             </div>
             <div>
               <div class="font-semibold text-gray-900">Emily Chen</div>
-              <div class="text-sm text-gray-600">VP Analytics, RetailPlus</div>
+              <div class="text-sm text-gray-600">VP Business Intelligence</div>
             </div>
           </div>
         </div>
@@ -464,7 +534,7 @@
   <section class="py-20 px-4 sm:px-6 lg:px-8 bg-white">
     <div class="max-w-7xl mx-auto">
       <div class="text-center mb-12">
-        <div class="inline-flex items-center gap-2 bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium mb-4">
+        <div class="inline-flex items-center gap-2 bg-teal-100 text-teal-800 px-4 py-2 rounded-full text-sm font-medium mb-4">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
             <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z"/>
             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd"/>
@@ -477,7 +547,7 @@
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         <!-- Starter Plan -->
-        <div class="relative bg-white rounded-2xl border-2 border-gray-200 p-8 hover:border-purple-200 transition-colors">
+        <div class="relative bg-white rounded-2xl border-2 border-gray-200 p-8 hover:border-teal-200 transition-colors">
           <div class="mb-8">
             <h3 class="text-2xl font-bold text-gray-900 mb-2">Starter</h3>
             <p class="text-gray-600 mb-6">Perfect for individuals and small teams</p>
@@ -491,7 +561,7 @@
               <svg class="w-5 h-5 text-green-500 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
               </svg>
-              <span class="text-gray-700">100 queries per month</span>
+              <span class="text-gray-700">100 queries/month</span>
             </li>
             <li class="flex items-start gap-3">
               <svg class="w-5 h-5 text-green-500 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
@@ -516,8 +586,8 @@
         </div>
 
         <!-- Professional Plan -->
-        <div class="relative bg-gradient-to-b from-purple-50 to-blue-50 rounded-2xl border-2 border-purple-500 p-8 transform scale-105 shadow-xl">
-          <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-1 rounded-full text-sm font-medium">
+        <div class="relative bg-gradient-to-b from-teal-50 to-cyan-50 rounded-2xl border-2 border-teal-500 p-8 transform scale-105 shadow-xl">
+          <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-teal-600 to-cyan-600 text-white px-4 py-1 rounded-full text-sm font-medium">
             MOST POPULAR
           </div>
           <div class="mb-8">
@@ -533,7 +603,7 @@
               <svg class="w-5 h-5 text-green-500 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
               </svg>
-              <span class="text-gray-700">500 queries per month</span>
+              <span class="text-gray-700">500 queries/month</span>
             </li>
             <li class="flex items-start gap-3">
               <svg class="w-5 h-5 text-green-500 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
@@ -560,11 +630,11 @@
               <span class="text-gray-700">Team collaboration</span>
             </li>
           </ul>
-          <%= link_to "Start Free Trial", new_user_registration_path, class: "block w-full text-center bg-gradient-to-r from-purple-600 to-blue-600 text-white px-6 py-3 rounded-xl hover:from-purple-700 hover:to-blue-700 transition-all font-semibold shadow-lg" %>
+          <%= link_to "Start Free Trial", new_user_registration_path, class: "block w-full text-center bg-gradient-to-r from-teal-600 to-cyan-600 text-white px-6 py-3 rounded-xl hover:from-teal-700 hover:to-cyan-700 transition-all font-semibold shadow-lg" %>
         </div>
 
         <!-- Enterprise Plan -->
-        <div class="relative bg-white rounded-2xl border-2 border-gray-200 p-8 hover:border-purple-200 transition-colors">
+        <div class="relative bg-white rounded-2xl border-2 border-gray-200 p-8 hover:border-teal-200 transition-colors">
           <div class="mb-8">
             <h3 class="text-2xl font-bold text-gray-900 mb-2">Enterprise</h3>
             <p class="text-gray-600 mb-6">For large organizations with custom needs</p>
@@ -613,23 +683,23 @@
   </section>
 
   <!-- Final CTA Section -->
-  <section class="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-600">
+  <section class="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-teal-600 via-cyan-600 to-sky-600">
     <div class="max-w-4xl mx-auto text-center text-white">
       <h2 class="text-4xl md:text-5xl font-bold mb-6">
-        Ready to Transform Your Data Analysis?
+        Turn Hours of Analysis Into Minutes
       </h2>
       <p class="text-xl mb-8 opacity-90">
-        Join thousands of data professionals who are already making smarter, faster decisions with QuantumQuery.
+        Connect your data. Ask questions in plain English. Get Python, R, or SQL code with visualizations. Built on Rails 8 with enterprise-grade security.
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
         <% if user_signed_in? %>
           <%= link_to "Launch Dashboard", dashboards_path, 
-              class: "inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-purple-600 bg-white rounded-xl hover:bg-gray-100 transform hover:scale-105 transition-all duration-200 shadow-xl" %>
+              class: "inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-teal-600 bg-white rounded-xl hover:bg-gray-100 transform hover:scale-105 transition-all duration-200 shadow-xl" %>
         <% else %>
           <%= link_to "Start Your Free Trial", new_user_registration_path, 
-              class: "inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-purple-600 bg-white rounded-xl hover:bg-gray-100 transform hover:scale-105 transition-all duration-200 shadow-xl" %>
+              class: "inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-teal-600 bg-white rounded-xl hover:bg-gray-100 transform hover:scale-105 transition-all duration-200 shadow-xl" %>
           <%= link_to "Schedule a Demo", "#", 
-              class: "inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-white bg-transparent border-2 border-white rounded-xl hover:bg-white hover:text-purple-600 transform hover:scale-105 transition-all duration-200" %>
+              class: "inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-white bg-transparent border-2 border-white rounded-xl hover:bg-white hover:text-teal-600 transform hover:scale-105 transition-all duration-200" %>
         <% end %>
       </div>
       <p class="mt-8 text-sm opacity-75">
