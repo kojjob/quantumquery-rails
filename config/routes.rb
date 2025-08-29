@@ -11,7 +11,11 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   # Dashboard routes (authenticated users)
-  resources :dashboards
+  resources :dashboards do
+    member do
+      post :duplicate
+    end
+  end
 
   # Static pages
   get "features", to: "pages#features"
