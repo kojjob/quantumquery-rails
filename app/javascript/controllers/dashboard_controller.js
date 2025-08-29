@@ -1,11 +1,13 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["grid", "editToggle", "addButton", "modal", "widget"]
+  static targets = ["grid", "editToggle", "addButton", "modal", "widget", "timeRange", "loadingOverlay"]
   
   connect() {
     this.editMode = false
     this.setupRefreshInterval()
+    this.setupEventListeners()
+    this.currentTimeRange = "30days"
   }
   
   disconnect() {
@@ -14,172 +16,437 @@ export default class extends Controller {
     }
   }
   
+  setupEventListeners() {
+    // Close modal when clicking outside
+    if (this.hasModalTarget) {
+      this.modalTarget.addEventListener('click', (e) => {
+        if (e.target === this.modalTarget) {
+          this.hideAddModal()
+        }
+      })
+    }
+    
+    // Handle ESC key to close modal
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && this.hasModalTarget && !this.modalTarget.classList.contains('hidden')) {
+        this.hideAddModal()
+      }
+    })
+  }
+  
   toggleEditMode() {
     this.editMode = !this.editMode
     this.gridTarget.dataset.editMode = this.editMode
     
+    const editButton = this.editToggleTarget
+    const editText = editButton.querySelector('span')
+    
     if (this.editMode) {
-      this.editToggleTarget.classList.add("bg-purple-600", "text-white")
-      this.editToggleTarget.classList.remove("border-gray-300", "text-gray-700")
-      this.addButtonTarget.classList.remove("hidden")
+      // Update button appearance for edit mode
+      editButton.classList.remove('bg-white', 'dark:bg-gray-800', 'hover:bg-gray-50', 'dark:hover:bg-gray-700')
+      editButton.classList.add('bg-blue-600', 'hover:bg-blue-700', 'text-white')
+      if (editText) editText.textContent = 'Save Layout'
+      
+      // Show add button
+      if (this.hasAddButtonTarget) {
+        this.addButtonTarget.classList.remove('hidden')
+      }
+      
       this.enableWidgetEditing()
+      this.showNotification('Edit mode enabled - Drag widgets to reposition', 'info')
     } else {
-      this.editToggleTarget.classList.remove("bg-purple-600", "text-white")
-      this.editToggleTarget.classList.add("border-gray-300", "text-gray-700")
-      this.addButtonTarget.classList.add("hidden")
+      // Update button appearance for view mode
+      editButton.classList.add('bg-white', 'dark:bg-gray-800', 'hover:bg-gray-50', 'dark:hover:bg-gray-700')
+      editButton.classList.remove('bg-blue-600', 'hover:bg-blue-700', 'text-white')
+      if (editText) editText.textContent = 'Edit'
+      
+      // Hide add button
+      if (this.hasAddButtonTarget) {
+        this.addButtonTarget.classList.add('hidden')
+      }
+      
       this.disableWidgetEditing()
       this.saveLayout()
+      this.showNotification('Layout saved successfully', 'success')
     }
   }
   
   enableWidgetEditing() {
     this.widgetTargets.forEach(widget => {
-      widget.classList.add("cursor-move")
-      widget.querySelector(".edit-widget")?.classList.remove("hidden")
-      widget.querySelector(".remove-widget")?.classList.remove("hidden")
-      widget.querySelector(".resize-handle")?.classList.remove("hidden")
+      widget.classList.add('cursor-move', 'hover:ring-2', 'hover:ring-blue-500')
+      
+      // Show edit and remove buttons
+      const editBtn = widget.querySelector('.edit-widget')
+      const removeBtn = widget.querySelector('.remove-widget')
+      const resizeHandle = widget.querySelector('.resize-handle')
+      
+      if (editBtn) editBtn.classList.remove('hidden')
+      if (removeBtn) removeBtn.classList.remove('hidden')
+      if (resizeHandle) resizeHandle.classList.remove('hidden')
+      
+      // Make widget draggable
+      this.makeWidgetDraggable(widget)
     })
   }
   
   disableWidgetEditing() {
     this.widgetTargets.forEach(widget => {
-      widget.classList.remove("cursor-move")
-      widget.querySelector(".edit-widget")?.classList.add("hidden")
-      widget.querySelector(".remove-widget")?.classList.add("hidden")
-      widget.querySelector(".resize-handle")?.classList.add("hidden")
+      widget.classList.remove('cursor-move', 'hover:ring-2', 'hover:ring-blue-500')
+      
+      // Hide edit and remove buttons
+      const editBtn = widget.querySelector('.edit-widget')
+      const removeBtn = widget.querySelector('.remove-widget')
+      const resizeHandle = widget.querySelector('.resize-handle')
+      
+      if (editBtn) editBtn.classList.add('hidden')
+      if (removeBtn) removeBtn.classList.add('hidden')
+      if (resizeHandle) resizeHandle.classList.add('hidden')
+      
+      // Remove draggable functionality
+      widget.draggable = false
+    })
+  }
+  
+  makeWidgetDraggable(widget) {
+    widget.draggable = true
+    
+    widget.addEventListener('dragstart', (e) => {
+      e.dataTransfer.effectAllowed = 'move'
+      e.dataTransfer.setData('text/html', widget.innerHTML)
+      widget.classList.add('opacity-50')
+    })
+    
+    widget.addEventListener('dragend', (e) => {
+      widget.classList.remove('opacity-50')
+    })
+    
+    widget.addEventListener('dragover', (e) => {
+      if (e.preventDefault) {
+        e.preventDefault()
+      }
+      e.dataTransfer.dropEffect = 'move'
+      return false
+    })
+    
+    widget.addEventListener('drop', (e) => {
+      if (e.stopPropagation) {
+        e.stopPropagation()
+      }
+      return false
     })
   }
   
   showAddModal() {
-    this.modalTarget.classList.remove("hidden")
+    if (this.hasModalTarget) {
+      this.modalTarget.classList.remove('hidden')
+      this.modalTarget.classList.add('flex')
+      
+      // Focus on first input
+      setTimeout(() => {
+        const firstInput = this.modalTarget.querySelector('input, select')
+        if (firstInput) firstInput.focus()
+      }, 100)
+    }
   }
   
   hideAddModal() {
-    this.modalTarget.classList.add("hidden")
+    if (this.hasModalTarget) {
+      this.modalTarget.classList.add('hidden')
+      this.modalTarget.classList.remove('flex')
+      
+      // Clear form inputs
+      document.getElementById('widget-title-input').value = ''
+      document.getElementById('widget-type-select').selectedIndex = 0
+      document.getElementById('widget-width-input').value = '2'
+      document.getElementById('widget-height-input').value = '3'
+    }
   }
   
   async addWidget() {
-    const widgetType = document.getElementById("widget-type-select").value
-    const title = document.getElementById("widget-title-input").value
-    const width = document.getElementById("widget-width-input").value
-    const height = document.getElementById("widget-height-input").value
+    const widgetType = document.getElementById('widget-type-select').value
+    const title = document.getElementById('widget-title-input').value
+    const width = document.getElementById('widget-width-input').value
+    const height = document.getElementById('widget-height-input').value
     
-    const dashboardId = this.gridTarget.closest("[data-dashboard-id]").dataset.dashboardId
+    if (!title) {
+      this.showNotification('Please enter a widget title', 'error')
+      return
+    }
     
-    const response = await fetch(`/dashboards/${dashboardId}/add_widget`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content
-      },
-      body: JSON.stringify({
-        widget: {
-          widget_type: widgetType,
-          title: title,
-          width: parseInt(width),
-          height: parseInt(height),
-          row: 0,
-          col: 0,
-          config: {}
-        }
+    const dashboardId = this.element.dataset.dashboardId
+    
+    this.showLoading()
+    
+    try {
+      const response = await fetch(`/dashboards/${dashboardId}/add_widget`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content,
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          widget: {
+            widget_type: widgetType,
+            title: title,
+            width: parseInt(width),
+            height: parseInt(height),
+            row: 0,
+            col: 0,
+            config: {}
+          }
+        })
       })
-    })
-    
-    if (response.ok) {
-      window.location.reload()
+      
+      if (response.ok) {
+        this.hideAddModal()
+        this.showNotification('Widget added successfully', 'success')
+        setTimeout(() => window.location.reload(), 1000)
+      } else {
+        const error = await response.json()
+        this.showNotification(error.errors?.join(', ') || 'Failed to add widget', 'error')
+      }
+    } catch (error) {
+      this.showNotification('An error occurred while adding the widget', 'error')
+    } finally {
+      this.hideLoading()
     }
   }
   
   async removeWidget(event) {
     const widgetId = event.currentTarget.dataset.widgetId
-    const dashboardId = this.gridTarget.closest("[data-dashboard-id]").dataset.dashboardId
+    const dashboardId = this.element.dataset.dashboardId
     
-    if (confirm("Are you sure you want to remove this widget?")) {
-      const response = await fetch(`/dashboards/${dashboardId}/remove_widget/${widgetId}`, {
-        method: "DELETE",
-        headers: {
-          "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content
-        }
-      })
+    if (confirm('Are you sure you want to remove this widget?')) {
+      this.showLoading()
       
-      if (response.ok) {
-        const widget = document.querySelector(`[data-widget-id="${widgetId}"]`)
-        widget.remove()
+      try {
+        const response = await fetch(`/dashboards/${dashboardId}/remove_widget/${widgetId}`, {
+          method: 'DELETE',
+          headers: {
+            'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content,
+            'Accept': 'application/json'
+          }
+        })
+        
+        if (response.ok) {
+          const widget = document.querySelector(`[data-widget-id="${widgetId}"]`)
+          
+          // Animate removal
+          widget.style.transition = 'all 0.3s ease'
+          widget.style.transform = 'scale(0.9)'
+          widget.style.opacity = '0'
+          
+          setTimeout(() => {
+            widget.remove()
+            this.showNotification('Widget removed successfully', 'success')
+          }, 300)
+        } else {
+          this.showNotification('Failed to remove widget', 'error')
+        }
+      } catch (error) {
+        this.showNotification('An error occurred while removing the widget', 'error')
+      } finally {
+        this.hideLoading()
       }
     }
   }
   
   async refreshWidget(event) {
-    const widgetId = event.currentTarget.dataset.widgetId
-    const dashboardId = this.gridTarget.closest("[data-dashboard-id]").dataset.dashboardId
+    const button = event.currentTarget
+    const widgetId = button.dataset.widgetId
+    const dashboardId = this.element.dataset.dashboardId
     
-    const response = await fetch(`/dashboards/${dashboardId}/refresh_widget/${widgetId}`, {
-      headers: {
-        "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content
-      }
-    })
-    
-    if (response.ok) {
-      const data = await response.json()
-      // Update widget content with new data
-      const widget = document.querySelector(`[data-widget-id="${widgetId}"]`)
-      const contentDiv = widget.querySelector(".widget-content")
-      contentDiv.dataset.widgetData = JSON.stringify(data.data)
-      // Optionally trigger a re-render of the widget
+    // Add rotation animation to refresh icon
+    const icon = button.querySelector('svg')
+    if (icon) {
+      icon.classList.add('animate-spin')
     }
+    
+    try {
+      const response = await fetch(`/dashboards/${dashboardId}/refresh_widget/${widgetId}`, {
+        headers: {
+          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content,
+          'Accept': 'application/json'
+        }
+      })
+      
+      if (response.ok) {
+        const data = await response.json()
+        const widget = document.querySelector(`[data-widget-id="${widgetId}"]`)
+        const contentDiv = widget.querySelector('.widget-content')
+        
+        if (contentDiv) {
+          contentDiv.dataset.widgetData = JSON.stringify(data.data)
+          
+          // Add subtle flash animation
+          widget.style.transition = 'all 0.2s ease'
+          widget.classList.add('ring-2', 'ring-green-500')
+          
+          setTimeout(() => {
+            widget.classList.remove('ring-2', 'ring-green-500')
+          }, 500)
+        }
+      }
+    } catch (error) {
+      console.error('Error refreshing widget:', error)
+    } finally {
+      // Stop rotation animation
+      if (icon) {
+        setTimeout(() => {
+          icon.classList.remove('animate-spin')
+        }, 500)
+      }
+    }
+  }
+  
+  async refreshDashboard() {
+    const button = event.currentTarget
+    const icon = button.querySelector('svg')
+    
+    // Add rotation animation
+    if (icon) {
+      icon.classList.add('animate-spin')
+    }
+    
+    this.showNotification('Refreshing dashboard...', 'info')
+    
+    await this.refreshAllWidgets()
+    
+    setTimeout(() => {
+      if (icon) {
+        icon.classList.remove('animate-spin')
+      }
+      this.showNotification('Dashboard refreshed', 'success')
+    }, 1000)
   }
   
   async saveLayout() {
     const widgets = []
+    
     this.widgetTargets.forEach(widget => {
       const style = widget.style
-      const gridColumn = style.gridColumn || ""
-      const gridRow = style.gridRow || ""
+      const widgetId = widget.dataset.widgetId
       
-      // Parse grid position from style
-      const colMatch = gridColumn.match(/span (\d+)/)
-      const rowMatch = gridRow.match(/span (\d+)/)
-      const colStartMatch = style.gridColumnStart.match(/(\d+)/)
-      const rowStartMatch = style.gridRowStart.match(/(\d+)/)
+      // Get current position from grid styles
+      const gridColumn = style.gridColumn || ''
+      const colSpan = gridColumn.match(/span (\d+)/)
+      const width = colSpan ? parseInt(colSpan[1]) : 2
       
       widgets.push({
-        id: widget.dataset.widgetId,
-        width: colMatch ? parseInt(colMatch[1]) : 3,
-        height: rowMatch ? parseInt(rowMatch[1]) : 2,
-        col: colStartMatch ? parseInt(colStartMatch[1]) - 1 : 0,
-        row: rowStartMatch ? parseInt(rowStartMatch[1]) - 1 : 0
+        id: widgetId,
+        width: width,
+        height: 3, // Default height
+        col: 0, // Would need to calculate from actual position
+        row: 0  // Would need to calculate from actual position
       })
     })
     
-    const dashboardId = this.gridTarget.closest("[data-dashboard-id]").dataset.dashboardId
+    const dashboardId = this.element.dataset.dashboardId
     
-    await fetch(`/dashboards/${dashboardId}/update_layout`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content
-      },
-      body: JSON.stringify({ widgets })
-    })
+    try {
+      await fetch(`/dashboards/${dashboardId}/update_layout`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content,
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({ widgets })
+      })
+    } catch (error) {
+      console.error('Error saving layout:', error)
+    }
   }
   
   setupRefreshInterval() {
-    // Auto-refresh widgets every 30 seconds
+    // Auto-refresh widgets every 60 seconds
     this.refreshInterval = setInterval(() => {
       if (!this.editMode) {
         this.refreshAllWidgets()
       }
-    }, 30000)
+    }, 60000)
   }
   
   async refreshAllWidgets() {
-    const refreshButtons = document.querySelectorAll(".refresh-widget")
-    refreshButtons.forEach(button => {
-      button.click()
-    })
+    const refreshButtons = document.querySelectorAll('[data-action*="refreshWidget"]')
+    
+    for (const button of refreshButtons) {
+      await this.refreshWidget({ currentTarget: button })
+      // Small delay between widget refreshes
+      await new Promise(resolve => setTimeout(resolve, 100))
+    }
   }
   
-  async refreshDashboard() {
-    await this.refreshAllWidgets()
+  changeTimeRange(event) {
+    const range = event.currentTarget.dataset.range
+    this.currentTimeRange = range
+    
+    // Update time range display
+    const rangeDisplay = document.querySelector('.time-range-display')
+    if (rangeDisplay) {
+      const rangeLabels = {
+        '24h': 'Last 24 Hours',
+        '7d': 'Last 7 Days',
+        '30d': 'Last 30 Days',
+        '90d': 'Last 90 Days',
+        '1y': 'Last Year'
+      }
+      rangeDisplay.textContent = rangeLabels[range] || 'Last 30 Days'
+    }
+    
+    // Refresh all widgets with new time range
+    this.refreshAllWidgets()
+    this.showNotification(`Time range changed to ${rangeLabels[range]}`, 'info')
+  }
+  
+  showLoading() {
+    const loadingOverlay = document.getElementById('dashboard-loading')
+    if (loadingOverlay) {
+      loadingOverlay.classList.remove('hidden')
+    }
+  }
+  
+  hideLoading() {
+    const loadingOverlay = document.getElementById('dashboard-loading')
+    if (loadingOverlay) {
+      loadingOverlay.classList.add('hidden')
+    }
+  }
+  
+  showNotification(message, type = 'info') {
+    // Create notification element
+    const notification = document.createElement('div')
+    notification.className = `fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg z-50 transform transition-all duration-300 translate-y-full`
+    
+    // Set color based on type
+    const colors = {
+      success: 'bg-green-500 text-white',
+      error: 'bg-red-500 text-white',
+      info: 'bg-blue-500 text-white',
+      warning: 'bg-yellow-500 text-white'
+    }
+    
+    notification.className += ` ${colors[type] || colors.info}`
+    notification.textContent = message
+    
+    // Add to page
+    document.body.appendChild(notification)
+    
+    // Animate in
+    setTimeout(() => {
+      notification.classList.remove('translate-y-full')
+      notification.classList.add('translate-y-0')
+    }, 100)
+    
+    // Remove after 3 seconds
+    setTimeout(() => {
+      notification.classList.remove('translate-y-0')
+      notification.classList.add('translate-y-full')
+      
+      setTimeout(() => {
+        notification.remove()
+      }, 300)
+    }, 3000)
   }
 }

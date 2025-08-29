@@ -14,6 +14,11 @@ Rails.application.routes.draw do
   resources :dashboards do
     member do
       post :duplicate
+      post :add_widget
+      patch :update_layout
+      delete "remove_widget/:widget_id", to: "dashboards#remove_widget", as: :remove_widget
+      get "refresh_widget/:widget_id", to: "dashboards#refresh_widget", as: :refresh_widget
+      patch "update_widget/:widget_id", to: "dashboards#update_widget", as: :update_widget
     end
   end
 
