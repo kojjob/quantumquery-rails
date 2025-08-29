@@ -41,6 +41,8 @@ gem "caxlsx" # Excel generation
 
 # Security and authentication
 gem "devise" # Authentication framework
+gem "devise-two-factor" # Two-factor authentication
+gem "rqrcode" # QR code generation for 2FA
 gem "pundit" # Authorization
 gem "jwt" # JSON Web Tokens
 gem "rack-attack" # Rate limiting

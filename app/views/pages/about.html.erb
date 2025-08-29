@@ -1,0 +1,104 @@
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+  <%= render 'shared/navbar' %>
+  
+  <div class="pt-24 pb-16 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto">
+      <!-- Hero Section -->
+      <div class="text-center mb-16">
+        <h1 class="text-5xl font-bold text-gray-900 mb-6">About QuantumQuery</h1>
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+          We're democratizing data science by making advanced analytics accessible to everyone through the power of AI.
+        </p>
+      </div>
+
+      <!-- Mission Section -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
+        <div>
+          <h2 class="text-3xl font-bold text-gray-900 mb-4">Our Mission</h2>
+          <p class="text-gray-600 mb-4">
+            QuantumQuery was founded with a simple yet powerful vision: to break down the barriers between business questions and data insights.
+          </p>
+          <p class="text-gray-600 mb-4">
+            We believe that everyone, regardless of their technical background, should be able to harness the power of data to make informed decisions.
+          </p>
+          <p class="text-gray-600">
+            By combining cutting-edge AI models with intuitive natural language processing, we're making data science as easy as asking a question.
+          </p>
+        </div>
+        <div class="bg-white rounded-lg shadow-lg p-8">
+          <h3 class="text-2xl font-bold text-gray-900 mb-6">By the Numbers</h3>
+          <div class="space-y-4">
+            <div class="flex justify-between">
+              <span class="text-gray-600">Founded</span>
+              <span class="font-semibold">2024</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-600">Team Members</span>
+              <span class="font-semibold">25+</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-600">Queries Processed</span>
+              <span class="font-semibold">1M+</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-600">Happy Customers</span>
+              <span class="font-semibold">5,000+</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Values Section -->
+      <div class="mb-16">
+        <h2 class="text-3xl font-bold text-gray-900 text-center mb-12">Our Values</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="text-center">
+            <div class="bg-blue-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg class="w-10 h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold mb-2">Innovation</h3>
+            <p class="text-gray-600">Constantly pushing the boundaries of what's possible with AI and data science.</p>
+          </div>
+          <div class="text-center">
+            <div class="bg-green-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg class="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold mb-2">Accessibility</h3>
+            <p class="text-gray-600">Making advanced analytics available to everyone, regardless of technical expertise.</p>
+          </div>
+          <div class="text-center">
+            <div class="bg-purple-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg class="w-10 h-10 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold mb-2">Security</h3>
+            <p class="text-gray-600">Protecting your data with enterprise-grade security and privacy measures.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Team Section -->
+      <div class="bg-white rounded-lg shadow-lg p-12">
+        <h2 class="text-3xl font-bold text-gray-900 text-center mb-12">Our Team</h2>
+        <p class="text-gray-600 text-center mb-8 max-w-3xl mx-auto">
+          We're a diverse team of data scientists, engineers, and designers passionate about making data accessible to everyone.
+        </p>
+        <div class="text-center">
+          <a href="<%= careers_path %>" class="inline-flex items-center bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition">
+            Join Our Team
+            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%= render 'shared/footer' %>
+</div>
