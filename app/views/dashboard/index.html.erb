@@ -1,0 +1,160 @@
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold text-gray-900 mb-8">Dashboard</h1>
+
+  <!-- Statistics Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div class="bg-white rounded-lg shadow p-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm font-medium text-gray-600">Total Analyses</p>
+          <p class="text-2xl font-bold text-gray-900"><%= @total_analyses %></p>
+        </div>
+        <svg class="h-12 w-12 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+        </svg>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow p-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm font-medium text-gray-600">Active Reports</p>
+          <p class="text-2xl font-bold text-gray-900"><%= @active_scheduled_reports %></p>
+        </div>
+        <svg class="h-12 w-12 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow p-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm font-medium text-gray-600">Total Reports</p>
+          <p class="text-2xl font-bold text-gray-900"><%= @total_scheduled_reports %></p>
+        </div>
+        <svg class="h-12 w-12 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+        </svg>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow p-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm font-medium text-gray-600">Datasets</p>
+          <p class="text-2xl font-bold text-gray-900"><%= @total_datasets %></p>
+        </div>
+        <svg class="h-12 w-12 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4" />
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Recent Analyses -->
+    <div class="bg-white rounded-lg shadow">
+      <div class="px-6 py-4 border-b flex justify-between items-center">
+        <h2 class="text-xl font-semibold text-gray-900">Recent Analyses</h2>
+        <%= link_to "View All", analysis_requests_path, class: "text-blue-600 hover:text-blue-900 text-sm" %>
+      </div>
+      <div class="p-6">
+        <% if @recent_analyses.any? %>
+          <div class="space-y-4">
+            <% @recent_analyses.each do |analysis| %>
+              <div class="border-l-4 border-blue-400 pl-4">
+                <%= link_to analysis, class: "block hover:bg-gray-50 -ml-4 pl-4 py-2" do %>
+                  <p class="text-sm font-medium text-gray-900"><%= truncate(analysis.natural_language_query, length: 60) %></p>
+                  <p class="text-xs text-gray-500 mt-1">
+                    <%= analysis.dataset&.name || "No dataset" %> • 
+                    <%= analysis.created_at.strftime("%b %d at %l:%M %p") %>
+                    <span class="ml-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%= analysis.completed? ? 'bg-green-100 text-green-800' : (analysis.failed? ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800') %>">
+                      <%= analysis.status %>
+                    </span>
+                  </p>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <p class="text-gray-500">No analyses yet. Create your first analysis!</p>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Scheduled Reports -->
+    <div class="bg-white rounded-lg shadow">
+      <div class="px-6 py-4 border-b flex justify-between items-center">
+        <h2 class="text-xl font-semibold text-gray-900">Scheduled Reports</h2>
+        <%= link_to "Manage Reports", scheduled_reports_path, class: "text-blue-600 hover:text-blue-900 text-sm" %>
+      </div>
+      <div class="p-6">
+        <% if @scheduled_reports.any? %>
+          <div class="space-y-4">
+            <% @scheduled_reports.each do |report| %>
+              <div class="border-l-4 border-green-400 pl-4">
+                <%= link_to report, class: "block hover:bg-gray-50 -ml-4 pl-4 py-2" do %>
+                  <p class="text-sm font-medium text-gray-900"><%= report.name %></p>
+                  <p class="text-xs text-gray-500 mt-1">
+                    <%= report.formatted_schedule %> • 
+                    Next: <%= report.next_run_at ? report.next_run_at.strftime("%b %d at %l:%M %p") : "Not scheduled" %>
+                    <span class="ml-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
+                      <%= report.format.upcase %>
+                    </span>
+                  </p>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+          <div class="mt-4 pt-4 border-t">
+            <%= link_to "Create New Report", new_scheduled_report_path, 
+                class: "text-blue-600 hover:text-blue-900 text-sm font-medium" %>
+          </div>
+        <% else %>
+          <p class="text-gray-500 mb-4">No scheduled reports yet.</p>
+          <%= link_to "Create Your First Report", new_scheduled_report_path, 
+              class: "inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="mt-8 bg-white rounded-lg shadow p-6">
+    <h2 class="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <%= link_to new_analysis_request_path, 
+          class: "flex flex-col items-center justify-center p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition duration-200" do %>
+        <svg class="h-8 w-8 text-blue-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+        </svg>
+        <span class="text-sm font-medium text-gray-900">New Analysis</span>
+      <% end %>
+
+      <%= link_to new_scheduled_report_path, 
+          class: "flex flex-col items-center justify-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition duration-200" do %>
+        <svg class="h-8 w-8 text-green-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span class="text-sm font-medium text-gray-900">Schedule Report</span>
+      <% end %>
+
+      <%= link_to datasets_path, 
+          class: "flex flex-col items-center justify-center p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition duration-200" do %>
+        <svg class="h-8 w-8 text-purple-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4" />
+        </svg>
+        <span class="text-sm font-medium text-gray-900">View Datasets</span>
+      <% end %>
+
+      <%= link_to scheduled_reports_path, 
+          class: "flex flex-col items-center justify-center p-4 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition duration-200" do %>
+        <svg class="h-8 w-8 text-indigo-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+        </svg>
+        <span class="text-sm font-medium text-gray-900">All Reports</span>
+      <% end %>
+    </div>
+  </div>
+</div>

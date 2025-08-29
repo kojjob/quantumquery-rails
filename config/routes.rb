@@ -22,6 +22,31 @@ Rails.application.routes.draw do
     end
   end
 
+  # Authenticated routes
+  authenticate :user do
+    resources :datasets do
+      member do
+        post :analyze
+      end
+    end
+    
+    resources :analysis_requests, only: [:index, :show, :destroy] do
+      member do
+        get :export
+      end
+    end
+    
+    resources :scheduled_reports do
+      member do
+        patch :enable
+        patch :disable
+        post :run_now
+      end
+    end
+    
+    get "dashboard", to: "dashboard#index"
+  end
+
   # Static pages
   get "features", to: "pages#features"
   get "pricing", to: "pages#pricing"
@@ -32,7 +57,6 @@ Rails.application.routes.draw do
   get "blog", to: "pages#blog"
   get "privacy", to: "pages#privacy"
   get "terms", to: "pages#terms"
-
   # Defines the root path route ("/")
   root "pages#home"
 end

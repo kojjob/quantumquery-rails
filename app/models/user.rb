@@ -9,6 +9,7 @@ class User < ApplicationRecord
   has_many :analysis_requests, dependent: :destroy
   has_many :api_keys, dependent: :destroy
   has_many :dashboards, dependent: :destroy
+  has_many :scheduled_reports, dependent: :destroy
 
   # Validations
   validates :email, presence: true, uniqueness: true

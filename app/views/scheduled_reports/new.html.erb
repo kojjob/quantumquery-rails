@@ -1,0 +1,161 @@
+<div class="container mx-auto px-4 py-8 max-w-3xl">
+  <h1 class="text-3xl font-bold text-gray-900 mb-6">Create Scheduled Report</h1>
+
+  <%= form_with model: @scheduled_report, local: true do |form| %>
+    <% if @scheduled_report.errors.any? %>
+      <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
+        <h3 class="font-medium mb-2">Please fix the following errors:</h3>
+        <ul class="list-disc list-inside">
+          <% @scheduled_report.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="bg-white rounded-lg shadow p-6">
+      <!-- Basic Information -->
+      <div class="mb-8">
+        <h2 class="text-xl font-semibold mb-4">Basic Information</h2>
+        
+        <div class="mb-4">
+          <%= form.label :name, class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= form.text_field :name, 
+              class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500",
+              placeholder: "e.g., Weekly Sales Report" %>
+        </div>
+
+        <div class="mb-4">
+          <%= form.label :query, "Natural Language Query", class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= form.text_area :query, 
+              rows: 3,
+              class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500",
+              placeholder: "e.g., Show me the sales trends for the last 7 days grouped by product category" %>
+          <p class="mt-1 text-sm text-gray-500">This query will be executed automatically according to your schedule</p>
+        </div>
+
+        <div class="mb-4">
+          <%= form.label :dataset_id, "Dataset", class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= form.select :dataset_id, 
+              options_for_select(@datasets.map { |d| [d.name, d.id] }, @scheduled_report.dataset_id),
+              { include_blank: "Select a dataset..." },
+              class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" %>
+        </div>
+      </div>
+
+      <!-- Schedule Configuration -->
+      <div class="mb-8">
+        <h2 class="text-xl font-semibold mb-4">Schedule Configuration</h2>
+        
+        <div class="mb-4">
+          <%= form.label :frequency, class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= form.select :frequency, 
+              options_for_select([
+                ['Daily', 'daily'],
+                ['Weekly', 'weekly'],
+                ['Monthly', 'monthly']
+              ], @scheduled_report.frequency),
+              {},
+              class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500",
+              data: { 
+                controller: "schedule-config",
+                action: "change->schedule-config#updateScheduleFields"
+              } %>
+        </div>
+
+        <div class="mb-4">
+          <%= form.label :schedule_hour, "Time of Day", class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= form.select :schedule_hour, 
+              options_for_select((0..23).map { |h| ["#{h.to_s.rjust(2, '0')}:00", h] }, @scheduled_report.schedule_hour),
+              {},
+              class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" %>
+        </div>
+
+        <div class="mb-4" data-schedule-config-target="dayField">
+          <%= form.label :schedule_day, "Day", class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <div id="weekly-day-select" style="<%= @scheduled_report.weekly? ? '' : 'display: none;' %>">
+            <%= form.select :schedule_day, 
+                options_for_select(Date::DAYNAMES.map.with_index { |day, i| [day, i] }, @scheduled_report.schedule_day),
+                {},
+                class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" %>
+          </div>
+          <div id="monthly-day-select" style="<%= @scheduled_report.monthly? ? '' : 'display: none;' %>">
+            <%= form.select :schedule_day, 
+                options_for_select((1..31).map { |d| ["Day #{d}", d] }, @scheduled_report.schedule_day),
+                {},
+                class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Delivery Options -->
+      <div class="mb-8">
+        <h2 class="text-xl font-semibold mb-4">Delivery Options</h2>
+        
+        <div class="mb-4">
+          <%= form.label :format, "Report Format", class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= form.select :format, 
+              options_for_select([
+                ['PDF', 'pdf'],
+                ['Excel', 'xlsx'],
+                ['CSV', 'csv']
+              ], @scheduled_report.format),
+              {},
+              class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" %>
+        </div>
+
+        <div class="mb-4">
+          <%= form.label :recipients, "Email Recipients", class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= form.text_field :recipients, 
+              value: @scheduled_report.recipients&.join(', '),
+              class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500",
+              placeholder: "email1@example.com, email2@example.com" %>
+          <p class="mt-1 text-sm text-gray-500">Separate multiple email addresses with commas</p>
+        </div>
+      </div>
+
+      <!-- Status -->
+      <div class="mb-8">
+        <div class="flex items-center">
+          <%= form.check_box :enabled, class: "h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" %>
+          <%= form.label :enabled, "Enable this scheduled report", class: "ml-2 block text-sm text-gray-900" %>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex justify-between">
+        <%= link_to "Cancel", scheduled_reports_path, class: "px-4 py-2 text-gray-700 hover:text-gray-900" %>
+        <%= form.submit "Create Scheduled Report", 
+            class: "px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200" %>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<script>
+  // Simple JavaScript for schedule field toggling
+  document.addEventListener('DOMContentLoaded', function() {
+    const frequencySelect = document.querySelector('[data-action*="schedule-config"]');
+    const weeklyDaySelect = document.getElementById('weekly-day-select');
+    const monthlyDaySelect = document.getElementById('monthly-day-select');
+    
+    if (frequencySelect) {
+      frequencySelect.addEventListener('change', function() {
+        const value = this.value;
+        
+        if (weeklyDaySelect && monthlyDaySelect) {
+          if (value === 'daily') {
+            weeklyDaySelect.style.display = 'none';
+            monthlyDaySelect.style.display = 'none';
+          } else if (value === 'weekly') {
+            weeklyDaySelect.style.display = 'block';
+            monthlyDaySelect.style.display = 'none';
+          } else if (value === 'monthly') {
+            weeklyDaySelect.style.display = 'none';
+            monthlyDaySelect.style.display = 'block';
+          }
+        }
+      });
+    }
+  });
+</script>
