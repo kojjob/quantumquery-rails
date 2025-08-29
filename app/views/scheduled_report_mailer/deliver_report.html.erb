@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        color: #333;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      .header {
+        background-color: #3b82f6;
+        color: white;
+        padding: 20px;
+        text-align: center;
+        border-radius: 8px 8px 0 0;
+      }
+      .content {
+        background-color: #f9fafb;
+        padding: 20px;
+        border: 1px solid #e5e7eb;
+        border-top: none;
+        border-radius: 0 0 8px 8px;
+      }
+      .footer {
+        text-align: center;
+        padding: 20px;
+        color: #6b7280;
+        font-size: 14px;
+      }
+      .button {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #3b82f6;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        margin-top: 15px;
+      }
+      .info-box {
+        background-color: white;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 15px 0;
+      }
+      .label {
+        font-weight: bold;
+        color: #4b5563;
+      }
+    </style>
+  </head>
+  
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>QuantumQuery Scheduled Report</h1>
+        <p style="margin: 0; font-size: 18px;"><%= @scheduled_report.name %></p>
+      </div>
+      
+      <div class="content">
+        <p>Hello,</p>
+        
+        <p>Your scheduled report "<strong><%= @scheduled_report.name %></strong>" has been generated successfully and is attached to this email.</p>
+        
+        <div class="info-box">
+          <p><span class="label">Report Query:</span><br>
+          <%= @scheduled_report.query %></p>
+          
+          <p><span class="label">Generated:</span><br>
+          <%= Date.current.strftime("%B %d, %Y") %></p>
+          
+          <p><span class="label">Format:</span><br>
+          <%= @format.upcase %></p>
+          
+          <% if @analysis_request.dataset.present? %>
+            <p><span class="label">Dataset:</span><br>
+            <%= @analysis_request.dataset.name %></p>
+          <% end %>
+        </div>
+        
+        <p>The report has been generated based on your configured query and is attached to this email in <%= @format.upcase %> format.</p>
+        
+        <p>If you need to modify this scheduled report or change its frequency, you can do so by visiting your dashboard:</p>
+        
+        <%= link_to "View Dashboard", root_url, class: "button", style: "color: white;" %>
+        
+        <div class="info-box" style="margin-top: 20px;">
+          <p style="margin: 0;"><span class="label">Next Report:</span><br>
+          <% if @scheduled_report.next_run_at %>
+            This report will be sent again on <%= @scheduled_report.next_run_at.strftime("%B %d, %Y at %l:%M %p %Z") %>
+          <% else %>
+            No future reports are scheduled.
+          <% end %>
+          </p>
+        </div>
+      </div>
+      
+      <div class="footer">
+        <p>This is an automated email from QuantumQuery. Please do not reply to this email.</p>
+        <p>If you have any questions or need assistance, please contact our support team.</p>
+        <p>&copy; <%= Date.current.year %> QuantumQuery. All rights reserved.</p>
+      </div>
+    </div>
+  </body>
+</html>

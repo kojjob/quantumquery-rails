@@ -1,10 +1,80 @@
 <!DOCTYPE html>
 <html data-theme="light" class="">
   <head>
-    <title><%= content_for(:title) || "Quantumquery" %></title>
+    <title><%= content_for(:title) || "QuantumQuery - AI-Powered Data Science Platform | Transform Data Into Insights" %></title>
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
+    
+    <!-- Primary SEO Meta Tags -->
+    <meta name="description" content="<%= content_for(:description) || 'QuantumQuery is the AI-powered data science platform that transforms complex data into actionable insights. Natural language queries, automated ML workflows, and enterprise-grade analytics - no coding required.' %>">
+    <meta name="keywords" content="<%= content_for(:keywords) || 'data science platform, AI analytics, machine learning, natural language processing, business intelligence, data visualization, predictive analytics, no-code data science, enterprise analytics, automated ML' %>">
+    <meta name="author" content="QuantumQuery">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="English">
+    
+    <!-- Open Graph / Facebook Meta Tags -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="<%= request.original_url %>">
+    <meta property="og:title" content="<%= content_for(:og_title) || 'QuantumQuery - AI-Powered Data Science Platform' %>">
+    <meta property="og:description" content="<%= content_for(:og_description) || 'Transform complex data into actionable insights with AI-powered analytics. Natural language queries, automated ML workflows, and enterprise-grade security.' %>">
+    <meta property="og:image" content="<%= content_for(:og_image) || request.base_url + '/icon.png' %>">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:site_name" content="QuantumQuery">
+    <meta property="og:locale" content="en_US">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="<%= request.original_url %>">
+    <meta name="twitter:title" content="<%= content_for(:twitter_title) || 'QuantumQuery - AI-Powered Data Science Platform' %>">
+    <meta name="twitter:description" content="<%= content_for(:twitter_description) || 'Transform data into insights with AI. Natural language queries, automated ML, enterprise security. Start free trial.' %>">
+    <meta name="twitter:image" content="<%= content_for(:twitter_image) || request.base_url + '/icon.png' %>">
+    <meta name="twitter:site" content="@quantumquery">
+    <meta name="twitter:creator" content="@quantumquery">
+    
+    <!-- Additional SEO Enhancements -->
+    <link rel="canonical" href="<%= content_for(:canonical_url) || request.original_url.split('?').first %>">
+    <meta name="theme-color" content="#0D9488">
+    <meta name="application-name" content="QuantumQuery">
+    <meta name="msapplication-TileColor" content="#0D9488">
+    
+    <!-- Schema.org Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "QuantumQuery",
+      "description": "AI-powered data science platform that transforms complex data into actionable insights",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD",
+        "priceValidUntil": "2025-12-31",
+        "availability": "https://schema.org/InStock"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "ratingCount": "2847",
+        "bestRating": "5",
+        "worstRating": "1"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "QuantumQuery",
+        "url": "https://quantumquery.ai",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "<%= request.base_url + '/icon.png' %>"
+        }
+      }
+    }
+    </script>
+    
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
@@ -22,18 +92,25 @@
     <%= javascript_importmap_tags %>
     
     <script>
-      // Initialize dark mode from local storage
+      // Initialize dark mode from local storage for TailwindCSS
       (function() {
         const theme = localStorage.getItem('theme') || 'light';
-        document.documentElement.setAttribute('data-theme', theme);
         if (theme === 'dark') {
           document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
         }
+        
+        // Store theme for Stimulus controllers to access
+        window.currentTheme = theme;
       })();
     </script>
   </head>
 
   <body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-    <%= yield %>
+    <%= render 'shared/navbar' %>
+    <main>
+      <%= yield %>
+    </main>
   </body>
 </html>

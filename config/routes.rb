@@ -22,12 +22,12 @@ Rails.application.routes.draw do
     namespace :v1 do
       # API Documentation
       get "documentation", to: "documentation#index"
-      
+
       # Dataset endpoints
       resources :datasets
-      
+
       # Analysis endpoints
-      resources :analysis, only: [:index, :show, :create] do
+      resources :analysis, only: [ :index, :show, :create ] do
         member do
           post :cancel
         end
@@ -46,6 +46,29 @@ Rails.application.routes.draw do
     end
   end
 
+  # Authenticated routes
+  authenticate :user do
+    resources :datasets do
+      member do
+        post :analyze
+      end
+    end
+
+    resources :analysis_requests, only: [ :index, :show, :destroy ] do
+      member do
+        get :export
+      end
+    end
+
+    resources :scheduled_reports do
+      member do
+        patch :enable
+        patch :disable
+        post :run_now
+      end
+    end
+  end
+
   # Static pages
   get "features", to: "pages#features"
   get "pricing", to: "pages#pricing"
@@ -56,7 +79,6 @@ Rails.application.routes.draw do
   get "blog", to: "pages#blog"
   get "privacy", to: "pages#privacy"
   get "terms", to: "pages#terms"
-
   # Defines the root path route ("/")
   root "pages#home"
 end

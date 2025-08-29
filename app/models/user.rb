@@ -10,6 +10,7 @@ class User < ApplicationRecord
   has_many :api_keys, dependent: :destroy
   has_many :api_tokens, dependent: :destroy
   has_many :dashboards, dependent: :destroy
+  has_many :scheduled_reports, dependent: :destroy
 
   # Validations
   validates :email, presence: true, uniqueness: true
@@ -51,6 +52,14 @@ class User < ApplicationRecord
     when "enterprise" then 2000
     when "custom" then nil # unlimited
     else 100
+    end
+  end
+
+  def name
+    if first_name.present? || last_name.present?
+      [ first_name, last_name ].compact.join(" ")
+    else
+      email.split("@").first.humanize
     end
   end
 end

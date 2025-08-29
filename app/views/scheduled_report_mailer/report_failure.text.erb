@@ -1,0 +1,40 @@
+Report Generation Failed
+========================
+
+Report: <%= @scheduled_report.name %>
+
+Hello,
+
+We were unable to generate your scheduled report "<%= @scheduled_report.name %>". The report generation process encountered an error.
+
+Error Details:
+--------------
+Report Query: <%= @scheduled_report.query %>
+Attempted: <%= Time.current.strftime("%B %d, %Y at %l:%M %p %Z") %>
+<% if @error_message.present? %>
+Error: <%= @error_message %>
+<% end %>
+
+What you can do:
+----------------
+- Check if your query is correctly formatted
+- Ensure the dataset is still accessible and contains data
+- Verify that any referenced columns or fields still exist
+- Try running the query manually to identify any issues
+
+You can review and edit your scheduled report settings in your dashboard:
+<%= scheduled_report_url(@scheduled_report) %>
+
+Next Attempt:
+-------------
+<% if @scheduled_report.next_run_at && @scheduled_report.enabled? %>
+We will attempt to generate this report again on <%= @scheduled_report.next_run_at.strftime("%B %d, %Y at %l:%M %p %Z") %>
+<% else %>
+This report is currently disabled or not scheduled for future runs.
+<% end %>
+
+---
+This is an automated error notification from QuantumQuery.
+If you continue to experience issues, please contact our support team.
+
+© <%= Date.current.year %> QuantumQuery. All rights reserved.

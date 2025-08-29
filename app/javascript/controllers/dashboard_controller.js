@@ -43,8 +43,8 @@ export default class extends Controller {
     
     if (this.editMode) {
       // Update button appearance for edit mode
-      editButton.classList.remove('bg-white', 'dark:bg-gray-800', 'hover:bg-gray-50', 'dark:hover:bg-gray-700')
-      editButton.classList.add('bg-blue-600', 'hover:bg-blue-700', 'text-white')
+      editButton.classList.remove('bg-white', 'dark:bg-slate-800', 'hover:bg-slate-50', 'dark:hover:bg-slate-700')
+      editButton.classList.add('bg-teal-600', 'hover:bg-teal-700', 'text-white')
       if (editText) editText.textContent = 'Save Layout'
       
       // Show add button
@@ -56,8 +56,8 @@ export default class extends Controller {
       this.showNotification('Edit mode enabled - Drag widgets to reposition', 'info')
     } else {
       // Update button appearance for view mode
-      editButton.classList.add('bg-white', 'dark:bg-gray-800', 'hover:bg-gray-50', 'dark:hover:bg-gray-700')
-      editButton.classList.remove('bg-blue-600', 'hover:bg-blue-700', 'text-white')
+      editButton.classList.add('bg-white', 'dark:bg-slate-800', 'hover:bg-slate-50', 'dark:hover:bg-slate-700')
+      editButton.classList.remove('bg-teal-600', 'hover:bg-teal-700', 'text-white')
       if (editText) editText.textContent = 'Edit'
       
       // Hide add button
@@ -73,7 +73,7 @@ export default class extends Controller {
   
   enableWidgetEditing() {
     this.widgetTargets.forEach(widget => {
-      widget.classList.add('cursor-move', 'hover:ring-2', 'hover:ring-blue-500')
+      widget.classList.add('cursor-move', 'hover:ring-2', 'hover:ring-teal-500')
       
       // Show edit and remove buttons
       const editBtn = widget.querySelector('.edit-widget')
@@ -91,7 +91,7 @@ export default class extends Controller {
   
   disableWidgetEditing() {
     this.widgetTargets.forEach(widget => {
-      widget.classList.remove('cursor-move', 'hover:ring-2', 'hover:ring-blue-500')
+      widget.classList.remove('cursor-move', 'hover:ring-2', 'hover:ring-teal-500')
       
       // Hide edit and remove buttons
       const editBtn = widget.querySelector('.edit-widget')
@@ -421,10 +421,10 @@ export default class extends Controller {
     
     // Set color based on type
     const colors = {
-      success: 'bg-green-500 text-white',
+      success: 'bg-teal-500 text-white',
       error: 'bg-red-500 text-white',
-      info: 'bg-blue-500 text-white',
-      warning: 'bg-yellow-500 text-white'
+      info: 'bg-slate-600 text-white',
+      warning: 'bg-amber-500 text-white'
     }
     
     notification.className += ` ${colors[type] || colors.info}`

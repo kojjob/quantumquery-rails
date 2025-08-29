@@ -1,6 +1,6 @@
 class ApiTokensController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_api_token, only: [:show, :revoke, :destroy]
+  before_action :set_api_token, only: [ :show, :revoke, :destroy ]
 
   def index
     @api_tokens = current_user.api_tokens.order(created_at: :desc)

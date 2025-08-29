@@ -1,0 +1,135 @@
+<% content_for :title, @dataset.name %>
+
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+  <!-- Header -->
+  <div class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 pt-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div class="flex justify-between items-start">
+        <div class="flex-1">
+          <div class="flex items-center space-x-3 mb-2">
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-white"><%= @dataset.name %></h1>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-teal-100 dark:bg-teal-900/30 text-teal-800 dark:text-teal-300">
+              <%= @dataset.data_source_type&.humanize || "Unknown Type" %>
+            </span>
+          </div>
+          <p class="text-lg text-gray-600 dark:text-gray-300">
+            <%= @dataset.description.presence || "No description provided" %>
+          </p>
+          <div class="mt-4 flex items-center text-sm text-gray-500 dark:text-gray-400 space-x-6">
+            <div>Created <%= time_ago_in_words(@dataset.created_at) %> ago</div>
+            <div>Last updated <%= time_ago_in_words(@dataset.updated_at) %> ago</div>
+            <div><%= pluralize(@dataset.analysis_requests.count, 'analysis') %> performed</div>
+          </div>
+        </div>
+        <div class="flex items-center space-x-3">
+          <%= form_with url: analyze_dataset_path(@dataset), method: :post, local: true, class: "inline" do |form| %>
+            <%= form.submit "Analyze Data", class: "inline-flex items-center px-4 py-2 bg-gradient-to-r from-teal-600 to-cyan-600 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:from-teal-700 hover:to-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-all duration-200" %>
+          <% end %>
+          <%= link_to "Edit", edit_dataset_path(@dataset), class: "inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200" %>
+          <%= link_to "Back", datasets_path, class: "inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200" %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Main Content -->
+      <div class="lg:col-span-2 space-y-8">
+        <!-- Recent Analysis Requests -->
+        <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg border border-gray-200 dark:border-gray-700">
+          <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+            <div class="flex items-center justify-between">
+              <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Recent Analysis</h2>
+              <%= link_to "View All", analysis_requests_path(dataset_id: @dataset.id), class: "text-teal-600 dark:text-teal-400 hover:text-teal-700 dark:hover:text-teal-300 text-sm font-medium transition-colors duration-200" %>
+            </div>
+          </div>
+          <div class="divide-y divide-gray-200 dark:divide-gray-700">
+            <% if @analysis_requests.any? %>
+              <% @analysis_requests.each do |analysis_request| %>
+                <div class="px-6 py-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-200">
+                  <div class="flex items-center justify-between">
+                    <div class="flex-1 min-w-0">
+                      <h3 class="text-sm font-medium text-gray-900 dark:text-white truncate">
+                        <%= link_to analysis_request.query.truncate(50), analysis_request, class: "hover:text-teal-600 dark:hover:text-teal-400 transition-colors duration-200" %>
+                      </h3>
+                      <div class="flex items-center text-xs text-gray-500 dark:text-gray-400 mt-1 space-x-4">
+                        <span><%= time_ago_in_words(analysis_request.created_at) %> ago</span>
+                        <span>by <%= analysis_request.user.email if analysis_request.user %></span>
+                      </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                      <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium
+                        <%= case analysis_request.status
+                            when 'completed' then 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300'
+                            when 'processing' then 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300'
+                            when 'failed' then 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300'
+                            else 'bg-gray-100 dark:bg-gray-900/30 text-gray-800 dark:text-gray-300'
+                            end %>">
+                        <%= analysis_request.status.humanize %>
+                      </span>
+                      <%= link_to "View", analysis_request, class: "text-teal-600 dark:text-teal-400 hover:text-teal-700 dark:hover:text-teal-300 text-xs font-medium transition-colors duration-200" %>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            <% else %>
+              <div class="px-6 py-8 text-center">
+                <svg class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+                <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">No analysis performed yet</p>
+                <%= form_with url: analyze_dataset_path(@dataset), method: :post, local: true, class: "mt-3" do |form| %>
+                  <%= form.submit "Start Analysis", class: "inline-flex items-center px-3 py-2 bg-gradient-to-r from-teal-600 to-cyan-600 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:from-teal-700 hover:to-cyan-700 transition-all duration-200" %>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="space-y-6">
+        <!-- Dataset Info -->
+        <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg border border-gray-200 dark:border-gray-700">
+          <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Dataset Information</h3>
+          </div>
+          <div class="px-6 py-4 space-y-4">
+            <div>
+              <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Type</dt>
+              <dd class="mt-1 text-sm text-gray-900 dark:text-white"><%= @dataset.data_source_type&.humanize || "Unknown" %></dd>
+            </div>
+            <div>
+              <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Created</dt>
+              <dd class="mt-1 text-sm text-gray-900 dark:text-white"><%= @dataset.created_at.strftime("%B %d, %Y") %></dd>
+            </div>
+            <div>
+              <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Last Modified</dt>
+              <dd class="mt-1 text-sm text-gray-900 dark:text-white"><%= @dataset.updated_at.strftime("%B %d, %Y") %></dd>
+            </div>
+            <div>
+              <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Analysis Count</dt>
+              <dd class="mt-1 text-sm text-gray-900 dark:text-white"><%= @dataset.analysis_requests.count %></dd>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg border border-gray-200 dark:border-gray-700">
+          <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Quick Actions</h3>
+          </div>
+          <div class="px-6 py-4 space-y-3">
+            <%= form_with url: analyze_dataset_path(@dataset), method: :post, local: true do |form| %>
+              <%= form.submit "Analyze Data", class: "w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-all duration-200" %>
+            <% end %>
+            <%= link_to "Edit Dataset", edit_dataset_path(@dataset), class: "w-full flex justify-center py-2 px-4 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200" %>
+            <%= link_to "View All Analysis", analysis_requests_path(dataset_id: @dataset.id), class: "w-full flex justify-center py-2 px-4 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,133 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-gray-900">Scheduled Reports</h1>
+    <%= link_to "New Scheduled Report", new_scheduled_report_path, 
+        class: "bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-200" %>
+  </div>
+
+  <!-- Filters -->
+  <div class="bg-white rounded-lg shadow p-4 mb-6">
+    <div class="flex flex-wrap gap-4">
+      <%= link_to "All", scheduled_reports_path, 
+          class: "px-3 py-1 rounded #{params[:status].blank? && params[:frequency].blank? ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}" %>
+      <%= link_to "Enabled", scheduled_reports_path(status: 'enabled'), 
+          class: "px-3 py-1 rounded #{params[:status] == 'enabled' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}" %>
+      
+      <div class="border-l pl-4">
+        <%= link_to "Daily", scheduled_reports_path(frequency: 'daily'), 
+            class: "px-3 py-1 rounded #{params[:frequency] == 'daily' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}" %>
+        <%= link_to "Weekly", scheduled_reports_path(frequency: 'weekly'), 
+            class: "px-3 py-1 rounded #{params[:frequency] == 'weekly' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}" %>
+        <%= link_to "Monthly", scheduled_reports_path(frequency: 'monthly'), 
+            class: "px-3 py-1 rounded #{params[:frequency] == 'monthly' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}" %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reports List -->
+  <div class="bg-white rounded-lg shadow overflow-hidden">
+    <% if @scheduled_reports.any? %>
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Report Name
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Schedule
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Format
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Status
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Next Run
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Actions
+            </th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <% @scheduled_reports.each do |report| %>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <%= link_to report.name, report, class: "text-blue-600 hover:text-blue-900 font-medium" %>
+                <div class="text-sm text-gray-500"><%= truncate(report.query, length: 50) %></div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-gray-900"><%= report.formatted_schedule %></div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
+                  <%= report.format.upcase %>
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <% if report.enabled? %>
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                    Enabled
+                  </span>
+                <% else %>
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
+                    Disabled
+                  </span>
+                <% end %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <% if report.next_run_at %>
+                  <div class="text-sm text-gray-900">
+                    <%= report.next_run_at.strftime("%b %d, %Y at %l:%M %p") %>
+                  </div>
+                  <div class="text-xs text-gray-500">
+                    <%= distance_of_time_in_words_to_now(report.next_run_at) %> from now
+                  </div>
+                <% else %>
+                  <span class="text-sm text-gray-500">Not scheduled</span>
+                <% end %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <div class="flex space-x-2">
+                  <%= link_to "Edit", edit_scheduled_report_path(report), 
+                      class: "text-indigo-600 hover:text-indigo-900" %>
+                  
+                  <% if report.enabled? %>
+                    <%= button_to "Disable", disable_scheduled_report_path(report), 
+                        method: :patch,
+                        class: "text-orange-600 hover:text-orange-900" %>
+                  <% else %>
+                    <%= button_to "Enable", enable_scheduled_report_path(report), 
+                        method: :patch,
+                        class: "text-green-600 hover:text-green-900" %>
+                  <% end %>
+                  
+                  <%= button_to "Run Now", run_now_scheduled_report_path(report), 
+                      method: :post,
+                      class: "text-blue-600 hover:text-blue-900" %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      
+      <div class="px-6 py-4 border-t">
+        <%= paginate @scheduled_reports %>
+      </div>
+    <% else %>
+      <div class="text-center py-12">
+        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+        </svg>
+        <h3 class="mt-2 text-sm font-medium text-gray-900">No scheduled reports</h3>
+        <p class="mt-1 text-sm text-gray-500">Get started by creating a new scheduled report.</p>
+        <div class="mt-6">
+          <%= link_to "New Scheduled Report", new_scheduled_report_path, 
+              class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

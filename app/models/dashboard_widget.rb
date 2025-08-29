@@ -161,10 +161,20 @@ class DashboardWidget < ApplicationRecord
     sort_by = config["sort_by"] || "created_at"
     limit = config["limit"] || 10
 
-    queries = user.analysis_requests
-      .includes(:dataset)
-      .order(sort_by => :desc)
-      .limit(limit)
+    queries = user.analysis_requests.includes(:dataset)
+
+    # Handle special ordering cases
+    if sort_by == "execution_time"
+      # Order by execution_time column with fallback to metadata
+      queries = queries.order(
+        Arel.sql("COALESCE(execution_time, (metadata->>'execution_time')::numeric) DESC NULLS LAST")
+      )
+    else
+      # Standard column ordering
+      queries = queries.order(sort_by => :desc)
+    end
+
+    queries = queries.limit(limit)
 
     {
       columns: columns.map(&:humanize),
@@ -176,7 +186,9 @@ class DashboardWidget < ApplicationRecord
           when "dataset"
             query.dataset.name
           when "execution_time"
-            "#{query.metadata&.dig("execution_time") || 0}ms"
+            # Use column value with fallback to metadata
+            time = query.execution_time || query.metadata&.dig("execution_time") || 0
+            "#{time.to_f.round(2)}s"
           when "created_at"
             query.created_at.strftime("%b %d, %I:%M %p")
           else
