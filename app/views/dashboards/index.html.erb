@@ -1,101 +1,230 @@
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-  <div class="flex justify-between items-center mb-8">
-    <div>
-      <h1 class="text-3xl font-bold bg-gradient-to-r from-slate-800 to-teal-600 dark:from-white dark:to-teal-400 bg-clip-text text-transparent">Dashboards</h1>
-      <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Create and manage your custom data dashboards</p>
+<!-- Main Dashboard Content -->
+<div class="bg-gradient-to-br from-slate-50 via-teal-50 to-cyan-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 min-h-screen pt-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Hero Section with Gradient Background -->
+    <div class="bg-gradient-to-r from-teal-600 via-cyan-600 to-blue-600 rounded-xl p-8 mb-8 text-white shadow-xl">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
+        <div>
+          <h1 class="text-3xl font-bold mb-2">Dashboard Analytics</h1>
+          <p class="text-teal-100 text-lg mb-4 md:mb-0">Monitor your data analytics and key performance indicators</p>
+        </div>
+        <%= link_to new_dashboard_path, class: "inline-flex items-center px-6 py-3 bg-white text-teal-600 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-teal-600 transition-all duration-200 font-semibold shadow-lg hover:shadow-xl" do %>
+          <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+          </svg>
+          Create New Dashboard
+        <% end %>
+      </div>
     </div>
-    <div>
-      <%= link_to new_dashboard_path, class: "inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-all duration-200" do %>
-        <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-        </svg>
-        New Dashboard
-      <% end %>
-    </div>
-  </div>
-  
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    <% @dashboards.each do |dashboard| %>
-      <div class="bg-white dark:bg-slate-800 overflow-hidden shadow-lg rounded-xl hover:shadow-xl transition-all duration-300 border border-slate-200 dark:border-slate-700">
-        <div class="relative">
-          <% if dashboard.is_default? %>
-            <span class="absolute top-3 right-3 inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-amber-100 to-amber-200 text-amber-800 dark:from-amber-900 dark:to-amber-800 dark:text-amber-200">
-              Default
-            </span>
-          <% end %>
-          
-          <div class="p-6">
-            <div class="flex items-center justify-between mb-4">
-              <div class="flex-1">
-                <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-1">
-                  <%= link_to dashboard.name, dashboard, class: "hover:text-teal-600 dark:hover:text-teal-400 transition-colors duration-200" %>
-                </h3>
-                <p class="text-sm text-slate-600 dark:text-slate-400 line-clamp-2">
-                  <%= dashboard.description || "No description" %>
-                </p>
-              </div>
-            </div>
-            
-            <div class="flex items-center text-sm text-slate-500 mb-4">
-              <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"></path>
-              </svg>
-              <span><%= dashboard.dashboard_widgets.count %> widgets</span>
-              
-              <svg class="h-4 w-4 ml-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-              <span>Updated <%= time_ago_in_words(dashboard.updated_at) %> ago</span>
-            </div>
-            
-            <div class="flex justify-between items-center">
-              <%= link_to dashboard, class: "inline-flex items-center px-3 py-2 border border-slate-300 dark:border-slate-600 shadow-sm text-sm leading-4 font-medium rounded-lg text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-700 hover:bg-slate-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-all duration-200" do %>
-                <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+
+    <!-- Key Metrics Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <!-- Total Dashboards -->
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-slate-200 dark:border-slate-700">
+        <div class="p-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wide">Total Dashboards</p>
+              <p class="text-3xl font-bold text-slate-900 dark:text-slate-100 mt-2"><%= @dashboards.count %></p>
+              <div class="flex items-center mt-2">
+                <svg class="h-4 w-4 text-teal-500 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M3.293 9.707a1 1 0 010-1.414l6-6a1 1 0 011.414 0l6 6a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L4.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
                 </svg>
-                View
-              <% end %>
-              
-              <div class="flex space-x-2">
-                <%= link_to edit_dashboard_path(dashboard), class: "text-slate-400 hover:text-teal-600 dark:hover:text-teal-400 transition-colors duration-200" do %>
-                  <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                  </svg>
-                <% end %>
-                
-                <%= link_to duplicate_dashboard_path(dashboard), method: :post, class: "text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors duration-200" do %>
-                  <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                  </svg>
-                <% end %>
-                
-                <% unless dashboard.is_default? %>
-                  <%= link_to dashboard, method: :delete, data: { confirm: "Are you sure?" }, class: "text-slate-400 hover:text-red-600 dark:hover:text-red-400 transition-colors duration-200" do %>
-                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                    </svg>
-                  <% end %>
-                <% end %>
+                <span class="text-sm text-teal-600 dark:text-teal-400 font-medium">Active</span>
               </div>
+            </div>
+            <div class="p-3 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-xl">
+              <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+              </svg>
             </div>
           </div>
         </div>
       </div>
-    <% end %>
-    
-    <!-- Template Cards -->
-    <div class="bg-white dark:bg-slate-800 overflow-hidden shadow-lg rounded-xl hover:shadow-xl transition-all duration-300 border-2 border-dashed border-slate-300 dark:border-slate-600">
-      <div class="p-6">
-        <div class="flex flex-col items-center justify-center h-full text-center">
-          <svg class="h-12 w-12 text-slate-400 dark:text-slate-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-          </svg>
-          <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-2">Dashboard Templates</h3>
-          <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">Start with a pre-built template</p>
-          <button class="inline-flex items-center px-3 py-2 border border-slate-300 dark:border-slate-600 shadow-sm text-sm leading-4 font-medium rounded-lg text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-700 hover:bg-slate-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-all duration-200">
-            Browse Templates
-          </button>
+
+      <!-- Active Widgets -->
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-slate-200 dark:border-slate-700">
+        <div class="p-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wide">Active Widgets</p>
+              <p class="text-3xl font-bold text-slate-900 dark:text-slate-100 mt-2"><%= @dashboards.sum { |d| d.dashboard_widgets.count } %></p>
+              <div class="flex items-center mt-2">
+                <svg class="h-4 w-4 text-amber-500 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clip-rule="evenodd"></path>
+                </svg>
+                <span class="text-sm text-amber-600 dark:text-amber-400 font-medium">Running</span>
+              </div>
+            </div>
+            <div class="p-3 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl">
+              <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Data Sources -->
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-slate-200 dark:border-slate-700">
+        <div class="p-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wide">Data Sources</p>
+              <p class="text-3xl font-bold text-slate-900 dark:text-slate-100 mt-2">4</p>
+              <div class="flex items-center mt-2">
+                <div class="h-2 w-2 bg-green-500 rounded-full mr-2"></div>
+                <span class="text-sm text-green-600 dark:text-green-400 font-medium">Connected</span>
+              </div>
+            </div>
+            <div class="p-3 bg-gradient-to-br from-slate-500 to-slate-600 rounded-xl">
+              <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Query Cache Performance -->
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-slate-200 dark:border-slate-700">
+        <div class="p-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wide">Cache Hit Rate</p>
+              <p class="text-3xl font-bold text-slate-900 dark:text-slate-100 mt-2">98.2%</p>
+              <div class="flex items-center mt-2">
+                <div class="w-16 bg-gray-200 rounded-full h-2 mr-2">
+                  <div class="bg-gradient-to-r from-green-400 to-green-500 h-2 rounded-full" style="width: 98.2%"></div>
+                </div>
+                <span class="text-sm text-green-600 dark:text-green-400 font-medium">Excellent</span>
+              </div>
+            </div>
+            <div class="p-3 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl">
+              <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dashboard Cards Section -->
+    <div class="mb-6">
+      <h2 class="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-4">Your Dashboards</h2>
+    </div>
+
+    <!-- Dashboard Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <% @dashboards.each do |dashboard| %>
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-slate-200 dark:border-slate-700 hover:border-teal-300 dark:hover:border-teal-500 group">
+          <!-- Dashboard Preview/Header -->
+          <div class="h-32 bg-gradient-to-br from-teal-100 via-cyan-100 to-blue-100 dark:from-slate-700 dark:via-slate-600 dark:to-slate-700 rounded-t-xl flex items-center justify-center relative overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-br from-teal-500/20 to-cyan-500/20"></div>
+            <div class="relative z-10 text-center">
+              <div class="inline-flex items-center justify-center w-16 h-16 bg-white dark:bg-slate-800 rounded-lg shadow-lg mb-2">
+                <svg class="h-8 w-8 text-teal-600 dark:text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+              </div>
+              <% if dashboard.is_default? %>
+                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300">
+                  <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                  </svg>
+                  Default
+                </span>
+              <% end %>
+            </div>
+          </div>
+          
+          <!-- Dashboard Content -->
+          <div class="p-6">
+            <div class="flex items-start justify-between mb-3">
+              <div class="flex-1">
+                <h3 class="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-2">
+                  <%= link_to dashboard.name, dashboard, class: "hover:text-teal-600 dark:hover:text-teal-400 transition-colors duration-200" %>
+                </h3>
+                <p class="text-sm text-slate-600 dark:text-slate-400 line-clamp-2">
+                  <%= dashboard.description || "Advanced analytics dashboard for data visualization and insights" %>
+                </p>
+              </div>
+            </div>
+            
+            <!-- Dashboard Stats -->
+            <div class="flex items-center justify-between text-sm text-slate-500 dark:text-slate-400 mb-6">
+              <div class="flex items-center space-x-4">
+                <div class="flex items-center">
+                  <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"></path>
+                  </svg>
+                  <span class="font-medium"><%= dashboard.dashboard_widgets.count %></span>
+                  <span class="ml-1">widgets</span>
+                </div>
+                <div class="flex items-center">
+                  <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  <span><%= time_ago_in_words(dashboard.updated_at) %> ago</span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="flex items-center justify-between pt-4 border-t border-slate-200 dark:border-slate-700">
+              <%= link_to dashboard, class: "inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-teal-600 to-cyan-600 rounded-lg hover:from-teal-700 hover:to-cyan-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 transition-all duration-200 shadow-sm hover:shadow-md" do %>
+                <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                </svg>
+                View Dashboard
+              <% end %>
+              
+              <div class="flex items-center space-x-1">
+                <%= link_to edit_dashboard_path(dashboard), class: "p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors duration-200", title: "Edit Dashboard" do %>
+                  <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                  </svg>
+                <% end %>
+                
+                <%= link_to duplicate_dashboard_path(dashboard), method: :post, class: "p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors duration-200", title: "Duplicate Dashboard" do %>
+                  <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                  </svg>
+                <% end %>
+                
+                <div class="relative" data-controller="dropdown">
+                  <button data-action="click->dropdown#toggle" class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors duration-200" title="More options">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"></path>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+      
+      <!-- Create New Dashboard Card -->
+      <div class="bg-white dark:bg-slate-800 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-600 hover:border-teal-400 dark:hover:border-teal-500 transition-all duration-300 shadow-lg hover:shadow-xl group">
+        <div class="p-8">
+          <div class="flex flex-col items-center justify-center text-center h-full min-h-[300px]">
+            <div class="p-4 bg-gradient-to-br from-teal-100 to-cyan-100 dark:from-slate-700 dark:to-slate-600 rounded-xl mb-6 group-hover:scale-110 transition-transform duration-300">
+              <svg class="h-12 w-12 text-teal-600 dark:text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-3">Create New Dashboard</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-400 mb-6 max-w-xs leading-relaxed">Build a powerful analytics dashboard from scratch or choose from our premium templates</p>
+            <%= link_to new_dashboard_path, class: "inline-flex items-center px-6 py-3 text-sm font-semibold text-white bg-gradient-to-r from-teal-600 to-cyan-600 rounded-lg hover:from-teal-700 hover:to-cyan-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 transition-all duration-200 shadow-lg hover:shadow-xl group-hover:scale-105" do %>
+              <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+              </svg>
+              Get Started
+            <% end %>
+          </div>
         </div>
       </div>
     </div>

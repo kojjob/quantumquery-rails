@@ -43,8 +43,6 @@ Rails.application.routes.draw do
         post :run_now
       end
     end
-    
-    get "dashboard", to: "dashboard#index"
   end
 
   # Static pages
