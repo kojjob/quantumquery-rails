@@ -56,9 +56,9 @@ class User < ApplicationRecord
 
   def name
     if first_name.present? || last_name.present?
-      [first_name, last_name].compact.join(' ')
+      [ first_name, last_name ].compact.join(" ")
     else
-      email.split('@').first.humanize
+      email.split("@").first.humanize
     end
   end
 end

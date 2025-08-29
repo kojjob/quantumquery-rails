@@ -22,6 +22,6 @@ class CreateScheduledReports < ActiveRecord::Migration[8.0]
 
     add_index :scheduled_reports, :next_run_at
     add_index :scheduled_reports, :enabled
-    add_index :scheduled_reports, [:user_id, :enabled]
+    add_index :scheduled_reports, [ :user_id, :enabled ]
   end
 end

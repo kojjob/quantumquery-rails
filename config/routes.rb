@@ -29,13 +29,13 @@ Rails.application.routes.draw do
         post :analyze
       end
     end
-    
-    resources :analysis_requests, only: [:index, :show, :destroy] do
+
+    resources :analysis_requests, only: [ :index, :show, :destroy ] do
       member do
         get :export
       end
     end
-    
+
     resources :scheduled_reports do
       member do
         patch :enable

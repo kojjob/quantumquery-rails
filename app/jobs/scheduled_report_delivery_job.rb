@@ -1,7 +1,7 @@
 # app/jobs/scheduled_report_delivery_job.rb
 class ScheduledReportDeliveryJob < ApplicationJob
   queue_as :mailers
-  
+
   def perform(scheduled_report, analysis_request)
     # Wait for analysis to complete
     unless analysis_request.completed?
@@ -14,22 +14,22 @@ class ScheduledReportDeliveryJob < ApplicationJob
         return
       end
     end
-    
+
     # Generate the report in the requested format
     export_service = AnalysisExportService.new(analysis_request, scheduled_report.format)
-    
+
     case scheduled_report.format
-    when 'pdf'
+    when "pdf"
       report_data = generate_pdf_report(analysis_request, export_service)
-    when 'xlsx'
+    when "xlsx"
       report_data = export_service.export
-    when 'csv'
+    when "csv"
       report_data = export_service.export
     else
       Rails.logger.error "Unknown report format: #{scheduled_report.format}"
       return
     end
-    
+
     # Send to all recipients
     scheduled_report.recipient_list.each do |recipient|
       ScheduledReportMailer.deliver_report(
@@ -40,35 +40,35 @@ class ScheduledReportDeliveryJob < ApplicationJob
         format: scheduled_report.format
       ).deliver_later
     end
-    
+
     Rails.logger.info "Delivered scheduled report #{scheduled_report.id} to #{scheduled_report.recipient_list.count} recipients"
   rescue => e
     Rails.logger.error "Failed to deliver scheduled report #{scheduled_report.id}: #{e.message}"
     Rails.logger.error e.backtrace.join("\n")
     notify_failure(scheduled_report, analysis_request, e.message)
   end
-  
+
   private
-  
+
   def generate_pdf_report(analysis_request, export_service)
     # For PDF, we need to generate it using WickedPDF
     # This would normally be done through the controller, but we can generate it here
     export_data = export_service.export
-    
+
     pdf = WickedPdf.new.pdf_from_string(
       ApplicationController.renderer.render(
-        template: 'analysis_requests/export',
-        layout: 'pdf',
+        template: "analysis_requests/export",
+        layout: "pdf",
         assigns: { export_data: export_data }
       ),
-      page_size: 'A4',
-      orientation: 'portrait',
+      page_size: "A4",
+      orientation: "portrait",
       margin: { top: 20, bottom: 20, left: 15, right: 15 }
     )
-    
+
     pdf
   end
-  
+
   def notify_failure(scheduled_report, analysis_request, error_message = nil)
     scheduled_report.recipient_list.each do |recipient|
       ScheduledReportMailer.report_failure(

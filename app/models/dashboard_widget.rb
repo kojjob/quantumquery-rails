@@ -162,7 +162,7 @@ class DashboardWidget < ApplicationRecord
     limit = config["limit"] || 10
 
     queries = user.analysis_requests.includes(:dataset)
-    
+
     # Handle special ordering cases
     if sort_by == "execution_time"
       # Order by execution_time column with fallback to metadata
@@ -173,7 +173,7 @@ class DashboardWidget < ApplicationRecord
       # Standard column ordering
       queries = queries.order(sort_by => :desc)
     end
-    
+
     queries = queries.limit(limit)
 
     {

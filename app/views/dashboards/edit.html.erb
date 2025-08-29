@@ -1,0 +1,145 @@
+<% content_for :title, "Edit Dashboard - #{@dashboard.name}" %>
+
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="mb-8">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Edit Dashboard</h1>
+          <p class="mt-2 text-lg text-gray-600 dark:text-gray-300">Update your dashboard configuration</p>
+        </div>
+        <div class="flex items-center space-x-3">
+          <%= link_to "View Dashboard", @dashboard, class: "inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200" %>
+          <%= link_to "Back to Dashboards", dashboards_path, class: "inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200" %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dashboard Edit Form -->
+    <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg border border-gray-200 dark:border-gray-700">
+      <div class="px-6 py-8">
+        <%= form_with model: @dashboard, local: true, class: "space-y-6" do |form| %>
+          <% if @dashboard.errors.any? %>
+            <div class="rounded-md bg-red-50 dark:bg-red-900/20 p-4 border border-red-200 dark:border-red-800">
+              <div class="flex">
+                <div class="flex-shrink-0">
+                  <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                  </svg>
+                </div>
+                <div class="ml-3">
+                  <h3 class="text-sm font-medium text-red-800 dark:text-red-200">
+                    There were <%= pluralize(@dashboard.errors.count, "error") %> with your submission:
+                  </h3>
+                  <div class="mt-2 text-sm text-red-700 dark:text-red-300">
+                    <ul class="list-disc pl-5 space-y-1">
+                      <% @dashboard.errors.full_messages.each do |message| %>
+                        <li><%= message %></li>
+                      <% end %>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+
+          <!-- Dashboard Name -->
+          <div>
+            <%= form.label :name, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" %>
+            <%= form.text_field :name, class: "block w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-gray-900 dark:text-white bg-white dark:bg-gray-700 placeholder-gray-500 dark:placeholder-gray-400 focus:border-teal-500 focus:ring-teal-500 focus:outline-none focus:ring-1 transition-colors duration-200", placeholder: "Enter dashboard name..." %>
+          </div>
+
+          <!-- Dashboard Description -->
+          <div>
+            <%= form.label :description, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" %>
+            <%= form.text_area :description, rows: 3, class: "block w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-gray-900 dark:text-white bg-white dark:bg-gray-700 placeholder-gray-500 dark:placeholder-gray-400 focus:border-teal-500 focus:ring-teal-500 focus:outline-none focus:ring-1 transition-colors duration-200", placeholder: "Describe what this dashboard tracks..." %>
+          </div>
+
+          <!-- Layout Selection -->
+          <div>
+            <%= form.label :layout, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" %>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div class="relative">
+                <%= form.radio_button :layout, "grid", id: "layout_grid", class: "sr-only peer" %>
+                <label for="layout_grid" class="flex flex-col items-center justify-center w-full p-4 text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 peer-checked:border-teal-600 hover:text-gray-600 dark:peer-checked:text-gray-300 peer-checked:text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+                  <svg class="mb-2 w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+                  </svg>
+                  <div class="w-full text-sm font-semibold">Grid Layout</div>
+                  <div class="w-full text-xs">Organized widgets in a grid</div>
+                </label>
+              </div>
+
+              <div class="relative">
+                <%= form.radio_button :layout, "flow", id: "layout_flow", class: "sr-only peer" %>
+                <label for="layout_flow" class="flex flex-col items-center justify-center w-full p-4 text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 peer-checked:border-teal-600 hover:text-gray-600 dark:peer-checked:text-gray-300 peer-checked:text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+                  <svg class="mb-2 w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/>
+                  </svg>
+                  <div class="w-full text-sm font-semibold">Flow Layout</div>
+                  <div class="w-full text-xs">Vertical flowing widgets</div>
+                </label>
+              </div>
+
+              <div class="relative">
+                <%= form.radio_button :layout, "custom", id: "layout_custom", class: "sr-only peer" %>
+                <label for="layout_custom" class="flex flex-col items-center justify-center w-full p-4 text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 peer-checked:border-teal-600 hover:text-gray-600 dark:peer-checked:text-gray-300 peer-checked:text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+                  <svg class="mb-2 w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
+                  </svg>
+                  <div class="w-full text-sm font-semibold">Custom Layout</div>
+                  <div class="w-full text-xs">Drag and drop widgets</div>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Make Default Toggle -->
+          <div class="flex items-center">
+            <%= form.check_box :is_default, class: "h-4 w-4 text-teal-600 focus:ring-teal-500 border-gray-300 dark:border-gray-600 rounded" %>
+            <%= form.label :is_default, "Set as default dashboard", class: "ml-2 block text-sm text-gray-900 dark:text-gray-300" %>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex items-center justify-between pt-6 border-t border-gray-200 dark:border-gray-700">
+            <div>
+              <%= link_to "Delete Dashboard", @dashboard, method: :delete, 
+                  confirm: "Are you sure? This will permanently delete the dashboard and all its widgets.", 
+                  class: "inline-flex items-center px-4 py-2 border border-red-300 dark:border-red-600 rounded-md shadow-sm text-sm font-medium text-red-700 dark:text-red-300 bg-white dark:bg-gray-800 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors duration-200" %>
+            </div>
+            <div class="flex items-center space-x-4">
+              <%= link_to "Cancel", @dashboard, class: "inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200" %>
+              <%= form.submit "Update Dashboard", class: "inline-flex items-center px-6 py-2 bg-gradient-to-r from-teal-600 to-cyan-600 border border-transparent rounded-md shadow-sm text-base font-medium text-white hover:from-teal-700 hover:to-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-all duration-200" %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Current Widgets Preview -->
+    <% if @dashboard.dashboard_widgets.any? %>
+      <div class="mt-12">
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Current Widgets</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <% @dashboard.dashboard_widgets.ordered.each do |widget| %>
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-4">
+              <div class="flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white"><%= widget.title %></h3>
+                <span class="px-2 py-1 text-xs font-medium rounded-full bg-teal-100 dark:bg-teal-900/30 text-teal-800 dark:text-teal-300">
+                  <%= widget.widget_type.humanize %>
+                </span>
+              </div>
+              <div class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                Position: Row <%= widget.row %>, Col <%= widget.col %>
+              </div>
+              <div class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                Size: <%= widget.width %>x<%= widget.height %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

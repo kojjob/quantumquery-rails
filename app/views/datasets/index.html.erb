@@ -1,0 +1,68 @@
+<% content_for :title, "Data Sources" %>
+
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+  <!-- Header -->
+  <div class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 pt-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div class="flex justify-between items-center">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Data Sources</h1>
+          <p class="mt-2 text-lg text-gray-600 dark:text-gray-300">Manage and analyze your data connections</p>
+        </div>
+        <%= link_to "Connect New Data Source", new_dataset_path, class: "inline-flex items-center px-4 py-2 bg-gradient-to-r from-teal-600 to-cyan-600 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:from-teal-700 hover:to-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-all duration-200" %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <% if @datasets.any? %>
+      <!-- Dataset Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <% @datasets.each do |dataset| %>
+          <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-shadow duration-200">
+            <div class="p-6">
+              <div class="flex items-start justify-between">
+                <div class="flex-1">
+                  <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                    <%= link_to dataset.name, dataset, class: "hover:text-teal-600 dark:hover:text-teal-400 transition-colors duration-200" %>
+                  </h3>
+                  <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">
+                    <%= dataset.description.presence || "No description provided" %>
+                  </p>
+                </div>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-teal-100 dark:bg-teal-900/30 text-teal-800 dark:text-teal-300">
+                  <%= dataset.data_source_type&.humanize || "Unknown" %>
+                </span>
+              </div>
+
+              <!-- Stats -->
+              <div class="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400 mb-4">
+                <span><%= pluralize(dataset.analysis_requests.count, 'analysis') %></span>
+                <span>Updated <%= time_ago_in_words(dataset.updated_at) %> ago</span>
+              </div>
+
+              <!-- Actions -->
+              <div class="flex items-center space-x-2">
+                <%= link_to "View", dataset, class: "flex-1 text-center px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors duration-200" %>
+                <%= link_to "Analyze", dataset_path(dataset, analyze: true), method: :post, class: "flex-1 text-center px-3 py-2 bg-gradient-to-r from-teal-600 to-cyan-600 text-white rounded-md text-sm font-medium hover:from-teal-700 hover:to-cyan-700 transition-all duration-200" %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <!-- Empty State -->
+      <div class="text-center py-12">
+        <svg class="mx-auto h-24 w-24 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path>
+        </svg>
+        <h3 class="mt-6 text-lg font-medium text-gray-900 dark:text-white">No data sources connected</h3>
+        <p class="mt-2 text-gray-500 dark:text-gray-400">Get started by connecting your first data source.</p>
+        <div class="mt-6">
+          <%= link_to "Connect Data Source", new_dataset_path, class: "inline-flex items-center px-4 py-2 bg-gradient-to-r from-teal-600 to-cyan-600 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:from-teal-700 hover:to-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-all duration-200" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

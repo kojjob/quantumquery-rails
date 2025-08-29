@@ -4,18 +4,14 @@ export default class extends Controller {
   static targets = ["mobileMenu", "menuButton"]
   
   connect() {
-    console.log('Navbar controller connected')
     // Ensure mobile menu is hidden by default
     this.hideMobileMenu()
   }
   
   toggleMenu() {
-    console.log('Toggle menu clicked')
     if (this.mobileMenuTarget.classList.contains('hidden')) {
-      console.log('Showing mobile menu')
       this.showMobileMenu()
     } else {
-      console.log('Hiding mobile menu')
       this.hideMobileMenu()
     }
   }

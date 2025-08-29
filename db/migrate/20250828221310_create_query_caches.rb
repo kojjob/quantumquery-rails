@@ -16,10 +16,10 @@ class CreateQueryCaches < ActiveRecord::Migration[8.0]
 
       t.timestamps
     end
-    
+
     add_index :query_caches, :query_hash, unique: true
     add_index :query_caches, :expires_at
-    add_index :query_caches, [:organization_id, :created_at]
+    add_index :query_caches, [ :organization_id, :created_at ]
     add_index :query_caches, :cache_key
   end
 end
