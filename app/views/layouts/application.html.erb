@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html data-theme="light" class="">
   <head>
     <title><%= content_for(:title) || "Quantumquery" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -20,11 +20,20 @@
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+    
+    <script>
+      // Initialize dark mode from local storage
+      (function() {
+        const theme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+        if (theme === 'dark') {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
   </head>
 
-  <body>
-    <main class="container mx-auto mt-28 px-5 flex">
-      <%= yield %>
-    </main>
+  <body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+    <%= yield %>
   </body>
 </html>

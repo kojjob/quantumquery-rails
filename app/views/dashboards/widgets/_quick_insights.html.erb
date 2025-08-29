@@ -1,0 +1,38 @@
+<div class="h-full overflow-auto">
+  <% if data[:insights].present? %>
+    <ul class="space-y-3">
+      <% data[:insights].each do |insight| %>
+        <li class="flex items-start">
+          <div class="flex-shrink-0">
+            <% case insight[:type] %>
+            <% when "trend" %>
+              <svg class="h-5 w-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+              </svg>
+            <% when "anomaly" %>
+              <svg class="h-5 w-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+              </svg>
+            <% when "success" %>
+              <svg class="h-5 w-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            <% else %>
+              <svg class="h-5 w-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            <% end %>
+          </div>
+          <div class="ml-3 flex-1">
+            <p class="text-sm text-gray-900"><%= insight[:message] %></p>
+            <p class="text-xs text-gray-500 mt-1"><%= insight[:timestamp] %></p>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <div class="flex items-center justify-center h-full text-gray-500">
+      <p class="text-sm">No insights available</p>
+    </div>
+  <% end %>
+</div>

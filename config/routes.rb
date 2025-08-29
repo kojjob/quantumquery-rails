@@ -10,6 +10,29 @@ Rails.application.routes.draw do
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
+  # Dashboard routes (authenticated users)
+  resources :dashboards do
+    member do
+      post :duplicate
+      post :add_widget
+      patch :update_layout
+      delete "remove_widget/:widget_id", to: "dashboards#remove_widget", as: :remove_widget
+      get "refresh_widget/:widget_id", to: "dashboards#refresh_widget", as: :refresh_widget
+      patch "update_widget/:widget_id", to: "dashboards#update_widget", as: :update_widget
+    end
+  end
+
+  # Static pages
+  get "features", to: "pages#features"
+  get "pricing", to: "pages#pricing"
+  get "documentation", to: "pages#documentation"
+  get "about", to: "pages#about"
+  get "careers", to: "pages#careers"
+  get "contact", to: "pages#contact"
+  get "blog", to: "pages#blog"
+  get "privacy", to: "pages#privacy"
+  get "terms", to: "pages#terms"
+
   # Defines the root path route ("/")
   root "pages#home"
 end
