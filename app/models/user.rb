@@ -1,8 +1,11 @@
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable, :trackable
+  devise :two_factor_authenticatable, :registerable,
+         :recoverable, :rememberable, :validatable, :trackable,
+         otp_secret_encryption_key: ENV.fetch("OTP_SECRET_KEY", Rails.application.credentials.otp_secret_key)
+  
+  devise :two_factor_backupable, otp_number_of_backup_codes: 10
 
   # Associations
   belongs_to :organization, optional: true
@@ -50,5 +53,33 @@ class User < ApplicationRecord
     when 'custom' then nil # unlimited
     else 100
     end
+  end
+  
+  # Two-Factor Authentication helpers
+  def two_factor_enabled?
+    otp_required_for_login?
+  end
+  
+  def enable_two_factor!
+    self.otp_required_for_login = true
+    self.two_factor_enabled_at = Time.current
+    self.otp_secret = User.generate_otp_secret unless otp_secret.present?
+    generate_otp_backup_codes!
+    save!
+  end
+  
+  def disable_two_factor!
+    self.otp_required_for_login = false
+    self.two_factor_enabled_at = nil
+    self.otp_secret = nil
+    self.otp_backup_codes = nil
+    self.consumed_timestep = nil
+    save!
+  end
+  
+  def two_factor_qr_code_uri
+    issuer = "QuantumQuery"
+    label = "#{issuer}:#{email}"
+    otp_provisioning_uri(label, issuer: issuer)
   end
 end
