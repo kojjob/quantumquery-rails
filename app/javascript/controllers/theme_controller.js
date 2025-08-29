@@ -4,14 +4,21 @@ export default class extends Controller {
   static targets = ["icon"]
   
   connect() {
+    console.log('Theme controller connected')
     // Check for saved theme preference or default to 'light'
-    const currentTheme = localStorage.getItem('theme') || 'light'
+    const currentTheme = localStorage.getItem('theme') || window.currentTheme || 'light'
+    console.log('Current theme:', currentTheme)
     this.setTheme(currentTheme)
+    
+    // Update icon immediately on connect
+    this.updateIcon(currentTheme)
   }
   
   toggle() {
+    console.log('Theme toggle clicked')
     const isDarkMode = document.documentElement.classList.contains('dark')
     const newTheme = isDarkMode ? 'light' : 'dark'
+    console.log('Toggling to:', newTheme)
     this.setTheme(newTheme)
   }
   

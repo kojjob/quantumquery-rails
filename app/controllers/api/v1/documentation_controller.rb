@@ -57,7 +57,7 @@ module Api
           "/datasets": {
             get: {
               summary: "List all datasets",
-              tags: ["Datasets"],
+              tags: [ "Datasets" ],
               parameters: [
                 { name: "page", in: "query", schema: { type: "integer" }, description: "Page number" },
                 { name: "per_page", in: "query", schema: { type: "integer" }, description: "Items per page" }
@@ -81,22 +81,22 @@ module Api
             },
             post: {
               summary: "Create a new dataset",
-              tags: ["Datasets"],
+              tags: [ "Datasets" ],
               requestBody: {
                 required: true,
                 content: {
                   "application/json": {
                     schema: {
                       type: "object",
-                      required: ["dataset"],
+                      required: [ "dataset" ],
                       properties: {
                         dataset: {
                           type: "object",
-                          required: ["name", "source_type"],
+                          required: [ "name", "source_type" ],
                           properties: {
                             name: { type: "string" },
                             description: { type: "string" },
-                            source_type: { type: "string", enum: ["csv", "json", "api", "database"] },
+                            source_type: { type: "string", enum: [ "csv", "json", "api", "database" ] },
                             connection_config: { type: "object" }
                           }
                         }
@@ -114,7 +114,7 @@ module Api
           "/datasets/{id}": {
             get: {
               summary: "Get a specific dataset",
-              tags: ["Datasets"],
+              tags: [ "Datasets" ],
               parameters: [
                 { name: "id", in: "path", required: true, schema: { type: "integer" } }
               ],
@@ -132,7 +132,7 @@ module Api
             },
             put: {
               summary: "Update a dataset",
-              tags: ["Datasets"],
+              tags: [ "Datasets" ],
               parameters: [
                 { name: "id", in: "path", required: true, schema: { type: "integer" } }
               ],
@@ -162,7 +162,7 @@ module Api
             },
             delete: {
               summary: "Delete a dataset",
-              tags: ["Datasets"],
+              tags: [ "Datasets" ],
               parameters: [
                 { name: "id", in: "path", required: true, schema: { type: "integer" } }
               ],
@@ -175,7 +175,7 @@ module Api
           "/analysis": {
             get: {
               summary: "List analysis requests",
-              tags: ["Analysis"],
+              tags: [ "Analysis" ],
               parameters: [
                 { name: "dataset_id", in: "query", schema: { type: "integer" } },
                 { name: "status", in: "query", schema: { type: "string" } },
@@ -201,14 +201,14 @@ module Api
             },
             post: {
               summary: "Create a new analysis request",
-              tags: ["Analysis"],
+              tags: [ "Analysis" ],
               requestBody: {
                 required: true,
                 content: {
                   "application/json": {
                     schema: {
                       type: "object",
-                      required: ["query", "dataset_id"],
+                      required: [ "query", "dataset_id" ],
                       properties: {
                         query: { type: "string", description: "Natural language query" },
                         dataset_id: { type: "integer", description: "ID of the dataset to analyze" },
@@ -247,7 +247,7 @@ module Api
           "/analysis/{id}": {
             get: {
               summary: "Get analysis results",
-              tags: ["Analysis"],
+              tags: [ "Analysis" ],
               parameters: [
                 { name: "id", in: "path", required: true, schema: { type: "integer" } }
               ],
@@ -267,7 +267,7 @@ module Api
           "/analysis/{id}/cancel": {
             post: {
               summary: "Cancel an analysis request",
-              tags: ["Analysis"],
+              tags: [ "Analysis" ],
               parameters: [
                 { name: "id", in: "path", required: true, schema: { type: "integer" } }
               ],

@@ -97,7 +97,12 @@
         const theme = localStorage.getItem('theme') || 'light';
         if (theme === 'dark') {
           document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
         }
+        
+        // Store theme for Stimulus controllers to access
+        window.currentTheme = theme;
       })();
     </script>
   </head>

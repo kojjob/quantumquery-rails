@@ -22,12 +22,12 @@ Rails.application.routes.draw do
     namespace :v1 do
       # API Documentation
       get "documentation", to: "documentation#index"
-      
+
       # Dataset endpoints
       resources :datasets
-      
+
       # Analysis endpoints
-      resources :analysis, only: [:index, :show, :create] do
+      resources :analysis, only: [ :index, :show, :create ] do
         member do
           post :cancel
         end

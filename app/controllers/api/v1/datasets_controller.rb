@@ -1,9 +1,9 @@
 module Api
   module V1
     class DatasetsController < BaseController
-      before_action :set_dataset, only: [:show, :update, :destroy]
-      before_action :check_read_permission, only: [:index, :show]
-      before_action :check_write_permission, only: [:create, :update, :destroy]
+      before_action :set_dataset, only: [ :show, :update, :destroy ]
+      before_action :check_read_permission, only: [ :index, :show ]
+      before_action :check_write_permission, only: [ :create, :update, :destroy ]
 
       # GET /api/v1/datasets
       def index
