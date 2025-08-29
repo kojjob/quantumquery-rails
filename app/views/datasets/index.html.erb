@@ -1,68 +1,331 @@
-<% content_for :title, "Data Sources" %>
+<% content_for :title, "Data Sources - QuantumQuery" %>
 
-<div class="min-h-screen bg-gray-50 dark:bg-gray-900">
-  <!-- Header -->
-  <div class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 pt-20">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div class="flex justify-between items-center">
-        <div>
-          <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Data Sources</h1>
-          <p class="mt-2 text-lg text-gray-600 dark:text-gray-300">Manage and analyze your data connections</p>
+<!-- Modern Data Sources Page -->
+<div class="bg-gradient-to-br from-slate-50 via-teal-50 to-cyan-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 min-h-screen pt-16">
+  <!-- Hero Header Section -->
+  <div class="relative overflow-hidden">
+    <!-- Background Pattern -->
+    <div class="absolute inset-0 opacity-5">
+      <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%230891b2" fill-opacity="0.3"%3E%3Ccircle cx="30" cy="30" r="4"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')]"></div>
+    </div>
+    
+    <div class="relative bg-gradient-to-r from-teal-600 via-cyan-600 to-blue-600 shadow-xl">
+      <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+          <!-- Header Content -->
+          <div class="flex-1 mb-8 lg:mb-0">
+            <!-- Breadcrumb -->
+            <nav class="flex items-center space-x-2 text-teal-100 text-sm mb-4">
+              <%= link_to "Dashboard", dashboards_path, class: "hover:text-white transition-colors" %>
+              <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+              </svg>
+              <span class="text-white font-medium">Data Sources</span>
+            </nav>
+
+            <!-- Title and Description -->
+            <div class="flex items-center space-x-4 mb-4">
+              <div class="p-3 bg-white bg-opacity-20 backdrop-blur-sm rounded-xl">
+                <svg class="h-8 w-8 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path>
+                </svg>
+              </div>
+              <div>
+                <h1 class="text-4xl font-bold text-white mb-2">Data Sources</h1>
+                <p class="text-xl text-teal-100">Connect and manage your data connections with powerful analytics</p>
+              </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="flex items-center space-x-6 text-teal-100">
+              <div class="flex items-center space-x-2">
+                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+                </svg>
+                <span><%= @datasets.count %> Active Sources</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.707 4.707a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                </svg>
+                <span><%= @datasets.sum { |d| d.analysis_requests.count } %> Total Analyses</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex items-center space-x-4">
+            <%= link_to new_dataset_path, class: "inline-flex items-center px-6 py-3 bg-white text-teal-600 rounded-xl font-semibold hover:bg-teal-50 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5" do %>
+              <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+              </svg>
+              Connect New Source
+            <% end %>
+            
+            <button class="inline-flex items-center px-4 py-3 bg-white bg-opacity-20 backdrop-blur-sm text-teal-600 rounded-xl font-medium hover:bg-opacity-30 transition-all duration-200" onclick="refreshDataSources()">
+              <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+              </svg>
+              Refresh
+            </button>
+          </div>
         </div>
-        <%= link_to "Connect New Data Source", new_dataset_path, class: "inline-flex items-center px-4 py-2 bg-gradient-to-r from-teal-600 to-cyan-600 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:from-teal-700 hover:to-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-all duration-200" %>
       </div>
     </div>
   </div>
 
-  <!-- Content -->
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <!-- Main Content -->
+  <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <% if @datasets.any? %>
+      <!-- Filter and Search Bar -->
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-6 mb-8">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
+          <!-- Search -->
+          <div class="flex-1 max-w-md">
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg class="h-5 w-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+              </div>
+              <input type="text" class="block w-full pl-10 pr-3 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent" placeholder="Search data sources...">
+            </div>
+          </div>
+
+          <!-- Filters -->
+          <div class="flex items-center space-x-4">
+            <select class="px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500">
+              <option>All Types</option>
+              <option>PostgreSQL</option>
+              <option>MySQL</option>
+              <option>MongoDB</option>
+              <option>CSV Upload</option>
+              <option>API Endpoint</option>
+            </select>
+            
+            <select class="px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500">
+              <option>All Status</option>
+              <option>Connected</option>
+              <option>Pending</option>
+              <option>Error</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
       <!-- Dataset Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
         <% @datasets.each do |dataset| %>
-          <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-shadow duration-200">
-            <div class="p-6">
-              <div class="flex items-start justify-between">
+          <div class="group bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden">
+            <!-- Header with gradient -->
+            <div class="bg-gradient-to-r from-teal-500 to-cyan-500 p-6 text-white relative overflow-hidden">
+              <!-- Background pattern -->
+              <div class="absolute top-0 right-0 opacity-20">
+                <svg class="h-24 w-24" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/>
+                </svg>
+              </div>
+              
+              <div class="relative z-10 flex items-start justify-between">
                 <div class="flex-1">
-                  <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                    <%= link_to dataset.name, dataset, class: "hover:text-teal-600 dark:hover:text-teal-400 transition-colors duration-200" %>
+                  <h3 class="text-xl font-bold mb-2 truncate">
+                    <%= link_to dataset.name, dataset, class: "hover:text-teal-100 transition-colors duration-200" %>
                   </h3>
-                  <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">
+                  <p class="text-teal-100 text-sm mb-4 line-clamp-2">
                     <%= dataset.description.presence || "No description provided" %>
                   </p>
                 </div>
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-teal-100 dark:bg-teal-900/30 text-teal-800 dark:text-teal-300">
-                  <%= dataset.data_source_type&.humanize || "Unknown" %>
-                </span>
+                
+                <!-- Status Badge -->
+                <div class="ml-4">
+                  <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-white bg-opacity-20 backdrop-blur-sm text-white">
+                    <%= dataset.status&.humanize || "Ready" %>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Content -->
+            <div class="p-6">
+              <!-- Data Source Type -->
+              <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center space-x-3">
+                  <div class="p-2 bg-teal-100 dark:bg-teal-900/30 rounded-lg">
+                    <% case dataset.data_source_type %>
+                    <% when 'postgresql' %>
+                      <svg class="h-5 w-5 text-teal-600 dark:text-teal-400" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M17.128 8.044c-.106.04-.209.093-.303.158-.094.063-.176.138-.247.225-.071.086-.129.183-.173.29-.044.107-.066.22-.066.339 0 .119.022.232.066.339.044.107.102.204.173.29.071.087.153.162.247.225.094.065.197.118.303.158v7.894c0 .828-.672 1.5-1.5 1.5s-1.5-.672-1.5-1.5v-7.894c-.106-.04-.209-.093-.303-.158-.094-.063-.176-.138-.247-.225-.071-.086-.129-.183-.173-.29-.044-.107-.066-.22-.066-.339 0-.119.022-.232.066-.339.044-.107.102-.204.173-.29.071-.087.153-.162.247-.225.094-.065.197-.118.303-.158V3c0-.828.672-1.5 1.5-1.5s1.5.672 1.5 1.5v5.044z"/>
+                      </svg>
+                    <% when 'mysql' %>
+                      <svg class="h-5 w-5 text-teal-600 dark:text-teal-400" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M16.405 5.501c-.115 0-.193.014-.274.033v.013h.014c.054.104.146.18.214.274.054.107.146.221.207.33l.023-.016c.125-.094.188-.257.188-.543 0-.074-.016-.134-.05-.183-.04-.064-.097-.099-.168-.099-.023 0-.049.005-.074.013v-.002c-.055.104-.146.18-.215.274z"/>
+                      </svg>
+                    <% when 'csv_upload' %>
+                      <svg class="h-5 w-5 text-teal-600 dark:text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                      </svg>
+                    <% else %>
+                      <svg class="h-5 w-5 text-teal-600 dark:text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/>
+                      </svg>
+                    <% end %>
+                  </div>
+                  <div>
+                    <p class="text-sm font-medium text-slate-900 dark:text-slate-100">
+                      <%= dataset.data_source_type&.humanize || "Unknown Type" %>
+                    </p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">
+                      Connected <%= time_ago_in_words(dataset.created_at) %> ago
+                    </p>
+                  </div>
+                </div>
               </div>
 
-              <!-- Stats -->
-              <div class="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400 mb-4">
-                <span><%= pluralize(dataset.analysis_requests.count, 'analysis') %></span>
-                <span>Updated <%= time_ago_in_words(dataset.updated_at) %> ago</span>
+              <!-- Stats Grid -->
+              <div class="grid grid-cols-2 gap-4 mb-6">
+                <div class="bg-slate-50 dark:bg-slate-700/50 rounded-lg p-3">
+                  <div class="flex items-center space-x-2">
+                    <svg class="h-4 w-4 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+                    </svg>
+                    <span class="text-xs text-slate-600 dark:text-slate-400">Analyses</span>
+                  </div>
+                  <p class="text-lg font-bold text-slate-900 dark:text-slate-100 mt-1">
+                    <%= dataset.analysis_requests.count %>
+                  </p>
+                </div>
+                
+                <div class="bg-slate-50 dark:bg-slate-700/50 rounded-lg p-3">
+                  <div class="flex items-center space-x-2">
+                    <svg class="h-4 w-4 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    </svg>
+                    <span class="text-xs text-slate-600 dark:text-slate-400">Status</span>
+                  </div>
+                  <p class="text-sm font-medium text-emerald-600 dark:text-emerald-400 mt-1">
+                    <%= dataset.status&.humanize || "Active" %>
+                  </p>
+                </div>
               </div>
+
+              <!-- Last Analysis -->
+              <% if dataset.analysis_requests.any? %>
+                <div class="bg-gradient-to-r from-slate-50 to-teal-50 dark:from-slate-700/50 dark:to-teal-900/20 rounded-lg p-3 mb-6">
+                  <div class="flex items-center space-x-2 mb-2">
+                    <svg class="h-4 w-4 text-teal-500" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+                    </svg>
+                    <p class="text-xs font-medium text-slate-700 dark:text-slate-300">Latest Analysis</p>
+                  </div>
+                  <p class="text-xs text-slate-600 dark:text-slate-400 line-clamp-2">
+                    <%= dataset.analysis_requests.order(created_at: :desc).first.query.truncate(60) %>
+                  </p>
+                </div>
+              <% end %>
 
               <!-- Actions -->
-              <div class="flex items-center space-x-2">
-                <%= link_to "View", dataset, class: "flex-1 text-center px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors duration-200" %>
-                <%= link_to "Analyze", dataset_path(dataset, analyze: true), method: :post, class: "flex-1 text-center px-3 py-2 bg-gradient-to-r from-teal-600 to-cyan-600 text-white rounded-md text-sm font-medium hover:from-teal-700 hover:to-cyan-700 transition-all duration-200" %>
+              <div class="flex items-center space-x-3">
+                <%= link_to dataset, class: "flex-1 text-center px-4 py-2.5 border-2 border-slate-300 dark:border-slate-600 rounded-lg text-sm font-semibold text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-700 hover:bg-slate-50 dark:hover:bg-slate-600 hover:border-teal-300 dark:hover:border-teal-500 transition-all duration-200" do %>
+                  <svg class="inline h-4 w-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                  </svg>
+                  View
+                <% end %>
+                
+                <%= form_with url: analyze_dataset_path(dataset), method: :post, local: true, class: "flex-1" do |form| %>
+                  <%= form.submit "Analyze", class: "w-full px-4 py-2.5 bg-gradient-to-r from-teal-600 to-cyan-600 text-white rounded-lg text-sm font-semibold hover:from-teal-700 hover:to-cyan-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 transition-all duration-200 shadow-md hover:shadow-lg" %>
+                <% end %>
               </div>
             </div>
           </div>
         <% end %>
       </div>
+
+      <!-- Load More -->
+      <div class="text-center mt-12">
+        <button class="inline-flex items-center px-6 py-3 border border-slate-300 dark:border-slate-600 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all duration-200">
+          Load More Sources
+          <svg class="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+          </svg>
+        </button>
+      </div>
     <% else %>
-      <!-- Empty State -->
-      <div class="text-center py-12">
-        <svg class="mx-auto h-24 w-24 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path>
-        </svg>
-        <h3 class="mt-6 text-lg font-medium text-gray-900 dark:text-white">No data sources connected</h3>
-        <p class="mt-2 text-gray-500 dark:text-gray-400">Get started by connecting your first data source.</p>
-        <div class="mt-6">
-          <%= link_to "Connect Data Source", new_dataset_path, class: "inline-flex items-center px-4 py-2 bg-gradient-to-r from-teal-600 to-cyan-600 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:from-teal-700 hover:to-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-all duration-200" %>
+      <!-- Enhanced Empty State -->
+      <div class="text-center py-16">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 p-12 max-w-md mx-auto">
+          <!-- Animated Icon -->
+          <div class="relative mb-8">
+            <div class="mx-auto h-24 w-24 bg-gradient-to-br from-teal-100 to-cyan-100 dark:from-teal-900/30 dark:to-cyan-900/30 rounded-2xl flex items-center justify-center">
+              <svg class="h-12 w-12 text-teal-600 dark:text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/>
+              </svg>
+            </div>
+            <!-- Floating icons -->
+            <div class="absolute -top-2 -right-2 p-2 bg-amber-400 rounded-full">
+              <svg class="h-4 w-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
+              </svg>
+            </div>
+          </div>
+          
+          <h3 class="text-xl font-bold text-slate-900 dark:text-slate-100 mb-3">No Data Sources Yet</h3>
+          <p class="text-slate-600 dark:text-slate-400 mb-8 leading-relaxed">
+            Connect your first data source to start analyzing your data with powerful AI-driven insights.
+          </p>
+          
+          <!-- Benefits List -->
+          <div class="space-y-3 mb-8 text-left">
+            <div class="flex items-center space-x-3">
+              <svg class="h-5 w-5 text-emerald-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+              </svg>
+              <span class="text-sm text-slate-600 dark:text-slate-400">Connect databases, CSV files, and APIs</span>
+            </div>
+            <div class="flex items-center space-x-3">
+              <svg class="h-5 w-5 text-emerald-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+              </svg>
+              <span class="text-sm text-slate-600 dark:text-slate-400">Get instant AI-powered insights</span>
+            </div>
+            <div class="flex items-center space-x-3">
+              <svg class="h-5 w-5 text-emerald-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+              </svg>
+              <span class="text-sm text-slate-600 dark:text-slate-400">Build beautiful dashboards automatically</span>
+            </div>
+          </div>
+          
+          <%= link_to new_dataset_path, class: "inline-flex items-center px-6 py-3 bg-gradient-to-r from-teal-600 to-cyan-600 border border-transparent rounded-xl text-base font-semibold text-white hover:from-teal-700 hover:to-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5" do %>
+            <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+            </svg>
+            Connect Your First Data Source
+          <% end %>
         </div>
       </div>
     <% end %>
   </div>
 </div>
+
+<script>
+function refreshDataSources() {
+  // Add loading state
+  const button = event.target.closest('button');
+  const originalContent = button.innerHTML;
+  button.innerHTML = `
+    <svg class="animate-spin h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+    </svg>
+    Refreshing...
+  `;
+  button.disabled = true;
+  
+  // Simulate refresh (replace with actual refresh logic)
+  setTimeout(() => {
+    window.location.reload();
+  }, 1000);
+}
+</script>

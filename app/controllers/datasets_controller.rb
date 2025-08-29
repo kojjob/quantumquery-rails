@@ -20,7 +20,6 @@ class DatasetsController < ApplicationController
 
   def create
     @dataset = current_user.organization.datasets.build(dataset_params)
-    @dataset.user = current_user
 
     if @dataset.save
       redirect_to @dataset, notice: "Dataset was successfully created."
