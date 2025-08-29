@@ -19,6 +19,15 @@
 
       <!-- Auth Buttons -->
       <div class="hidden md:flex items-center space-x-4">
+        <!-- Dark Mode Toggle -->
+        <button data-controller="theme" data-action="click->theme#toggle" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition">
+          <span data-theme-target="icon">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+            </svg>
+          </span>
+        </button>
+        
         <% if user_signed_in? %>
           <span class="text-gray-700">Welcome, <%= current_user.email %></span>
           <%= link_to "Dashboards", dashboards_path, class: "bg-blue-100 text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-200 transition" %>
