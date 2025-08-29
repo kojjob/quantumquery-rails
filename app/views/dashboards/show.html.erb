@@ -1,60 +1,471 @@
-<div class="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-blue-900/20">
-  <!-- Modern Dashboard Header with Glass Effect -->
-  <div class="sticky top-0 z-40 backdrop-blur-xl bg-white/70 dark:bg-gray-900/70 border-b border-gray-200/50 dark:border-gray-700/50">
-    <div class="px-4 sm:px-6 lg:px-8">
+<div class="min-h-screen bg-gradient-to-br from-sky-50 via-white to-teal-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+  <!-- Modern Dashboard Header -->
+  <div class="sticky top-0 z-40 backdrop-blur-xl bg-white/80 dark:bg-slate-900/80 border-b border-teal-100 dark:border-slate-700">
+    <div class="px-6 lg:px-8">
       <div class="flex items-center justify-between h-16">
-        <!-- Left Section: Navigation and Title -->
-        <div class="flex items-center gap-4">
-          <!-- Back Button with Hover Effect -->
-          <%= link_to dashboards_path, class: "group flex items-center justify-center w-10 h-10 rounded-xl bg-gray-100 dark:bg-gray-800 hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-all duration-200" do %>
-            <svg class="w-5 h-5 text-gray-600 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-            </svg>
-          <% end %>
-          
-          <!-- Dashboard Title with Gradient -->
-          <div>
-            <h1 class="text-2xl font-bold bg-gradient-to-r from-gray-900 to-blue-600 dark:from-white dark:to-blue-400 bg-clip-text text-transparent">
-              <%= @dashboard.name %>
-            </h1>
-            <% if @dashboard.description.present? %>
-              <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5"><%= @dashboard.description %></p>
-            <% end %>
+        <!-- Left Section: Header Info -->
+        <div class="flex items-center gap-6">
+          <!-- Welcome Message -->
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-gradient-to-br from-teal-400 to-cyan-500 rounded-full flex items-center justify-center">
+              <span class="text-white font-semibold text-sm">👋</span>
+            </div>
+            <div>
+              <h1 class="text-lg font-semibold bg-gradient-to-r from-slate-800 to-teal-600 dark:from-white dark:to-teal-400 bg-clip-text text-transparent">
+                Welcome back, <%= current_user.name || "Analyst" %>
+              </h1>
+              <p class="text-sm text-slate-500 dark:text-slate-400">Your data insights are looking great today!</p>
+            </div>
           </div>
         </div>
         
-        <!-- Right Section: Action Buttons -->
-        <div class="flex items-center gap-2">
-          <!-- Time Range Selector -->
-          <div class="hidden md:flex items-center gap-2 px-3 py-1.5 bg-gray-100 dark:bg-gray-800 rounded-lg">
-            <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <!-- Right Section: Quick Stats & Actions -->
+        <div class="flex items-center gap-4">
+          <!-- Quick Stats -->
+          <div class="hidden lg:flex items-center gap-6 text-sm">
+            <div class="flex items-center gap-2">
+              <div class="w-2 h-2 bg-teal-500 rounded-full"></div>
+              <span class="text-slate-600 dark:text-slate-300">Active Queries</span>
+              <span class="font-semibold text-slate-800 dark:text-white">24</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-2 h-2 bg-amber-500 rounded-full"></div>
+              <span class="text-slate-600 dark:text-slate-300">Models Running</span>
+              <span class="font-semibold text-slate-800 dark:text-white">7</span>
+            </div>
+          </div>
+          
+          <!-- Time Filter -->
+          <div class="flex items-center gap-2 px-3 py-1.5 bg-teal-50 dark:bg-slate-800 border border-teal-200 dark:border-slate-600 rounded-lg">
+            <svg class="w-4 h-4 text-teal-600 dark:text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
             </svg>
-            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Last 30 Days</span>
-            <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <span class="text-sm font-medium text-slate-700 dark:text-slate-200">Last 7 Days</span>
+            <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
             </svg>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboard Content -->
+  <div class="p-6 lg:p-8">
+    
+    <!-- Main Stats Cards Row -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      
+      <!-- Total Queries Processed -->
+      <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-teal-100 dark:border-slate-700 shadow-sm hover:shadow-md transition-all duration-200">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 bg-gradient-to-br from-teal-400 to-cyan-500 rounded-xl flex items-center justify-center">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-sm font-medium text-slate-600 dark:text-slate-300">Queries Processed</h3>
+              <p class="text-2xl font-bold text-slate-800 dark:text-white">1,247</p>
+            </div>
+          </div>
+          <div class="text-right">
+            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-400">
+              +12.5%
+            </span>
+          </div>
+        </div>
+        <div class="w-full bg-sky-100 dark:bg-slate-700 rounded-full h-1.5">
+          <div class="bg-gradient-to-r from-teal-500 to-cyan-500 h-1.5 rounded-full" style="width: 78%"></div>
+        </div>
+      </div>
+
+      <!-- Models Completed -->
+      <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-amber-100 dark:border-slate-700 shadow-sm hover:shadow-md transition-all duration-200">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-xl flex items-center justify-center">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-sm font-medium text-slate-600 dark:text-slate-300">Models Completed</h3>
+              <p class="text-2xl font-bold text-slate-800 dark:text-white">847</p>
+            </div>
+          </div>
+          <div class="text-right">
+            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400">
+              +8.2%
+            </span>
+          </div>
+        </div>
+        <div class="w-full bg-sky-100 dark:bg-slate-700 rounded-full h-1.5">
+          <div class="bg-gradient-to-r from-amber-500 to-orange-500 h-1.5 rounded-full" style="width: 65%"></div>
+        </div>
+      </div>
+
+      <!-- Success Rate -->
+      <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-emerald-100 dark:border-slate-700 shadow-sm hover:shadow-md transition-all duration-200">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-xl flex items-center justify-center">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-sm font-medium text-slate-600 dark:text-slate-300">Success Rate</h3>
+              <p class="text-2xl font-bold text-slate-800 dark:text-white">94.2%</p>
+            </div>
+          </div>
+          <div class="text-right">
+            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400">
+              +2.1%
+            </span>
+          </div>
+        </div>
+        <div class="w-full bg-sky-100 dark:bg-slate-700 rounded-full h-1.5">
+          <div class="bg-gradient-to-r from-emerald-500 to-teal-500 h-1.5 rounded-full" style="width: 94%"></div>
+        </div>
+      </div>
+
+      <!-- Processing Time -->
+      <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-all duration-200">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 bg-gradient-to-br from-slate-400 to-slate-600 rounded-xl flex items-center justify-center">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-sm font-medium text-slate-600 dark:text-slate-300">Avg Processing Time</h3>
+              <p class="text-2xl font-bold text-slate-800 dark:text-white">2.4s</p>
+            </div>
+          </div>
+          <div class="text-right">
+            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400">
+              -15.3%
+            </span>
+          </div>
+        </div>
+        <div class="w-full bg-sky-100 dark:bg-slate-700 rounded-full h-1.5">
+          <div class="bg-gradient-to-r from-slate-500 to-slate-600 h-1.5 rounded-full" style="width: 45%"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+      
+      <!-- Left Column (2/3 width) -->
+      <div class="xl:col-span-2 space-y-8">
+        
+        <!-- Query Analysis Trends -->
+        <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm">
+          <div class="flex items-center justify-between mb-6">
+            <div>
+              <h2 class="text-lg font-semibold text-slate-800 dark:text-white">Query Analysis Trends</h2>
+              <p class="text-sm text-slate-500 dark:text-slate-400">Weekly analysis activity overview</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button class="px-3 py-1.5 text-xs font-medium bg-teal-100 text-teal-700 dark:bg-teal-900/30 dark:text-teal-400 rounded-lg">
+                7 Days
+              </button>
+              <button class="px-3 py-1.5 text-xs font-medium text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg">
+                30 Days
+              </button>
+            </div>
+          </div>
           
-          <!-- Edit Mode Toggle -->
-          <button data-dashboard-target="editToggle" 
-                  data-action="click->dashboard#toggleEditMode"
-                  class="group relative px-4 py-2 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700 rounded-lg transition-all duration-200 flex items-center gap-2">
-            <svg class="w-4 h-4 text-gray-600 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-            </svg>
-            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Edit</span>
-          </button>
+          <!-- Chart Container -->
+          <div class="h-64 flex items-center justify-center border-2 border-dashed border-slate-200 dark:border-slate-600 rounded-xl">
+            <div class="text-center">
+              <div class="w-12 h-12 bg-teal-100 dark:bg-teal-900/30 rounded-xl flex items-center justify-center mx-auto mb-3">
+                <svg class="w-6 h-6 text-teal-600 dark:text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+              </div>
+              <p class="text-sm font-medium text-slate-600 dark:text-slate-300">Chart visualization will appear here</p>
+              <p class="text-xs text-slate-500 dark:text-slate-400">Connect your data sources to see trends</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm">
+          <div class="flex items-center justify-between mb-6">
+            <div>
+              <h2 class="text-lg font-semibold text-slate-800 dark:text-white">Recent Query Activity</h2>
+              <p class="text-sm text-slate-500 dark:text-slate-400">Latest data analysis requests</p>
+            </div>
+            <button class="text-sm font-medium text-teal-600 dark:text-teal-400 hover:text-teal-700 dark:hover:text-teal-300">
+              View all
+            </button>
+          </div>
           
-          <!-- Add Widget Button (Hidden by default) -->
-          <button data-dashboard-target="addButton" 
-                  data-action="click->dashboard#showAddModal"
-                  class="hidden group px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-lg transition-all duration-200 flex items-center gap-2 shadow-lg shadow-blue-500/25">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-            </svg>
-            <span class="text-sm font-medium">Add Widget</span>
-          </button>
+          <div class="space-y-4">
+            <!-- Query Item -->
+            <div class="flex items-center gap-4 p-4 bg-slate-50 dark:bg-slate-700/50 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+              <div class="w-10 h-10 bg-gradient-to-br from-teal-400 to-cyan-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                </svg>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-slate-800 dark:text-white truncate">
+                  Customer segmentation analysis for Q3 data
+                </p>
+                <div class="flex items-center gap-4 mt-1">
+                  <span class="text-xs text-slate-500 dark:text-slate-400">Marketing Dataset</span>
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400">
+                    Completed
+                  </span>
+                </div>
+              </div>
+              <div class="text-right text-xs text-slate-500 dark:text-slate-400">
+                2m ago
+              </div>
+            </div>
+
+            <!-- Query Item -->
+            <div class="flex items-center gap-4 p-4 bg-slate-50 dark:bg-slate-700/50 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+              <div class="w-10 h-10 bg-gradient-to-br from-amber-400 to-orange-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-slate-800 dark:text-white truncate">
+                  Revenue prediction model training
+                </p>
+                <div class="flex items-center gap-4 mt-1">
+                  <span class="text-xs text-slate-500 dark:text-slate-400">Sales Dataset</span>
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400">
+                    Processing
+                  </span>
+                </div>
+              </div>
+              <div class="text-right text-xs text-slate-500 dark:text-slate-400">
+                5m ago
+              </div>
+            </div>
+
+            <!-- Query Item -->
+            <div class="flex items-center gap-4 p-4 bg-slate-50 dark:bg-slate-700/50 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+              <div class="w-10 h-10 bg-gradient-to-br from-slate-400 to-slate-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-slate-800 dark:text-white truncate">
+                  Product performance dashboard refresh
+                </p>
+                <div class="flex items-center gap-4 mt-1">
+                  <span class="text-xs text-slate-500 dark:text-slate-400">Analytics Dataset</span>
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400">
+                    Completed
+                  </span>
+                </div>
+              </div>
+              <div class="text-right text-xs text-slate-500 dark:text-slate-400">
+                12m ago
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column (1/3 width) -->
+      <div class="space-y-8">
+        
+        <!-- AI Models Performance -->
+        <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm">
+          <div class="flex items-center justify-between mb-6">
+            <div>
+              <h2 class="text-lg font-semibold text-slate-800 dark:text-white">AI Models</h2>
+              <p class="text-sm text-slate-500 dark:text-slate-400">Performance overview</p>
+            </div>
+          </div>
+          
+          <div class="space-y-6">
+            <!-- Claude 3.5 Sonnet -->
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-gradient-to-br from-teal-400 to-cyan-500 rounded-lg flex items-center justify-center">
+                  <span class="text-white text-xs font-bold">C</span>
+                </div>
+                <div>
+                  <p class="text-sm font-medium text-slate-800 dark:text-white">Claude 3.5 Sonnet</p>
+                  <p class="text-xs text-slate-500 dark:text-slate-400">85% usage</p>
+                </div>
+              </div>
+              <div class="text-right">
+                <span class="text-xs font-medium text-teal-600 dark:text-teal-400">94.2%</span>
+                <div class="w-16 bg-slate-200 dark:bg-slate-700 rounded-full h-1.5 mt-1">
+                  <div class="bg-gradient-to-r from-teal-500 to-cyan-500 h-1.5 rounded-full" style="width: 85%"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- GPT-4 -->
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-gradient-to-br from-amber-400 to-orange-500 rounded-lg flex items-center justify-center">
+                  <span class="text-white text-xs font-bold">G</span>
+                </div>
+                <div>
+                  <p class="text-sm font-medium text-slate-800 dark:text-white">GPT-4 Turbo</p>
+                  <p class="text-xs text-slate-500 dark:text-slate-400">12% usage</p>
+                </div>
+              </div>
+              <div class="text-right">
+                <span class="text-xs font-medium text-amber-600 dark:text-amber-400">91.8%</span>
+                <div class="w-16 bg-slate-200 dark:bg-slate-700 rounded-full h-1.5 mt-1">
+                  <div class="bg-gradient-to-r from-amber-500 to-orange-500 h-1.5 rounded-full" style="width: 12%"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Gemini -->
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-gradient-to-br from-slate-400 to-slate-600 rounded-lg flex items-center justify-center">
+                  <span class="text-white text-xs font-bold">G</span>
+                </div>
+                <div>
+                  <p class="text-sm font-medium text-slate-800 dark:text-white">Gemini Pro</p>
+                  <p class="text-xs text-slate-500 dark:text-slate-400">3% usage</p>
+                </div>
+              </div>
+              <div class="text-right">
+                <span class="text-xs font-medium text-slate-600 dark:text-slate-400">88.5%</span>
+                <div class="w-16 bg-slate-200 dark:bg-slate-700 rounded-full h-1.5 mt-1">
+                  <div class="bg-gradient-to-r from-slate-500 to-slate-600 h-1.5 rounded-full" style="width: 3%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm">
+          <div class="mb-6">
+            <h2 class="text-lg font-semibold text-slate-800 dark:text-white">Quick Actions</h2>
+            <p class="text-sm text-slate-500 dark:text-slate-400">Start your next analysis</p>
+          </div>
+          
+          <div class="space-y-3">
+            <button class="w-full flex items-center gap-3 p-4 bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white rounded-xl transition-all duration-200 group">
+              <div class="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                </svg>
+              </div>
+              <div class="text-left">
+                <p class="font-medium">New Query</p>
+                <p class="text-xs opacity-80">Start data analysis</p>
+              </div>
+              <svg class="w-4 h-4 ml-auto group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </button>
+
+            <button class="w-full flex items-center gap-3 p-4 bg-amber-50 dark:bg-amber-900/20 hover:bg-amber-100 dark:hover:bg-amber-900/30 text-amber-700 dark:text-amber-400 rounded-xl transition-all duration-200 group">
+              <div class="w-8 h-8 bg-amber-500/20 rounded-lg flex items-center justify-center">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"></path>
+                </svg>
+              </div>
+              <div class="text-left">
+                <p class="font-medium">Add Dataset</p>
+                <p class="text-xs opacity-70">Connect new data source</p>
+              </div>
+              <svg class="w-4 h-4 ml-auto group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </button>
+
+            <button class="w-full flex items-center gap-3 p-4 bg-slate-50 dark:bg-slate-700/50 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl transition-all duration-200 group">
+              <div class="w-8 h-8 bg-slate-500/20 rounded-lg flex items-center justify-center">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+              </div>
+              <div class="text-left">
+                <p class="font-medium">View Reports</p>
+                <p class="text-xs opacity-70">Browse analysis history</p>
+              </div>
+              <svg class="w-4 h-4 ml-auto group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Active Datasets -->
+        <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm">
+          <div class="flex items-center justify-between mb-6">
+            <div>
+              <h2 class="text-lg font-semibold text-slate-800 dark:text-white">Active Datasets</h2>
+              <p class="text-sm text-slate-500 dark:text-slate-400">Connected data sources</p>
+            </div>
+            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-400">
+              5 Active
+            </span>
+          </div>
+          
+          <div class="space-y-4">
+            <!-- Dataset -->
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 bg-gradient-to-br from-teal-400 to-cyan-500 rounded-lg flex items-center justify-center">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"></path>
+                </svg>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-slate-800 dark:text-white truncate">Sales Analytics</p>
+                <p class="text-xs text-slate-500 dark:text-slate-400">PostgreSQL • 2.4M rows</p>
+              </div>
+              <div class="w-2 h-2 bg-emerald-400 rounded-full"></div>
+            </div>
+
+            <!-- Dataset -->
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 bg-gradient-to-br from-amber-400 to-orange-500 rounded-lg flex items-center justify-center">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-slate-800 dark:text-white truncate">Customer Data</p>
+                <p class="text-xs text-slate-500 dark:text-slate-400">CSV • 847K rows</p>
+              </div>
+              <div class="w-2 h-2 bg-emerald-400 rounded-full"></div>
+            </div>
+
+            <!-- Dataset -->
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 bg-gradient-to-br from-slate-400 to-slate-600 rounded-lg flex items-center justify-center">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14-4H9m4 8H7m6 4v.01"></path>
+                </svg>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-slate-800 dark:text-white truncate">Marketing Metrics</p>
+                <p class="text-xs text-slate-500 dark:text-slate-400">MongoDB • 1.2M docs</p>
+              </div>
+              <div class="w-2 h-2 bg-amber-400 rounded-full"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
           
           <!-- Refresh Button -->
           <button data-action="click->dashboard#refreshDashboard"

@@ -4,22 +4,26 @@ export default class extends Controller {
   static targets = ["mobileMenu", "menuButton"]
   
   connect() {
+    console.log('Navbar controller connected')
     // Ensure mobile menu is hidden by default
     this.hideMobileMenu()
   }
   
   toggleMenu() {
+    console.log('Toggle menu clicked')
     if (this.mobileMenuTarget.classList.contains('hidden')) {
+      console.log('Showing mobile menu')
       this.showMobileMenu()
     } else {
+      console.log('Hiding mobile menu')
       this.hideMobileMenu()
     }
   }
   
   showMobileMenu() {
-    // Remove hidden class and add animation
+    // Remove hidden class and add smooth transition
     this.mobileMenuTarget.classList.remove('hidden')
-    this.mobileMenuTarget.classList.add('animate-fade-in-down')
+    this.mobileMenuTarget.classList.add('block')
     
     // Update button icon to X
     this.updateMenuButtonIcon(true)
@@ -29,9 +33,9 @@ export default class extends Controller {
   }
   
   hideMobileMenu() {
-    // Add hidden class and remove animation
+    // Add hidden class and remove block class
     this.mobileMenuTarget.classList.add('hidden')
-    this.mobileMenuTarget.classList.remove('animate-fade-in-down')
+    this.mobileMenuTarget.classList.remove('block')
     
     // Update button icon to hamburger
     this.updateMenuButtonIcon(false)

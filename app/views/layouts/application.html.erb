@@ -92,10 +92,9 @@
     <%= javascript_importmap_tags %>
     
     <script>
-      // Initialize dark mode from local storage
+      // Initialize dark mode from local storage for TailwindCSS
       (function() {
         const theme = localStorage.getItem('theme') || 'light';
-        document.documentElement.setAttribute('data-theme', theme);
         if (theme === 'dark') {
           document.documentElement.classList.add('dark');
         }
