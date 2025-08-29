@@ -53,4 +53,12 @@ class User < ApplicationRecord
     else 100
     end
   end
+
+  def name
+    if first_name.present? || last_name.present?
+      [first_name, last_name].compact.join(' ')
+    else
+      email.split('@').first.humanize
+    end
+  end
 end
