@@ -1,0 +1,31 @@
+<div class="h-full overflow-auto">
+  <% if data[:queries].present? %>
+    <ul class="space-y-2">
+      <% data[:queries].each do |query| %>
+        <li class="border-b border-gray-200 pb-2">
+          <div class="flex justify-between items-start">
+            <div class="flex-1">
+              <p class="text-sm font-medium text-gray-900 truncate" title="<%= query[:natural_language_query] %>">
+                <%= query[:natural_language_query] %>
+              </p>
+              <p class="text-xs text-gray-500">
+                <%= query[:status].capitalize %> • <%= time_ago_in_words(query[:created_at]) %> ago
+              </p>
+            </div>
+            <% if query[:id] %>
+              <%= link_to analysis_request_path(query[:id]), class: "text-purple-600 hover:text-purple-700" do %>
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+              <% end %>
+            <% end %>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <div class="flex items-center justify-center h-full text-gray-500">
+      <p class="text-sm">No recent queries</p>
+    </div>
+  <% end %>
+</div>

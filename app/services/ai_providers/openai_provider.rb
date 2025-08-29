@@ -2,23 +2,23 @@
 module AiProviders
   class OpenaiProvider < BaseProvider
     MODELS = {
-      'gpt-4-turbo' => { 
-        name: 'GPT-4 Turbo', 
-        context: 128_000, 
+      "gpt-4-turbo" => {
+        name: "GPT-4 Turbo",
+        context: 128_000,
         cost: { input: 0.01, output: 0.03 },
-        capabilities: [:advanced_reasoning, :function_calling, :vision]
+        capabilities: [ :advanced_reasoning, :function_calling, :vision ]
       },
-      'gpt-4' => { 
-        name: 'GPT-4', 
-        context: 8192, 
+      "gpt-4" => {
+        name: "GPT-4",
+        context: 8192,
         cost: { input: 0.03, output: 0.06 },
-        capabilities: [:advanced_reasoning, :function_calling]
+        capabilities: [ :advanced_reasoning, :function_calling ]
       },
-      'gpt-3.5-turbo' => { 
-        name: 'GPT-3.5 Turbo', 
-        context: 16_385, 
+      "gpt-3.5-turbo" => {
+        name: "GPT-3.5 Turbo",
+        context: 16_385,
         cost: { input: 0.0005, output: 0.0015 },
-        capabilities: [:fast_responses, :basic_reasoning]
+        capabilities: [ :fast_responses, :basic_reasoning ]
       }
     }.freeze
 
@@ -34,11 +34,11 @@ module AiProviders
       )
 
       {
-        content: response.dig('choices', 0, 'message', 'content'),
+        content: response.dig("choices", 0, "message", "content"),
         usage: {
-          input_tokens: response.dig('usage', 'prompt_tokens'),
-          output_tokens: response.dig('usage', 'completion_tokens'),
-          total_tokens: response.dig('usage', 'total_tokens')
+          input_tokens: response.dig("usage", "prompt_tokens"),
+          output_tokens: response.dig("usage", "completion_tokens"),
+          total_tokens: response.dig("usage", "total_tokens")
         },
         model: @model
       }
@@ -46,8 +46,8 @@ module AiProviders
       handle_api_error(e)
     end
 
-    def generate_code(prompt, language: 'python', options = {})
-      functions = [{
+    def generate_code(prompt, language: "python", **options)
+      functions = [ {
         name: "generate_code",
         description: "Generate code for data analysis",
         parameters: {
@@ -67,9 +67,9 @@ module AiProviders
               description: "Required libraries or packages"
             }
           },
-          required: ["code"]
+          required: [ "code" ]
         }
-      }]
+      } ]
 
       response = @client.chat(
         parameters: {
@@ -84,19 +84,19 @@ module AiProviders
         }
       )
 
-      function_call = response.dig('choices', 0, 'message', 'function_call')
+      function_call = response.dig("choices", 0, "message", "function_call")
       if function_call
-        result = JSON.parse(function_call['arguments'])
-        result['code']
+        result = JSON.parse(function_call["arguments"])
+        result["code"]
       else
-        extract_code_from_response(response.dig('choices', 0, 'message', 'content'))
+        extract_code_from_response(response.dig("choices", 0, "message", "content"))
       end
     rescue => e
       handle_api_error(e)
     end
 
     def analyze_data_requirements(query, dataset_schema, options = {})
-      functions = [{
+      functions = [ {
         name: "analyze_requirements",
         description: "Analyze data requirements for the query",
         parameters: {
@@ -104,7 +104,7 @@ module AiProviders
           properties: {
             analysis_type: {
               type: "string",
-              enum: ["statistical", "predictive", "exploratory", "descriptive", "diagnostic"]
+              enum: [ "statistical", "predictive", "exploratory", "descriptive", "diagnostic" ]
             },
             required_tables: {
               type: "array",
@@ -116,7 +116,7 @@ module AiProviders
             },
             filters: {
               type: "array",
-              items: { 
+              items: {
                 type: "object",
                 properties: {
                   column: { type: "string" },
@@ -135,9 +135,9 @@ module AiProviders
               maximum: 10
             }
           },
-          required: ["analysis_type", "required_tables", "analysis_steps", "complexity_score"]
+          required: [ "analysis_type", "required_tables", "analysis_steps", "complexity_score" ]
         }
-      }]
+      } ]
 
       response = @client.chat(
         parameters: {
@@ -152,21 +152,21 @@ module AiProviders
         }
       )
 
-      function_call = response.dig('choices', 0, 'message', 'function_call')
-      JSON.parse(function_call['arguments']) if function_call
+      function_call = response.dig("choices", 0, "message", "function_call")
+      JSON.parse(function_call["arguments"]) if function_call
     rescue => e
       handle_api_error(e)
     end
 
     def interpret_results(results, original_query, options = {})
       interpretation_prompt = build_interpretation_prompt(results, original_query)
-      
+
       response = generate_completion(
-        interpretation_prompt, 
+        interpretation_prompt,
         system_prompt: "You are a data analyst explaining results to business stakeholders.",
         temperature: 0.5
       )
-      
+
       response[:content]
     end
 
@@ -179,11 +179,11 @@ module AiProviders
     end
 
     def supports_function_calling?
-      @model != 'gpt-3.5-turbo'
+      @model != "gpt-3.5-turbo"
     end
 
     def supports_vision?
-      @model == 'gpt-4-turbo'
+      @model == "gpt-4-turbo"
     end
 
     def max_context_length
@@ -201,7 +201,7 @@ module AiProviders
     end
 
     def default_model
-      'gpt-4-turbo'
+      "gpt-4-turbo"
     end
 
     private
@@ -228,15 +228,15 @@ module AiProviders
     def build_interpretation_prompt(results, query)
       """
       Interpret these results for the query: #{query}
-      
+
       Results: #{results.to_json}
-      
+
       Provide:
       1. Direct answer
       2. Key insights
       3. Recommendations
       4. Limitations
-      
+
       Use business-friendly language.
       """
     end

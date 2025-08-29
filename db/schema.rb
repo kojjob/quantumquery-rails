@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_28_223717) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_29_083358) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -72,6 +72,35 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_28_223717) do
     t.index ["commentable_type", "commentable_id"], name: "index_comments_on_commentable"
     t.index ["created_at"], name: "index_comments_on_created_at"
     t.index ["user_id"], name: "index_comments_on_user_id"
+  end
+
+  create_table "dashboard_widgets", force: :cascade do |t|
+    t.bigint "dashboard_id", null: false
+    t.string "widget_type"
+    t.string "title"
+    t.jsonb "config"
+    t.integer "position"
+    t.integer "row"
+    t.integer "col"
+    t.integer "width"
+    t.integer "height"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["dashboard_id"], name: "index_dashboard_widgets_on_dashboard_id"
+  end
+
+  create_table "dashboards", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "name"
+    t.text "description"
+    t.string "layout"
+    t.jsonb "config"
+    t.integer "position"
+    t.boolean "is_default"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["is_default"], name: "index_dashboards_on_is_default"
+    t.index ["user_id"], name: "index_dashboards_on_user_id"
   end
 
   create_table "data_source_connections", force: :cascade do |t|
@@ -244,7 +273,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_28_223717) do
     t.integer "technical_level", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "encrypted_otp_secret"
+    t.string "encrypted_otp_secret_iv"
+    t.string "encrypted_otp_secret_salt"
+    t.integer "consumed_timestep"
+    t.boolean "otp_required_for_login", default: false, null: false
+    t.text "otp_backup_codes", array: true
+    t.datetime "two_factor_enabled_at"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["encrypted_otp_secret"], name: "index_users_on_encrypted_otp_secret", unique: true
     t.index ["organization_id"], name: "index_users_on_organization_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
@@ -255,6 +292,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_28_223717) do
   add_foreign_key "api_tokens", "users"
   add_foreign_key "api_usage_logs", "api_tokens"
   add_foreign_key "comments", "users"
+  add_foreign_key "dashboard_widgets", "dashboards"
+  add_foreign_key "dashboards", "users"
   add_foreign_key "data_source_connections", "organizations"
   add_foreign_key "data_source_connections", "users"
   add_foreign_key "datasets", "organizations"

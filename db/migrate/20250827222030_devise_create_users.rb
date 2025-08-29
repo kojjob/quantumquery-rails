@@ -20,7 +20,7 @@ class DeviseCreateUsers < ActiveRecord::Migration[8.0]
       t.datetime :last_sign_in_at
       t.string   :current_sign_in_ip
       t.string   :last_sign_in_ip
-      
+
       ## Additional fields
       t.references :organization, foreign_key: true, null: true
       t.string :first_name

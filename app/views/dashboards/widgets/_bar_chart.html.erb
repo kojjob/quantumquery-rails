@@ -1,0 +1,29 @@
+<div class="h-full">
+  <canvas id="bar-chart-<%= widget.id %>" class="w-full h-full"></canvas>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('bar-chart-<%= widget.id %>').getContext('2d');
+    const chartData = <%= data.to_json.html_safe %>;
+    
+    new Chart(ctx, {
+      type: 'bar',
+      data: chartData,
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  });
+</script>

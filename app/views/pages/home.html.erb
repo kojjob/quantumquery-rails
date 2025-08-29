@@ -1,43 +1,117 @@
-<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-    <h1 class="text-5xl font-bold text-gray-900 mb-4">
-      🚀 QuantumQuery
-    </h1>
-    <p class="text-xl text-gray-600 mb-8">
-      Natural Language Data Science Platform
-    </p>
-    <div class="bg-white rounded-lg shadow-lg p-8">
-      <p class="text-gray-700 mb-6">
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+  <%= render 'shared/navbar' %>
+  
+  <!-- Hero Section -->
+  <div class="pt-24 pb-16 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto text-center">
+      <h1 class="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
+        🚀 QuantumQuery
+      </h1>
+      <p class="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
+        Natural Language Data Science Platform
+      </p>
+      <p class="text-lg text-gray-700 mb-12 max-w-2xl mx-auto">
         Ask questions in plain English. Get advanced analytics powered by AI.
       </p>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
-        <div class="p-4 bg-blue-50 rounded">
-          <h3 class="font-semibold text-blue-900">🤖 Multi-Model AI</h3>
-          <p class="text-sm text-blue-700">Claude, GPT-4, Gemini, and more</p>
-        </div>
-        <div class="p-4 bg-green-50 rounded">
-          <h3 class="font-semibold text-green-900">📊 Code Generation</h3>
-          <p class="text-sm text-green-700">Python, R, SQL automatically</p>
-        </div>
-        <div class="p-4 bg-purple-50 rounded">
-          <h3 class="font-semibold text-purple-900">🔒 Secure Execution</h3>
-          <p class="text-sm text-purple-700">Sandboxed Docker containers</p>
-        </div>
-      </div>
+      
       <% if user_signed_in? %>
-        <div class="mt-8">
+        <div class="space-y-4">
           <p class="text-gray-600">Welcome back, <%= current_user.email %>!</p>
-          <%= link_to "Sign Out", destroy_user_session_path, method: :delete, 
-              class: "mt-4 inline-block bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700" %>
+          <div class="space-x-4">
+            <%= link_to "Go to Dashboard", dashboards_path, 
+                class: "inline-block bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition text-lg font-semibold" %>
+            <%= link_to "Sign Out", destroy_user_session_path, method: :delete, 
+                class: "inline-block bg-gray-600 text-white px-8 py-3 rounded-lg hover:bg-gray-700 transition text-lg font-semibold" %>
+          </div>
         </div>
       <% else %>
-        <div class="mt-8 space-x-4">
+        <div class="space-x-4">
+          <%= link_to "Get Started Free", new_user_registration_path, 
+              class: "inline-block bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition text-lg font-semibold" %>
           <%= link_to "Sign In", new_user_session_path, 
-              class: "inline-block bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700" %>
-          <%= link_to "Sign Up", new_user_registration_path, 
-              class: "inline-block bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700" %>
+              class: "inline-block bg-white text-blue-600 border-2 border-blue-600 px-8 py-3 rounded-lg hover:bg-blue-50 transition text-lg font-semibold" %>
         </div>
       <% end %>
     </div>
   </div>
+
+  <!-- Features Section -->
+  <div class="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+    <div class="max-w-7xl mx-auto">
+      <h2 class="text-3xl font-bold text-center text-gray-900 mb-12">
+        Powerful Features for Data Analysis
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="text-center">
+          <div class="bg-blue-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span class="text-3xl">🤖</span>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">Multi-Model AI</h3>
+          <p class="text-gray-600">Access Claude, GPT-4, Gemini, and more for diverse insights</p>
+        </div>
+        
+        <div class="text-center">
+          <div class="bg-green-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span class="text-3xl">📊</span>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">Code Generation</h3>
+          <p class="text-gray-600">Automatically generate Python, R, and SQL code</p>
+        </div>
+        
+        <div class="text-center">
+          <div class="bg-purple-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span class="text-3xl">🔒</span>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">Secure Execution</h3>
+          <p class="text-gray-600">Run code safely in sandboxed Docker containers</p>
+        </div>
+        
+        <div class="text-center">
+          <div class="bg-yellow-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span class="text-3xl">💡</span>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">Natural Language</h3>
+          <p class="text-gray-600">Ask questions in plain English, no coding required</p>
+        </div>
+        
+        <div class="text-center">
+          <div class="bg-red-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span class="text-3xl">📈</span>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">Advanced Analytics</h3>
+          <p class="text-gray-600">Perform complex statistical analysis with ease</p>
+        </div>
+        
+        <div class="text-center">
+          <div class="bg-indigo-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span class="text-3xl">🚀</span>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">Real-time Results</h3>
+          <p class="text-gray-600">Get instant insights from your data queries</p>
+        </div>
+      </div>
+      
+      <div class="text-center mt-12">
+        <%= link_to "View All Features →", features_path, class: "text-blue-600 hover:text-blue-700 font-semibold text-lg" %>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA Section -->
+  <div class="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-blue-600 to-indigo-600">
+    <div class="max-w-4xl mx-auto text-center text-white">
+      <h2 class="text-3xl font-bold mb-4">Ready to Transform Your Data Analysis?</h2>
+      <p class="text-xl mb-8">Join thousands of users who are already using QuantumQuery</p>
+      <% unless user_signed_in? %>
+        <div class="space-x-4">
+          <%= link_to "Start Free Trial", new_user_registration_path, 
+              class: "inline-block bg-white text-blue-600 px-8 py-3 rounded-lg hover:bg-gray-100 transition font-semibold" %>
+          <%= link_to "View Pricing", pricing_path, 
+              class: "inline-block bg-transparent border-2 border-white text-white px-8 py-3 rounded-lg hover:bg-white hover:text-blue-600 transition font-semibold" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <%= render 'shared/footer' %>
 </div>
