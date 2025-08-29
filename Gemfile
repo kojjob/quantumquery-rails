@@ -51,6 +51,10 @@ gem "jsonapi-serializer" # Fast JSON serialization
 gem "kaminari" # Pagination
 gem "rack-cors" # CORS support
 
+# Analytics and charting
+gem "groupdate" # Time-based grouping for charts
+gem "chartkick" # JavaScript charts with one line of Ruby
+
 # Monitoring and performance
 gem "scout_apm" # Performance monitoring
 gem "rollbar" # Error tracking
