@@ -1,6 +1,6 @@
-<div class="min-h-screen bg-gray-50" data-dashboard-id="<%= @dashboard.id %>" data-controller="dashboard">
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900" data-dashboard-id="<%= @dashboard.id %>" data-controller="dashboard">
   <!-- Dashboard Header -->
-  <div class="bg-white shadow-sm border-b border-gray-200">
+  <div class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
     <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center py-4">
         <div class="flex items-center space-x-4">
@@ -11,8 +11,8 @@
           <% end %>
           
           <div>
-            <h1 class="text-2xl font-bold text-gray-900"><%= @dashboard.name %></h1>
-            <p class="text-sm text-gray-600"><%= @dashboard.description %></p>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100"><%= @dashboard.name %></h1>
+            <p class="text-sm text-gray-600 dark:text-gray-400"><%= @dashboard.description %></p>
           </div>
         </div>
         
@@ -56,7 +56,7 @@
   <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <div data-dashboard-target="grid" class="grid grid-cols-12 gap-4 auto-rows-[80px]" data-edit-mode="false">
       <% @widgets.each do |widget| %>
-        <div class="dashboard-widget bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow"
+        <div class="dashboard-widget bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow"
              data-dashboard-target="widget"
              data-widget-id="<%= widget.id %>"
              data-widget-type="<%= widget.widget_type %>"
@@ -64,7 +64,7 @@
           
           <!-- Widget Header -->
           <div class="widget-header flex justify-between items-center mb-3">
-            <h3 class="text-sm font-semibold text-gray-900"><%= widget.title %></h3>
+            <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100"><%= widget.title %></h3>
             <div class="widget-actions flex space-x-1">
               <button class="refresh-widget text-gray-400 hover:text-gray-600" data-widget-id="<%= widget.id %>" data-action="click->dashboard#refreshWidget">
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

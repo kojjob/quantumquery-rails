@@ -1,0 +1,187 @@
+/* Dark Mode Styles */
+
+/* Base dark mode colors */
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f9fafb;
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --border-color: #e5e7eb;
+  --accent-color: #3b82f6;
+}
+
+[data-theme="dark"] {
+  --bg-primary: #111827;
+  --bg-secondary: #1f2937;
+  --text-primary: #f9fafb;
+  --text-secondary: #9ca3af;
+  --border-color: #374151;
+  --accent-color: #60a5fa;
+}
+
+/* Apply dark mode to body */
+[data-theme="dark"] body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+/* Dark mode for navigation */
+[data-theme="dark"] nav {
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] nav a {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] nav a:hover {
+  color: var(--accent-color);
+}
+
+/* Dark mode for cards and widgets */
+[data-theme="dark"] .bg-white {
+  background-color: var(--bg-secondary) !important;
+}
+
+[data-theme="dark"] .bg-gray-50 {
+  background-color: var(--bg-primary) !important;
+}
+
+[data-theme="dark"] .bg-gray-100 {
+  background-color: var(--bg-secondary) !important;
+}
+
+[data-theme="dark"] .text-gray-900 {
+  color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .text-gray-700 {
+  color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .text-gray-600 {
+  color: var(--text-secondary) !important;
+}
+
+[data-theme="dark"] .text-gray-500 {
+  color: var(--text-secondary) !important;
+}
+
+[data-theme="dark"] .border-gray-200 {
+  border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .border-gray-300 {
+  border-color: var(--border-color) !important;
+}
+
+/* Dark mode for forms */
+[data-theme="dark"] input,
+[data-theme="dark"] textarea,
+[data-theme="dark"] select {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] input:focus,
+[data-theme="dark"] textarea:focus,
+[data-theme="dark"] select:focus {
+  border-color: var(--accent-color);
+  outline-color: var(--accent-color);
+}
+
+/* Dark mode for buttons */
+[data-theme="dark"] .btn-primary {
+  background-color: var(--accent-color);
+  color: white;
+}
+
+[data-theme="dark"] .btn-secondary {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+/* Dark mode for modals */
+[data-theme="dark"] .modal {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+/* Dark mode for tables */
+[data-theme="dark"] table {
+  background-color: var(--bg-secondary);
+}
+
+[data-theme="dark"] th {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] td {
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] tr:hover {
+  background-color: var(--bg-primary);
+}
+
+/* Dark mode for charts */
+[data-theme="dark"] canvas {
+  filter: invert(0.9) hue-rotate(180deg);
+}
+
+/* Dark mode for shadows */
+[data-theme="dark"] .shadow-md {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="dark"] .shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+}
+
+/* Dark mode for dashboard widgets */
+[data-theme="dark"] .dashboard-widget {
+  background-color: var(--bg-secondary);
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .widget-header {
+  color: var(--text-primary);
+}
+
+/* Dark mode for code blocks */
+[data-theme="dark"] pre,
+[data-theme="dark"] code {
+  background-color: #0d1117;
+  color: #c9d1d9;
+}
+
+/* Dark mode for alerts */
+[data-theme="dark"] .alert-success {
+  background-color: #065f46;
+  color: #d1fae5;
+}
+
+[data-theme="dark"] .alert-error {
+  background-color: #7f1d1d;
+  color: #fee2e2;
+}
+
+[data-theme="dark"] .alert-warning {
+  background-color: #78350f;
+  color: #fef3c7;
+}
+
+[data-theme="dark"] .alert-info {
+  background-color: #1e3a8a;
+  color: #dbeafe;
+}
+
+/* Smooth transition for theme changes */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
