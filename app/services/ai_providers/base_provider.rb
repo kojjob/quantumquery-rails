@@ -14,7 +14,7 @@ module AiProviders
       raise NotImplementedError, "#{self.class} must implement #generate_completion"
     end
 
-    def generate_code(prompt, language: 'python', options = {})
+    def generate_code(prompt, language: "python", **options)
       raise NotImplementedError, "#{self.class} must implement #generate_code"
     end
 
@@ -62,7 +62,7 @@ module AiProviders
 
     def handle_api_error(error)
       Rails.logger.error "AI Provider Error (#{self.class}): #{error.message}"
-      
+
       case error
       when /rate limit/i
         raise ProviderErrors::RateLimitError, error.message

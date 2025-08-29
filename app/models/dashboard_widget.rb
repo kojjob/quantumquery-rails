@@ -1,17 +1,17 @@
 class DashboardWidget < ApplicationRecord
   belongs_to :dashboard
-  
+
   # Validations
   validates :widget_type, presence: true
   validates :title, presence: true
   validates :position, :row, :col, :width, :height, presence: true, numericality: { greater_than_or_equal_to: 0 }
-  
+
   # Scopes
   scope :ordered, -> { order(:position) }
-  
+
   # Callbacks
   before_validation :set_defaults
-  
+
   def data
     case widget_type
     when "metric_card"
@@ -34,9 +34,9 @@ class DashboardWidget < ApplicationRecord
       {}
     end
   end
-  
+
   private
-  
+
   def set_defaults
     self.position ||= 0
     self.row ||= 0
@@ -45,10 +45,10 @@ class DashboardWidget < ApplicationRecord
     self.height ||= 2
     self.config ||= {}
   end
-  
+
   def fetch_metric_data
     user = dashboard.user
-    
+
     case config["metric"]
     when "total_queries"
       period = config["period"] || "month"
@@ -59,14 +59,14 @@ class DashboardWidget < ApplicationRecord
         ).count
         calculate_percentage_change(count, previous_count)
       end
-      
+
       {
         value: count,
         label: "Total Queries",
         change: comparison,
         trend: comparison && comparison > 0 ? "up" : "down"
       }
-      
+
     when "active_datasets"
       count = user.organization&.datasets&.active&.count || 0
       {
@@ -74,37 +74,37 @@ class DashboardWidget < ApplicationRecord
         label: "Active Datasets",
         icon: "database"
       }
-      
+
     else
       { value: 0, label: "No Data" }
     end
   end
-  
+
   def fetch_line_chart_data
     user = dashboard.user
     period = config["period"] || "30days"
     group_by = config["group_by"] || "day"
-    
+
     data = user.analysis_requests
       .where("created_at > ?", period_start(period))
       .group_by_period(group_by.to_sym, :created_at)
       .count
-    
+
     {
       labels: data.keys.map { |k| k.strftime("%b %d") },
-      datasets: [{
+      datasets: [ {
         label: "Queries",
         data: data.values,
         borderColor: "rgb(147, 51, 234)",
         backgroundColor: "rgba(147, 51, 234, 0.1)"
-      }]
+      } ]
     }
   end
-  
+
   def fetch_bar_chart_data
     user = dashboard.user
     period = config["period"] || "7days"
-    
+
     data = user.analysis_requests
       .joins(:dataset)
       .where("analysis_requests.created_at > ?", period_start(period))
@@ -112,10 +112,10 @@ class DashboardWidget < ApplicationRecord
       .count
       .sort_by { |_, v| -v }
       .first(5)
-    
+
     {
       labels: data.map(&:first),
-      datasets: [{
+      datasets: [ {
         label: "Queries",
         data: data.map(&:last),
         backgroundColor: [
@@ -125,47 +125,47 @@ class DashboardWidget < ApplicationRecord
           "rgba(139, 92, 246, 0.8)",
           "rgba(168, 85, 247, 0.8)"
         ]
-      }]
+      } ]
     }
   end
-  
+
   def fetch_pie_chart_data
     user = dashboard.user
-    
+
     data = user.analysis_requests
       .group(:complexity_score)
       .count
-    
+
     complexity_ranges = {
       "Simple (0-3)" => data.select { |k, _| k && k < 3 }.values.sum,
       "Moderate (3-7)" => data.select { |k, _| k && k >= 3 && k < 7 }.values.sum,
       "Complex (7-10)" => data.select { |k, _| k && k >= 7 }.values.sum
     }
-    
+
     {
       labels: complexity_ranges.keys,
-      datasets: [{
+      datasets: [ {
         data: complexity_ranges.values,
         backgroundColor: [
           "rgba(34, 197, 94, 0.8)",
           "rgba(251, 191, 36, 0.8)",
           "rgba(239, 68, 68, 0.8)"
         ]
-      }]
+      } ]
     }
   end
-  
+
   def fetch_table_data
     user = dashboard.user
-    columns = config["columns"] || ["query", "dataset", "created_at"]
+    columns = config["columns"] || [ "query", "dataset", "created_at" ]
     sort_by = config["sort_by"] || "created_at"
     limit = config["limit"] || 10
-    
+
     queries = user.analysis_requests
       .includes(:dataset)
       .order(sort_by => :desc)
       .limit(limit)
-    
+
     {
       columns: columns.map(&:humanize),
       rows: queries.map do |query|
@@ -186,16 +186,16 @@ class DashboardWidget < ApplicationRecord
       end
     }
   end
-  
+
   def fetch_recent_queries
     user = dashboard.user
     limit = config["limit"] || 5
-    
+
     queries = user.analysis_requests
       .includes(:dataset)
       .order(created_at: :desc)
       .limit(limit)
-    
+
     {
       queries: queries.map do |query|
         {
@@ -208,10 +208,10 @@ class DashboardWidget < ApplicationRecord
       end
     }
   end
-  
+
   def fetch_quick_insights
     user = dashboard.user
-    
+
     {
       insights: [
         {
@@ -232,11 +232,11 @@ class DashboardWidget < ApplicationRecord
       ]
     }
   end
-  
+
   def fetch_dataset_overview
     user = dashboard.user
     datasets = user.organization&.datasets&.active || []
-    
+
     {
       datasets: datasets.map do |dataset|
         {
@@ -250,7 +250,7 @@ class DashboardWidget < ApplicationRecord
       end
     }
   end
-  
+
   def period_start(period)
     case period
     when "day" then 1.day.ago
@@ -261,7 +261,7 @@ class DashboardWidget < ApplicationRecord
     else 1.month.ago
     end
   end
-  
+
   def previous_period_range(period)
     case period
     when "day" then 2.days.ago..1.day.ago
@@ -271,12 +271,12 @@ class DashboardWidget < ApplicationRecord
     else 2.months.ago..1.month.ago
     end
   end
-  
+
   def calculate_percentage_change(current, previous)
     return 0 if previous.zero?
     ((current - previous).to_f / previous * 100).round(1)
   end
-  
+
   def time_ago_in_words(time)
     seconds = Time.current - time
     case seconds

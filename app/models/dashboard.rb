@@ -1,30 +1,30 @@
 class Dashboard < ApplicationRecord
   belongs_to :user
   has_many :dashboard_widgets, dependent: :destroy
-  
+
   # Validations
   validates :name, presence: true
   validates :layout, inclusion: { in: %w[grid flex columns] }, allow_blank: true
-  
+
   # Scopes
   scope :default_dashboards, -> { where(is_default: true) }
   scope :user_dashboards, -> { where(is_default: false) }
-  
+
   # Callbacks
   before_create :set_position
   after_create :create_default_widgets, if: :is_default?
-  
+
   # Default configuration
   DEFAULT_CONFIG = {
     grid_cols: 12,
     row_height: 80,
-    margin: [10, 10],
-    container_padding: [10, 10],
+    margin: [ 10, 10 ],
+    container_padding: [ 10, 10 ],
     auto_size: true,
     draggable: true,
     resizable: true
   }.freeze
-  
+
   WIDGET_TYPES = {
     metric_card: "Metric Card",
     line_chart: "Line Chart",
@@ -35,13 +35,13 @@ class Dashboard < ApplicationRecord
     quick_insights: "Quick Insights",
     dataset_overview: "Dataset Overview"
   }.freeze
-  
+
   def duplicate_for_user(new_user)
     new_dashboard = dup
     new_dashboard.user = new_user
     new_dashboard.is_default = false
     new_dashboard.name = "#{name} (Copy)"
-    
+
     if new_dashboard.save
       dashboard_widgets.each do |widget|
         new_widget = widget.dup
@@ -49,16 +49,16 @@ class Dashboard < ApplicationRecord
         new_widget.save
       end
     end
-    
+
     new_dashboard
   end
-  
+
   private
-  
+
   def set_position
     self.position ||= user.dashboards.maximum(:position).to_i + 1
   end
-  
+
   def create_default_widgets
     # Create default widgets for new dashboard
     case name
@@ -68,7 +68,7 @@ class Dashboard < ApplicationRecord
       create_analytics_widgets
     end
   end
-  
+
   def create_overview_widgets
     dashboard_widgets.create!(
       widget_type: "metric_card",
@@ -84,7 +84,7 @@ class Dashboard < ApplicationRecord
         comparison: "previous_month"
       }
     )
-    
+
     dashboard_widgets.create!(
       widget_type: "metric_card",
       title: "Active Datasets",
@@ -97,7 +97,7 @@ class Dashboard < ApplicationRecord
         metric: "active_datasets"
       }
     )
-    
+
     dashboard_widgets.create!(
       widget_type: "line_chart",
       title: "Query Trends",
@@ -112,7 +112,7 @@ class Dashboard < ApplicationRecord
         group_by: "day"
       }
     )
-    
+
     dashboard_widgets.create!(
       widget_type: "recent_queries",
       title: "Recent Queries",
@@ -126,7 +126,7 @@ class Dashboard < ApplicationRecord
       }
     )
   end
-  
+
   def create_analytics_widgets
     dashboard_widgets.create!(
       widget_type: "bar_chart",
@@ -141,7 +141,7 @@ class Dashboard < ApplicationRecord
         period: "7days"
       }
     )
-    
+
     dashboard_widgets.create!(
       widget_type: "pie_chart",
       title: "Query Complexity Distribution",
@@ -154,7 +154,7 @@ class Dashboard < ApplicationRecord
         metric: "complexity_distribution"
       }
     )
-    
+
     dashboard_widgets.create!(
       widget_type: "data_table",
       title: "Top Queries",
@@ -164,7 +164,7 @@ class Dashboard < ApplicationRecord
       width: 12,
       height: 5,
       config: {
-        columns: ["query", "dataset", "execution_time", "created_at"],
+        columns: [ "query", "dataset", "execution_time", "created_at" ],
         sort_by: "execution_time",
         limit: 10
       }
