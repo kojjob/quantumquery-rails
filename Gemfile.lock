@@ -165,7 +165,7 @@ GEM
       raabro (~> 1.4)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    google-apis-aiplatform_v1 (0.63.0)
+    google-apis-aiplatform_v1 (0.65.0)
       google-apis-core (>= 0.15.0, < 2.a)
     google-apis-core (1.0.1)
       addressable (~> 2.8, >= 2.8.7)
