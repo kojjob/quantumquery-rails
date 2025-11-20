@@ -397,8 +397,39 @@ class QueryAnalysisOrchestrator
   end
 
   def validate_generated_code(code, language)
-    validator = CodeValidator.new(code, language)
-    validator.validate
+    # Use the new validation system
+    validator = CodeValidation::ValidatorFactory.build(language, code)
+    result = validator.validate
+
+    # Log validation results
+    Rails.logger.info "Code validation for #{language}: #{result.valid? ? 'PASSED' : 'FAILED'}"
+    
+    if result.has_violations?
+      Rails.logger.warn "Security violations detected: #{result.violations.map { |v| v[:type] }.join(', ')}"
+    end
+
+    # Store validation metadata
+    @analysis_request.update!(
+      metadata: @analysis_request.metadata.merge(
+        "last_validation" => {
+          "valid" => result.valid?,
+          "errors" => result.errors,
+          "warnings" => result.warnings,
+          "violations" => result.violations,
+          "metadata" => result.metadata
+        }
+      )
+    )
+
+    # Return result in expected format
+    {
+      valid: result.safe?, # Must be both valid syntax and no security violations
+      errors: result.errors + result.violations.select { |v| v[:severity] == :critical }.map { |v| v[:message] },
+      warnings: result.warnings + result.violations.select { |v| v[:severity] != :critical }.map { |v| v[:message] }
+    }
+  rescue => e
+    Rails.logger.error "Validation error: #{e.message}"
+    { valid: false, errors: ["Validation failed: #{e.message}"], warnings: [] }
   end
 
   def wait_for_step_completion(step, timeout: 60.seconds)
