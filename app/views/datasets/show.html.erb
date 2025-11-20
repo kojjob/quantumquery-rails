@@ -1,10 +1,10 @@
 <% content_for :title, @dataset.name %>
 
 <!-- Modern Dataset Detail Page -->
-<div class="bg-gradient-to-br from-slate-50 via-teal-50 to-cyan-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 min-h-screen pt-16">
+<div class="bg-gradient-to-br from-slate-50 via-teal-50 to-cyan-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 min-h-screen pt-20">
   <!-- Breadcrumb & Navigation -->
   <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-b border-slate-200/50 dark:border-slate-700/50 sticky top-16 z-10">
-    <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
       <nav class="flex items-center space-x-2 text-sm">
         <%= link_to "Data Sources", datasets_path, class: "text-slate-500 dark:text-slate-400 hover:text-teal-600 dark:hover:text-teal-400 transition-colors" %>
         <svg class="h-4 w-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -115,7 +115,7 @@
                     <div class="flex-1 min-w-0">
                       <div class="flex items-center space-x-3 mb-2">
                         <h3 class="text-base font-semibold text-slate-900 dark:text-slate-100 truncate group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors">
-                          <%= link_to analysis_request.query.truncate(60), analysis_request, class: "hover:underline" %>
+                          <%= link_to analysis_request.natural_language_query.truncate(60), analysis_request, class: "hover:underline" %>
                         </h3>
                       </div>
                       <div class="flex flex-wrap items-center gap-4 text-sm text-slate-500 dark:text-slate-400">

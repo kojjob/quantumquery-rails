@@ -1,7 +1,7 @@
 <% content_for :title, "Connect New Data Source" %>
 
 <!-- Modern Create Dataset Page -->
-<div class="bg-gradient-to-br from-slate-50 via-teal-50 to-cyan-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 min-h-screen pt-16">
+<div class="bg-gradient-to-br from-slate-50 via-teal-50 to-cyan-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 min-h-screen pt-20">
   <!-- Breadcrumb & Navigation -->
   <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-b border-slate-200/50 dark:border-slate-700/50 sticky top-16 z-10">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
@@ -123,9 +123,9 @@
                   ['MySQL Database', 'mysql'], 
                   ['SQLite Database', 'sqlite'],
                   ['MongoDB Database', 'mongodb'],
-                  ['CSV File', 'csv'],
-                  ['Excel File', 'excel'],
-                  ['API Endpoint', 'api']
+                  ['CSV File', 'csv_upload'],
+                  ['Excel File', 'excel_upload'],
+                  ['API Endpoint', 'api_endpoint']
                 ], 
                 { prompt: 'Choose your data source type...' }, 
                 { 
@@ -212,9 +212,9 @@
         
         if (['postgresql', 'mysql', 'sqlite', 'mongodb'].includes(selectedType)) {
           highlightType = 'database';
-        } else if (['csv', 'excel'].includes(selectedType)) {
+        } else if (['csv_upload', 'excel_upload'].includes(selectedType)) {
           highlightType = 'file';
-        } else if (selectedType === 'api') {
+        } else if (selectedType === 'api_endpoint') {
           highlightType = 'api';
         }
         
