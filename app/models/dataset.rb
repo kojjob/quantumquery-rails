@@ -43,6 +43,10 @@ class Dataset < ApplicationRecord
   scope :active, -> { where(status: [ :connected, :ready ]) }
   scope :by_type, ->(type) { where(data_source_type: type) }
 
+  # Callbacks
+  after_create :schedule_schema_refresh, if: -> { status_connected? || status_ready? }
+  after_update :schedule_schema_refresh, if: -> { saved_change_to_status? && (status_connected? || status_ready?) }
+
   def test_connection
     connector.test_connection
   rescue => e
@@ -70,5 +74,21 @@ class Dataset < ApplicationRecord
     # Estimate from row counts
     total_rows = row_counts&.values&.sum || 0
     total_rows * 0.001 # Rough estimate: 1KB per row
+  end
+
+  def schema_summary
+    return "Schema not yet introspected" if schema_metadata.blank?
+
+    table_count = tables&.length || 0
+    total_columns = columns&.values&.flatten&.length || 0
+    total_rows = row_counts&.values&.sum || 0
+
+    "#{table_count} tables, #{total_columns} columns, ~#{total_rows.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse} rows"
+  end
+
+  private
+
+  def schedule_schema_refresh
+    refresh_schema
   end
 end

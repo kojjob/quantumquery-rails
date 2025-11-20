@@ -319,7 +319,36 @@ class QueryAnalysisOrchestrator
   end
 
   def fetch_dataset_schema
-    @analysis_request.dataset.schema_metadata || {}
+    dataset = @analysis_request.dataset
+    
+    # Try to get cached AI-formatted schema first
+    cached_schema = Rails.cache.read("dataset_schema_ai:#{dataset.id}")
+    return cached_schema if cached_schema.present?
+    
+    # Fall back to raw schema metadata
+    schema_metadata = dataset.schema_metadata
+    
+    if schema_metadata.blank?
+      # Trigger schema refresh if not available
+      dataset.refresh_schema
+      return { error: "Schema not yet introspected. Please try again in a moment." }
+    end
+    
+    # Format for AI if we have raw metadata
+    introspector = SchemaIntrospection::IntrospectorFactory.build(dataset)
+    formatted = introspector.send(:format_for_ai, schema_metadata)
+    
+    # Cache it
+    Rails.cache.write(
+      "dataset_schema_ai:#{dataset.id}",
+      formatted,
+      expires_in: 1.hour
+    )
+    
+    formatted
+  rescue => e
+    Rails.logger.error "Failed to fetch dataset schema: #{e.message}"
+    dataset.schema_metadata || {}
   end
 
   def fetch_data_context_for_step(step)
