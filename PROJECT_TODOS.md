@@ -27,16 +27,21 @@ The project is in active development with a solid foundation. The dataset views 
   - [ ] Container lifecycle management
 - **Priority**: 🔥 **CRITICAL** - Blocks core analysis functionality
 
-### 2. **Code Validation System**
-- **Status**: ⚠️ Stub implementation exists
-- **Location**: `query_analysis_orchestrator.rb` (line 376)
-- **Work Needed**:
-  - [ ] Implement `CodeValidator` class
-  - [ ] Add syntax checking for Python, R, SQL, Julia, JavaScript
-  - [ ] Security validation to prevent malicious code
-  - [ ] Resource usage estimation
-  - [ ] Dependency validation
-- **Priority**: 🔥 **CRITICAL**
+### 2. **Code Validation System** ✅
+- **Status**: ✅ **COMPLETED** (November 20, 2025)
+- **Location**: `app/services/code_validation/`
+- **Implemented**:
+  - ✅ Modular validation architecture with BaseValidator
+  - ✅ PythonValidator: syntax, forbidden imports (os, subprocess), file/network/system ops, eval/exec detection
+  - ✅ RValidator: syntax, forbidden functions (system, file ops), package restrictions
+  - ✅ SqlValidator: SQL injection, DDL/DML restrictions, DELETE/UPDATE without WHERE blocking
+  - ✅ ValidatorFactory: automatic language detection and validator selection
+  - ✅ Security violation tracking with severity levels (critical, high, medium, low)
+  - ✅ Integration with QueryAnalysisOrchestrator
+  - ✅ Comprehensive test suite (30+ tests)
+  - ✅ Detailed README with usage and security considerations
+- **Commit**: 2717b3a
+- **Priority**: 🔥 **CRITICAL** - ✅ DONE
 
 ### 3. **PDF Report Generation**
 - **Status**: ⚠️ Missing implementation
@@ -63,18 +68,23 @@ The project is in active development with a solid foundation. The dataset views 
   - [ ] Fallback strategies for parsing failures
 - **Priority**: ⚡ **HIGH**
 
-### 5. **Dataset Schema Management**
-- **Status**: ⚠️ Method exists but incomplete
-- **Location**: `query_analysis_orchestrator.rb` (line 304)
-- **Work Needed**:
-  - [ ] Database schema introspection for PostgreSQL
-  - [ ] Database schema introspection for MySQL
-  - [ ] Database schema introspection for SQLite
-  - [ ] MongoDB collection structure analysis
-  - [ ] CSV/Excel file structure analysis
-  - [ ] API endpoint schema discovery
-  - [ ] Schema caching for performance
-- **Priority**: ⚡ **HIGH**
+### 5. **Dataset Schema Introspection** ✅
+- **Status**: ✅ **COMPLETED** (November 20, 2025)
+- **Location**: `app/services/schema_introspection/`
+- **Implemented**:
+  - ✅ BaseIntrospector with common interface and type inference
+  - ✅ PostgresqlIntrospector: pg_catalog queries for tables, columns, relationships, indexes
+  - ✅ MysqlIntrospector: information_schema queries matching PostgreSQL approach
+  - ✅ MongodbIntrospector: collection sampling to infer schemaless structure
+  - ✅ CsvIntrospector: file parsing with type inference and statistics
+  - ✅ ExcelIntrospector: multi-sheet analysis using Roo gem
+  - ✅ IntrospectorFactory: automatic introspector selection by data_source_type
+  - ✅ DatasetSchemaRefreshJob: async refresh with retry logic and caching
+  - ✅ QueryAnalysisOrchestrator integration: uses cached AI-formatted schema
+  - ✅ Dataset model enhancements: auto-refresh callbacks, schema_summary method
+  - ✅ Comprehensive test suite covering all introspectors
+- **Commit**: cd1ef5f
+- **Priority**: ⚡ **HIGH** - ✅ DONE
 
 ### 6. **Result Interpretation & Synthesis**
 - **Status**: ⚠️ Stub methods
@@ -242,18 +252,16 @@ The project is in active development with a solid foundation. The dataset views 
 
 ### 🔥 **CRITICAL PRIORITY** (Blocking Core Functionality)
 1. Docker code execution environment
-2. Code validation system
-3. Dataset schema introspection
-4. Analysis plan parsing
 
 ### ⚡ **HIGH PRIORITY** (Enhanced Experience)
-5. Result interpretation & visualization
-6. PDF report generation
-7. Cost calculation accuracy
-8. Comprehensive testing
-9. Security hardening
-10. API token management improvements
-11. Data privacy compliance
+2. Analysis plan parsing
+3. Result interpretation & visualization
+4. PDF report generation
+5. Cost calculation accuracy
+6. Comprehensive testing
+7. Security hardening
+8. API token management improvements
+9. Data privacy compliance
 
 ### 📌 **MEDIUM PRIORITY** (Important but not Blocking)
 12. Advanced dashboard features
@@ -275,9 +283,9 @@ The project is in active development with a solid foundation. The dataset views 
 ### **Phase 1: Core Functionality** (Weeks 1-3)
 1. ✅ Complete Dataset Views PR (#13)
 2. ✅ Build AI provider integrations (Anthropic & OpenAI)
-3. 🔴 Implement Docker execution environment
-4. 🔴 Implement code validation system
-5. 🔴 Add dataset schema introspection
+3. ✅ Implement code validation system
+4. ✅ Add dataset schema introspection
+5. 🔴 Implement Docker execution environment
 
 ### **Phase 2: Analysis Pipeline** (Weeks 4-6)
 6. 🟡 Complete result interpretation
