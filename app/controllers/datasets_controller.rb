@@ -16,11 +16,15 @@ class DatasetsController < ApplicationController
 
   def new
     @dataset = current_user.organization.datasets.build
+    
+    # Prevent caching of the form
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
   end
 
   def create
     @dataset = current_user.organization.datasets.build(dataset_params)
-    @dataset.user = current_user
 
     if @dataset.save
       redirect_to @dataset, notice: "Dataset was successfully created."
@@ -30,6 +34,10 @@ class DatasetsController < ApplicationController
   end
 
   def edit
+    # Prevent caching of the form
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
   end
 
   def update
@@ -49,8 +57,8 @@ class DatasetsController < ApplicationController
     # Create new analysis request
     analysis_request = @dataset.analysis_requests.create!(
       user: current_user,
-      query: params[:query] || "Analyze this dataset",
-      status: "pending"
+      organization: current_user.organization,
+      natural_language_query: params[:query] || "Analyze this dataset"
     )
 
     # Queue analysis job (if you have background jobs set up)
