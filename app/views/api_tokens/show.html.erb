@@ -1,150 +1,270 @@
-<div class="container mx-auto px-4 py-8 max-w-3xl">
-  <div class="bg-white shadow sm:rounded-lg">
-    <div class="px-4 py-5 sm:px-6">
-      <h3 class="text-lg leading-6 font-medium text-gray-900">
-        API Token: <%= @api_token.name %>
-      </h3>
-      <p class="mt-1 max-w-2xl text-sm text-gray-500">
-        Created <%= @api_token.created_at.strftime("%B %d, %Y at %I:%M %p") %>
-      </p>
-    </div>
+<% content_for :title, "#{@api_token.name} - API Token - QuantumQuery" %>
 
-    <% if @show_token %>
-      <div class="border-t border-gray-200 px-4 py-5 sm:px-6">
-        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
-          <div class="flex">
-            <div class="flex-shrink-0">
-              <svg class="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
-              </svg>
-            </div>
-            <div class="ml-3">
-              <p class="text-sm text-yellow-700">
-                <strong>Important:</strong> Copy your token now. For security reasons, it won't be shown again.
-              </p>
-            </div>
+<!-- Premium API Token Detail Page -->
+<div class="bg-gradient-to-br from-slate-50 via-purple-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 min-h-screen pt-20">
+  <!-- Breadcrumb & Navigation -->
+  <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-b border-slate-200/50 dark:border-slate-700/50 sticky top-16 z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+      <nav class="flex items-center space-x-2 text-sm">
+        <%= link_to "Dashboard", root_path, class: "text-slate-500 dark:text-slate-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors" %>
+        <svg class="h-4 w-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+        </svg>
+        <%= link_to "API Tokens", api_tokens_path, class: "text-slate-500 dark:text-slate-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors" %>
+        <svg class="h-4 w-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+        </svg>
+        <span class="text-slate-900 dark:text-slate-100 font-medium"><%= @api_token.name %></span>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Hero Header Section -->
+  <div class="relative bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 shadow-xl">
+    <div class="absolute inset-0 bg-black/20"></div>
+    
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="flex items-start gap-6">
+        <!-- Icon -->
+        <div class="p-4 bg-white/20 backdrop-blur-sm rounded-2xl">
+          <svg class="h-12 w-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
+          </svg>
+        </div>
+        
+        <!-- Title & Meta -->
+        <div class="flex-1">
+          <h1 class="text-4xl font-bold text-white mb-2"><%= @api_token.name %></h1>
+          <p class="text-lg text-purple-100">Created <%= @api_token.created_at.strftime("%B %d, %Y at %I:%M %p") %></p>
+          
+          <!-- Status Badge -->
+          <div class="mt-4">
+            <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold shadow-lg
+              <%= if @api_token.revoked?
+                    'bg-red-500 text-white'
+                  elsif @api_token.expired?
+                    'bg-amber-500 text-white'
+                  else
+                    'bg-green-500 text-white'
+                  end %>">
+              <%= if @api_token.revoked?
+                    'Revoked'
+                  elsif @api_token.expired?
+                    'Expired'
+                  else
+                    'Active'
+                  end %>
+            </span>
           </div>
         </div>
 
-        <div class="bg-gray-50 p-4 rounded-md">
-          <label class="block text-sm font-medium text-gray-700 mb-2">Your API Token</label>
-          <div class="flex">
-            <input type="text" id="api-token" value="<%= @api_token.token %>" readonly
-                   class="flex-1 px-3 py-2 border border-gray-300 rounded-l-md bg-white font-mono text-sm">
-            <button onclick="copyToken()" 
-                    class="px-4 py-2 bg-blue-500 text-white rounded-r-md hover:bg-blue-600 focus:outline-none">
-              Copy
-            </button>
+        <!-- Actions -->
+        <div class="flex flex-col gap-3">
+          <%= link_to api_tokens_path, class: "inline-flex items-center px-4 py-2 bg-white/20 border border-white/30 rounded-lg text-sm font-medium text-white hover:bg-white/30 transition-colors" do %>
+            <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Back to Tokens
+          <% end %>
+          
+          <% if @api_token.active? %>
+            <%= link_to revoke_api_token_path(@api_token), method: :post, data: { confirm: "Are you sure you want to revoke this token?" }, class: "inline-flex items-center px-4 py-2 bg-red-500 border border-transparent rounded-lg text-sm font-medium text-white hover:bg-red-600 transition-colors" do %>
+              <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path>
+              </svg>
+              Revoke Token
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Main Content Column -->
+      <div class="lg:col-span-2 space-y-6">
+        <!-- Token Display (if newly created) -->
+        <% if @show_token %>
+          <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+            <div class="bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-4">
+              <div class="flex items-center gap-3">
+                <svg class="h-6 w-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                </svg>
+                <h2 class="text-lg font-bold text-white">Important: Copy Your Token</h2>
+              </div>
+              <p class="text-sm text-amber-100 mt-2">For security reasons, this token will only be shown once. Copy it now and store it safely.</p>
+            </div>
+            
+            <div class="p-6">
+              <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">Your API Token</label>
+              <div class="flex gap-2">
+                <input type="text" id="api-token" value="<%= @api_token.token %>" readonly
+                       class="flex-1 px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-mono text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                <button onclick="copyToken()" 
+                        class="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium transition-colors">
+                  <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <script>
+            function copyToken() {
+              const tokenInput = document.getElementById('api-token');
+              tokenInput.select();
+              tokenInput.setSelectionRange(0, 99999);
+              navigator.clipboard.writeText(tokenInput.value).then(() => {
+                const button = event.target.closest('button');
+                const originalHTML = button.innerHTML;
+                button.innerHTML = '<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>';
+                setTimeout(() => button.innerHTML = originalHTML, 2000);
+              });
+            }
+          </script>
+        <% end %>
+
+        <!-- API Usage Examples -->
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+          <div class="bg-gradient-to-r from-indigo-500 to-purple-600 px-6 py-4">
+            <h2 class="text-lg font-bold text-white">API Usage Examples</h2>
+            <p class="text-sm text-indigo-100 mt-1">Get started with these examples</p>
+          </div>
+          
+          <div class="p-6 space-y-6">
+            <!-- Example 1 -->
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <h3 class="text-sm font-semibold text-slate-900 dark:text-slate-100">List Datasets</h3>
+                <button onclick="copyCode('example1')" class="text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-medium">
+                  Copy
+                </button>
+              </div>
+              <pre id="example1" class="bg-slate-50 dark:bg-slate-900 p-4 rounded-lg text-sm overflow-x-auto border border-slate-200 dark:border-slate-700"><code class="text-slate-800 dark:text-slate-200">curl -H "Authorization: Bearer YOUR_TOKEN" \
+  <%= request.protocol %><%= request.host_with_port %>/api/v1/datasets</code></pre>
+            </div>
+
+            <!-- Example 2 -->
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <h3 class="text-sm font-semibold text-slate-900 dark:text-slate-100">Create Analysis Request</h3>
+                <button onclick="copyCode('example2')" class="text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-medium">
+                  Copy
+                </button>
+              </div>
+              <pre id="example2" class="bg-slate-50 dark:bg-slate-900 p-4 rounded-lg text-sm overflow-x-auto border border-slate-200 dark:border-slate-700"><code class="text-slate-800 dark:text-slate-200">curl -X POST \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"query": "Show sales trends", "dataset_id": 1}' \
+  <%= request.protocol %><%= request.host_with_port %>/api/v1/analysis</code></pre>
+            </div>
+
+            <% if respond_to?(:api_v1_documentation_path) %>
+              <div class="pt-4 border-t border-slate-200 dark:border-slate-700">
+                <%= link_to api_v1_documentation_path, target: "_blank", class: "inline-flex items-center text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300" do %>
+                  <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                  </svg>
+                  View Full API Documentation
+                <% end %>
+              </div>
+            <% end %>
           </div>
         </div>
 
         <script>
-          function copyToken() {
-            const tokenInput = document.getElementById('api-token');
-            tokenInput.select();
-            document.execCommand('copy');
-            alert('Token copied to clipboard!');
+          function copyCode(id) {
+            const codeElement = document.getElementById(id);
+            const text = codeElement.textContent;
+            navigator.clipboard.writeText(text).then(() => {
+              const button = event.target;
+              const originalText = button.textContent;
+              button.textContent = 'Copied!';
+              setTimeout(() => button.textContent = originalText, 2000);
+            });
           }
         </script>
       </div>
-    <% end %>
 
-    <div class="border-t border-gray-200">
-      <dl>
-        <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-          <dt class="text-sm font-medium text-gray-500">Status</dt>
-          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-            <% if @api_token.revoked? %>
-              <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                Revoked
-              </span>
-            <% elsif @api_token.expired? %>
-              <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                Expired
-              </span>
-            <% else %>
-              <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                Active
-              </span>
-            <% end %>
-          </dd>
-        </div>
-
-        <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-          <dt class="text-sm font-medium text-gray-500">Expires</dt>
-          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-            <%= @api_token.expires_at ? @api_token.expires_at.strftime("%B %d, %Y at %I:%M %p") : "Never" %>
-          </dd>
-        </div>
-
-        <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-          <dt class="text-sm font-medium text-gray-500">Last Used</dt>
-          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-            <%= @api_token.last_used_at ? time_ago_in_words(@api_token.last_used_at) + " ago" : "Never" %>
-          </dd>
-        </div>
-
-        <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-          <dt class="text-sm font-medium text-gray-500">Permissions</dt>
-          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-            <div class="flex flex-wrap gap-2">
-              <% @api_token.scopes_array.each do |scope| %>
-                <span class="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded">
-                  <%= scope %>
-                </span>
-              <% end %>
+      <!-- Sidebar Column -->
+      <div class="lg:col-span-1 space-y-6">
+        <!-- Token Details -->
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+          <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-700">
+            <h2 class="text-lg font-semibold text-slate-900 dark:text-slate-100">Token Details</h2>
+          </div>
+          
+          <div class="p-6 space-y-4">
+            <!-- Expires -->
+            <div>
+              <dt class="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Expires</dt>
+              <dd class="text-sm text-slate-900 dark:text-slate-100">
+                <%= @api_token.expires_at ? @api_token.expires_at.strftime("%B %d, %Y at %I:%M %p") : "Never" %>
+              </dd>
             </div>
-          </dd>
+
+            <!-- Last Used -->
+            <div>
+              <dt class="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Last Used</dt>
+              <dd class="text-sm text-slate-900 dark:text-slate-100">
+                <%= @api_token.last_used_at ? "#{time_ago_in_words(@api_token.last_used_at)} ago" : "Never" %>
+              </dd>
+            </div>
+
+            <!-- Permissions -->
+            <% if @api_token.respond_to?(:scopes_array) && @api_token.scopes_array.any? %>
+              <div>
+                <dt class="text-sm font-medium text-slate-500 dark:text-slate-400 mb-2">Permissions</dt>
+                <dd class="flex flex-wrap gap-2">
+                  <% @api_token.scopes_array.each do |scope| %>
+                    <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300">
+                      <%= scope %>
+                    </span>
+                  <% end %>
+                </dd>
+              </div>
+            <% end %>
+          </div>
         </div>
 
-        <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-          <dt class="text-sm font-medium text-gray-500">Usage Today</dt>
-          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-            <%= @api_token.usage_today %> requests
-          </dd>
+        <!-- Usage Statistics -->
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+          <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-700">
+            <h2 class="text-lg font-semibold text-slate-900 dark:text-slate-100">Usage Statistics</h2>
+          </div>
+          
+          <div class="p-6 space-y-4">
+            <!-- Usage Today -->
+            <div class="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-900 rounded-lg">
+              <div>
+                <dt class="text-sm font-medium text-slate-500 dark:text-slate-400">Today</dt>
+                <dd class="text-2xl font-bold text-slate-900 dark:text-slate-100 mt-1"><%= @api_token.usage_today %></dd>
+              </div>
+              <div class="p-3 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg">
+                <svg class="h-6 w-6 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                </svg>
+              </div>
+            </div>
+
+            <!-- Usage This Month -->
+            <div class="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-900 rounded-lg">
+              <div>
+                <dt class="text-sm font-medium text-slate-500 dark:text-slate-400">This Month</dt>
+                <dd class="text-2xl font-bold text-slate-900 dark:text-slate-100 mt-1"><%= @api_token.usage_this_month %></dd>
+              </div>
+              <div class="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
+                <svg class="h-6 w-6 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+              </div>
+            </div>
+          </div>
         </div>
-
-        <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-          <dt class="text-sm font-medium text-gray-500">Usage This Month</dt>
-          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-            <%= @api_token.usage_this_month %> requests
-          </dd>
-        </div>
-      </dl>
-    </div>
-
-    <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-      <%= link_to "Back to Tokens", api_tokens_path, class: "bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded mr-2" %>
-      <% if @api_token.active? %>
-        <%= link_to "Revoke Token", revoke_api_token_path(@api_token), method: :post,
-            data: { confirm: "Are you sure you want to revoke this token?" },
-            class: "bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded" %>
-      <% end %>
-    </div>
-  </div>
-
-  <div class="mt-8 bg-white shadow sm:rounded-lg p-6">
-    <h4 class="text-lg font-medium text-gray-900 mb-4">Using Your API Token</h4>
-    
-    <div class="space-y-4">
-      <div>
-        <h5 class="text-sm font-medium text-gray-700 mb-2">Example: List Datasets</h5>
-        <pre class="bg-gray-50 p-3 rounded text-sm overflow-x-auto"><code>curl -H "Authorization: Bearer YOUR_TOKEN" \
-  <%= request.protocol %><%= request.host_with_port %>/api/v1/datasets</code></pre>
-      </div>
-
-      <div>
-        <h5 class="text-sm font-medium text-gray-700 mb-2">Example: Create Analysis</h5>
-        <pre class="bg-gray-50 p-3 rounded text-sm overflow-x-auto"><code>curl -X POST \
-  -H "Authorization: Bearer YOUR_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{"query": "Show me sales trends", "dataset_id": 1}' \
-  <%= request.protocol %><%= request.host_with_port %>/api/v1/analysis</code></pre>
-      </div>
-
-      <div class="mt-4">
-        <%= link_to "View Full API Documentation", api_v1_documentation_path, 
-            class: "text-blue-600 hover:text-blue-900", target: "_blank" %>
       </div>
     </div>
   </div>
