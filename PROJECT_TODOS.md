@@ -92,20 +92,23 @@ The project is in active development with a solid foundation. The dataset views 
 ## 🟢 **Enhancement TODOs**
 
 ### 7. **AI Provider Implementations**
-- **Status**: ⚠️ Base provider exists, specific implementations incomplete
+- **Status**: ✅ **COMPLETED** - Anthropic & OpenAI fully implemented (Nov 20, 2025)
 - **Location**: `app/services/ai_providers/`
-- **Work Needed**:
-  - [ ] Complete Anthropic (Claude) provider
-  - [ ] Complete OpenAI (GPT-4) provider
+- **Completed**:
+  - [x] Complete Anthropic (Claude) provider with streaming, vision, retry, rate limiting
+  - [x] Complete OpenAI (GPT-4) provider with streaming, function calling, vision
+  - [x] Implement streaming support for both providers
+  - [x] Add function calling capabilities (OpenAI, partial Anthropic)
+  - [x] Implement vision support (Claude 3, GPT-4 Turbo)
+  - [x] Error handling and retry logic with exponential backoff
+  - [x] Rate limiting (RPM/TPM tracking)
+  - [x] Comprehensive test suite
+  - [x] Complete documentation with examples
+- **Remaining**:
   - [ ] Complete Google (Gemini) provider
   - [ ] Complete Cohere provider
   - [ ] Complete Replicate provider
-  - [ ] Implement streaming support
-  - [ ] Add function calling capabilities
-  - [ ] Implement vision support where applicable
-  - [ ] Error handling and retry logic
-  - [ ] Rate limiting
-- **Priority**: ⚡ **HIGH**
+- **Priority**: ✅ **DONE** (Core providers complete)
 
 ### 8. **Cost Calculation & Tracking**
 - **Status**: ⚠️ Simplified implementation
@@ -240,8 +243,8 @@ The project is in active development with a solid foundation. The dataset views 
 ### 🔥 **CRITICAL PRIORITY** (Blocking Core Functionality)
 1. Docker code execution environment
 2. Code validation system
-3. AI provider implementations
-4. Dataset schema introspection
+3. Dataset schema introspection
+4. Analysis plan parsing
 
 ### ⚡ **HIGH PRIORITY** (Enhanced Experience)
 5. Result interpretation & visualization
@@ -271,8 +274,8 @@ The project is in active development with a solid foundation. The dataset views 
 
 ### **Phase 1: Core Functionality** (Weeks 1-3)
 1. ✅ Complete Dataset Views PR (#13)
-2. 🔴 Implement Docker execution environment
-3. 🔴 Build AI provider integrations
+2. ✅ Build AI provider integrations (Anthropic & OpenAI)
+3. 🔴 Implement Docker execution environment
 4. 🔴 Implement code validation system
 5. 🔴 Add dataset schema introspection
 
@@ -323,11 +326,12 @@ The project is in active development with a solid foundation. The dataset views 
 
 ## 🚀 **Immediate Next Steps**
 
-1. **Merge PR #13** - Complete dataset views redesign
-2. **Set up Docker execution environment** - Start with Python container
-3. **Implement first AI provider** - Begin with Anthropic/Claude
-4. **Add basic testing** - Focus on critical path
-5. **Create code validator** - Basic syntax checking
+1. ✅ ~~Merge PR #13~~ - Dataset views redesign complete
+2. ✅ ~~Implement AI providers~~ - Anthropic & OpenAI complete with tests
+3. **Dataset Schema Introspection** - Enable AI to understand data structure
+4. **Set up Docker execution environment** - Start with Python container
+5. **Create code validator** - Basic syntax checking for generated code
+6. **Analysis plan parsing** - Robust JSON parsing from AI responses
 
 ---
 
