@@ -14,18 +14,28 @@ The project is in active development with a solid foundation. The dataset views 
 
 ## 🔴 **Critical Missing Features**
 
-### 1. **Code Execution Environment (Docker Sandboxing)**
-- **Status**: ⚠️ Referenced throughout but not implemented
-- **Files**: 
-  - `app/models/execution_step.rb`
-  - `app/services/query_analysis_orchestrator.rb`
-- **Work Needed**:
-  - [ ] Build Docker containers for Python/R/SQL execution
-  - [ ] Implement `CodeExecutionJob` for secure code execution
-  - [ ] Set up resource limits and security policies
-  - [ ] Network isolation for sandboxed execution
-  - [ ] Container lifecycle management
-- **Priority**: 🔥 **CRITICAL** - Blocks core analysis functionality
+### 1. **Code Execution Environment (Docker Sandboxing)** ✅
+- **Status**: ✅ **COMPLETED** (November 20, 2025)
+- **Location**: `app/services/code_execution/`
+- **Implemented**:
+  - ✅ BaseExecutor: Docker container lifecycle, resource limits (512MB RAM, 1 CPU, 60s timeout), cleanup
+  - ✅ PythonExecutor: Python 3.11 with pandas, numpy, scikit-learn, matplotlib, pickle data injection
+  - ✅ RExecutor: R 4.3.2 with tidyverse, ggplot2, caret, randomForest, RDS data injection
+  - ✅ SqlExecutor: Direct database connection with read-only user and query timeout
+  - ✅ ExecutorFactory: Language-based executor selection
+  - ✅ CodeExecutionJob: Async execution with retry logic (3 attempts), timeout handling
+  - ✅ Docker images: python-executor and r-executor with security (network isolation, non-root user)
+  - ✅ Comprehensive test suite for all executors
+  - ✅ Detailed README with architecture, security model, troubleshooting
+  - ✅ Rake tasks for building and testing Docker images
+- **Security**:
+  - Network isolation (bridge network only, no external access)
+  - Container resource limits prevent runaway processes
+  - Automatic cleanup on success/failure
+  - Read-only database user for SQL
+  - Non-root user in containers (UID 1000 Python, UID 10000 R)
+- **Commit**: 13dfc96
+- **Priority**: 🔥 **CRITICAL** - ✅ DONE
 
 ### 2. **Code Validation System** ✅
 - **Status**: ✅ **COMPLETED** (November 20, 2025)
@@ -251,17 +261,19 @@ The project is in active development with a solid foundation. The dataset views 
 ## 📊 **Priority Matrix**
 
 ### 🔥 **CRITICAL PRIORITY** (Blocking Core Functionality)
-1. Docker code execution environment
+- ✅ ~~Docker code execution environment~~ - COMPLETE
+- ✅ ~~Code validation system~~ - COMPLETE
+- ✅ ~~Dataset schema introspection~~ - COMPLETE
 
 ### ⚡ **HIGH PRIORITY** (Enhanced Experience)
-2. Analysis plan parsing
-3. Result interpretation & visualization
-4. PDF report generation
-5. Cost calculation accuracy
-6. Comprehensive testing
-7. Security hardening
-8. API token management improvements
-9. Data privacy compliance
+1. Analysis plan parsing
+2. Result interpretation & visualization
+3. PDF report generation
+4. Comprehensive testing
+5. Security hardening
+6. Cost calculation accuracy
+7. API token management improvements
+8. Data privacy compliance
 
 ### 📌 **MEDIUM PRIORITY** (Important but not Blocking)
 12. Advanced dashboard features
@@ -280,14 +292,14 @@ The project is in active development with a solid foundation. The dataset views 
 
 ## 🎯 **Recommended Development Roadmap**
 
-### **Phase 1: Core Functionality** (Weeks 1-3)
+### **Phase 1: Core Functionality** (Weeks 1-3) ✅ COMPLETE
 1. ✅ Complete Dataset Views PR (#13)
 2. ✅ Build AI provider integrations (Anthropic & OpenAI)
 3. ✅ Implement code validation system
 4. ✅ Add dataset schema introspection
-5. 🔴 Implement Docker execution environment
+5. ✅ Implement Docker execution environment
 
-### **Phase 2: Analysis Pipeline** (Weeks 4-6)
+### **Phase 2: Analysis Pipeline** (Weeks 4-6) 🎯 IN PROGRESS
 6. 🟡 Complete result interpretation
 7. 🟡 Implement analysis plan parsing
 8. 🟡 Add comprehensive error handling
@@ -336,8 +348,11 @@ The project is in active development with a solid foundation. The dataset views 
 
 1. ✅ ~~Merge PR #13~~ - Dataset views redesign complete
 2. ✅ ~~Implement AI providers~~ - Anthropic & OpenAI complete with tests
-3. **Dataset Schema Introspection** - Enable AI to understand data structure
-4. **Set up Docker execution environment** - Start with Python container
+3. ✅ ~~Dataset Schema Introspection~~ - Complete with 8 introspectors
+4. ✅ ~~Code Validation System~~ - Complete with security checks
+5. ✅ ~~Set up Docker execution environment~~ - Python, R, SQL executors complete
+6. **Analysis Plan Parsing** - Robust JSON parsing from AI streaming responses
+7. **Result Interpretation** - Generate insights and recommendations from execution results
 5. **Create code validator** - Basic syntax checking for generated code
 6. **Analysis plan parsing** - Robust JSON parsing from AI responses
 
