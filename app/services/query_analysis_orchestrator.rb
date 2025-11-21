@@ -231,30 +231,26 @@ class QueryAnalysisOrchestrator
 
     @analysis_request.interpret_results!
 
-    # Use best model for interpretation
-    model = @model_selector.select_model_for_task(:result_interpretation)
-    provider = create_provider(model)
+    # Use ResultInterpreter service for comprehensive interpretation
+    interpreter = ResultInterpreter.new(@analysis_request)
+    
+    interpretation = interpreter.interpret(user_level: @analysis_request.user.technical_level)
 
-    # Gather all results from execution steps
-    all_results = gather_execution_results
-
-    interpretation = provider.interpret_results(
-      all_results,
-      @analysis_request.natural_language_query,
-      user_level: @analysis_request.user.technical_level
-    )
-
-    # Create final result summary
-    create_result_summary(interpretation, all_results)
-
+    # Store interpretation in analysis_request
     @analysis_request.update!(
+      final_results: interpretation,
       metadata: @analysis_request.metadata.merge(
         "interpretation" => interpretation,
         "total_tokens_used" => @total_tokens_used,
         "total_cost" => @total_cost,
-        "models_used" => @analysis_request.metadata["selected_models"]
+        "models_used" => @analysis_request.metadata["selected_models"],
+        "interpretation_confidence" => interpretation[:confidence_score],
+        "interpretation_warnings" => interpretation[:warnings],
+        "interpretation_errors" => interpretation[:errors]
       )
     )
+
+    Rails.logger.info "Interpretation completed with confidence: #{interpretation[:confidence_score]}"
   end
 
   def create_provider(model)
