@@ -145,7 +145,30 @@ class QueryAnalysisOrchestrator
     plan_prompt = build_analysis_plan_prompt
 
     result = provider.generate_completion(plan_prompt, temperature: 0.5)
-    plan = parse_analysis_plan(result[:content])
+    
+    # Use robust parser to extract and validate plan
+    parser = AnalysisPlanParser.new(result[:content])
+    plan = parser.parse
+    
+    unless parser.valid?
+      error_msg = "Failed to parse analysis plan: #{parser.errors.join('; ')}"
+      Rails.logger.error error_msg
+      @analysis_request.update!(
+        status: :failed,
+        error_message: error_msg,
+        metadata: @analysis_request.metadata.merge(
+          "plan_parse_errors" => parser.errors,
+          "plan_parse_warnings" => parser.warnings,
+          "raw_plan_response" => result[:content]
+        )
+      )
+      raise error_msg
+    end
+    
+    # Log warnings if any
+    if parser.warnings.any?
+      Rails.logger.warn "Plan parsing warnings: #{parser.warnings.join('; ')}"
+    end
 
     # Create execution steps based on plan
     plan["steps"].each_with_index do |step_config, index|
@@ -360,30 +383,6 @@ class QueryAnalysisOrchestrator
     # Get results from previous steps if needed
     previous_steps = @execution_steps.select { |s| s.completed? }
     previous_steps.map { |s| { type: s.step_type, summary: s.result_data } }
-  end
-
-  def parse_analysis_plan(plan_text)
-    # Parse the plan text into structured steps
-    # This would be more sophisticated in production
-    {
-      "steps" => [
-        {
-          "type" => "data_exploration",
-          "language" => "python",
-          "description" => "Initial data exploration and summary statistics"
-        },
-        {
-          "type" => "statistical_analysis",
-          "language" => "python",
-          "description" => "Perform required statistical analysis"
-        },
-        {
-          "type" => "visualization",
-          "language" => "python",
-          "description" => "Create visualizations of results"
-        }
-      ]
-    }
   end
 
   def create_execution_step(step_config, index)
